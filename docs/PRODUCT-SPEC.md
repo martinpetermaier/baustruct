@@ -1,6 +1,6 @@
 # BauGPT Procurement — Product Specification (Consolidated)
-**Version:** 1.0 (Draft) | **Stand:** 2026-03-11 | **Lead:** Hugo 🚀
-**Status:** ⚠️ 90% — Analytics-Datenmodell fehlt noch (Rainman)
+**Version:** 1.0 | **Stand:** 2026-03-11 | **Lead:** Hugo 🚀
+**Status:** ✅ 100% — Alle Team-Docs konsolidiert
 
 ---
 
@@ -245,23 +245,59 @@ Invoice:        received → ai_processing → ready_to_book → booked / disput
 
 ---
 
-## 9. Analytics & Data Model
+## 9. Analytics & ESG Data Model (Rainman)
 
-> ⚠️ **PENDING — Rainman's Deliverable**
-> 
-> Erwartete Inhalte:
-> - Event-Tracking Schema (Segment/Snowflake)
-> - Core KPIs & Metrics (Conversion Funnel, Document Processing Stats)
-> - Dashboard-Anforderungen
-> - Datenmodell für Reporting (ESG/CO2, Kosten, Lieferanten-Performance)
-> - PostHog Event-Setup
+### ESG/CO2 Tracking
+CO2 entsteht automatisch als Nebenprodukt des Procure-to-Pay Flows:
+```
+Lieferschein bestätigt → Material × Menge → × CO2-Faktor → CO2-Emissionen
+→ Tägliche Snapshots → Dashboard (sub-100ms) → CSRD-Report
+```
 
-**Placeholder KPIs (aus business-model.md):**
-- **North Star:** Monthly Processed Documents
-- Acquisition: Free signups, F2P conversion (target: 12% at 90d)
-- Revenue: MRR/ARR, ARPU by segment, NRR (target: >100%)
-- Product: Auto-match rate (target: >95%), time-to-value (<1 day)
-- CS: NPS (target: >50), churn by segment
+### Neue Analytics-Tabellen
+- `material_categories` — Materialkategorien mit Hierarchie + CO2 Scope
+- `co2_emission_factors` — CO2-Faktoren aus ÖKOBAUDAT/EC3/DEFRA pro Material
+- `delivery_note_line_co2` — Auto-berechnete CO2 pro Lieferschein-Position
+- `project_esg_snapshots` — Tägliche materialized Aggregation (Finanz + CO2)
+- `company_esg_targets` — CO2-Ziele & Reduktionspfade (CSRD, SBTi, DGNB)
+- `esg_reports` — Compliance Reports mit Audit-Trail
+
+### Materialized Views
+- `mv_project_co2_by_material` — CO2 nach Materialkategorie pro Projekt/Monat
+- `mv_supplier_co2_performance` — Lieferanten CO2-Footprint + CO2/€ Ratio
+
+### ESG KPIs
+| KPI | Ziel | CSRD |
+|-----|------|------|
+| Total CO2 (t) | Trending ↓ | ✅ |
+| CO2-Intensität (kg/€) | Benchmark | ✅ |
+| CO2-Intensität (kg/m²) | Branchenvergleich | ✅ |
+| Scope 3 Anteil (%) | < 90% | ✅ |
+| Reduction vs. Vorjahr | > 5% p.a. | ✅ |
+
+### Operationelle KPIs
+| KPI | Ziel |
+|-----|------|
+| **North Star:** Monthly Processed Documents | Growth |
+| Invoice Match Rate | > 95% |
+| Rechnungsprüfzeit | < 1h |
+| Budgetabweichung | < 5% |
+| Skonto-Ausschöpfung | > 90% |
+| Digitalisierungsgrad Lieferscheine | > 80% |
+
+### Dashboard-Hierarchie
+- **Company Dashboard:** ESG Overview (CO2 by Scope, Trends, Material, Supplier Heatmap) + Procurement Analytics (Spend, Trends, Budget vs. Actual) + CSRD Report Builder
+- **Project Dashboard:** CO2 Timeline, Material Verbrauch, Budget-Tracking, ESG-Ampel
+
+### CO2-Faktoren (MVP — Top 14 Materialien ≈ 80% der Scope-3-Emissionen)
+Initialdaten aus ÖKOBAUDAT + DEFRA + UBA für: Beton, Bewehrungsstahl, Baustahl, Brettsperrholz, Kalksandstein, Porenbeton, Mineralwolle, EPS, Glaswolle, Gips, Aluminium, PVC, Diesel, Baustrom.
+
+### CSRD Compliance
+- Scope 3 Upstream (Materialien): ✅ Automatisch über Procure-to-Pay
+- Scope 1+2 (Energie): ⚠️ Manuelle Erfassung (Phase 2)
+- Audit Trail + Positions-Granularität + Vorjahresvergleich: ✅
+
+**Vollständiges Analytics-Datenmodell:** → `docs/analytics-datamodel.md`
 
 ---
 
@@ -374,8 +410,8 @@ Invoice:        received → ai_processing → ready_to_book → booked / disput
 | `db-schema-draft.md` | Hugo 🚀 | ✅ Complete |
 | `tech-architecture.md` | Bob 👨‍💻 | ✅ Complete |
 | `business-model.md` | Brunhilde 👩‍💼 | ✅ Complete |
-| `analytics-datamodel.md` | Rainman 👨🏻‍🔧 | ❌ **PENDING** |
-| `PRODUCT-SPEC.md` | Hugo 🚀 | ⚠️ 90% (Analytics pending) |
+| `analytics-datamodel.md` | Rainman 👨🏻‍🔧 | ✅ Complete |
+| `PRODUCT-SPEC.md` | Hugo 🚀 | ✅ Complete (v1.0) |
 
 ---
 
