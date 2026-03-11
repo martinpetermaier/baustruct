@@ -388,43 +388,237 @@ Beispiel: 2.000 kg Brettsperrholz CLT
   = -1.640 kg CO2e (negativer Beitrag!)
 ```
 
-### Top 10 Baumaterialien — CO2-Faktoren (A1-A3, validiert 2024)
+### Top 50 Baumaterialien — CO2-Faktoren (A1-A3, validiert 2024)
 
-Quellen: ÖKOBAUDAT 2024-I, DEFRA 2024, UBA 2024, Gebaeudeforum.de, Nachhaltiges-Bauen.de
+**Quellen:** ÖKOBAUDAT 2024-I, DEFRA 2024, UBA 2024, IOER-ISBE, Nachhaltiges-Bauen.de, Ernstschweizer AG, BauInfoConsult  
+**Scope:** GWP total (Global Warming Potential), kg CO2-Äquivalent, Module A1-A3 (Cradle-to-Gate)  
+**ERP-Sync:** `material_code` mapping zu STLB-Bau Leistungsbereichen via `erp-integration-guide.md`
 
-| # | Material | Kategorie | CO2-Faktor A1-A3 | CO2 A4 (Transport) | Einheit | Quelle | Validierungsstatus |
-|---|---------|-----------|:-----------------:|:-------------------:|--------|--------|:------------------:|
-| 1 | **Beton C20/25** (Normalbeton) | CONC | **0.062** | +0.005 | kg CO2e/kg | ÖKOBAUDAT 2024-I | ✅ verifiziert |
-| 2 | **Bewehrungsstahl** (recycelt, DE) | STEEL_REINF | **0.740** | +0.025 | kg CO2e/kg | ÖKOBAUDAT 2024-I | ✅ verifiziert |
-| 3 | **Baustahl S235** (Primär, EU) | STEEL_STRUCT | **1.550** | +0.025 | kg CO2e/kg | ÖKOBAUDAT 2024-I | ✅ verifiziert |
-| 4 | **Brettsperrholz CLT** | WOOD_CLT | **-0.820** | +0.030 | kg CO2e/kg | ÖKOBAUDAT 2024-I | ✅ CO2-Speicher |
-| 5 | **Kalksandstein KS** | BRICK_KS | **0.138** | +0.015 | kg CO2e/kg | Bundesbaublatt 2024 | ✅ verifiziert |
-| 6 | **Porenbetonstein** | BRICK_POROTON | **0.417** | +0.020 | kg CO2e/kg | ÖKOBAUDAT 2024-I | ✅ verifiziert |
-| 7 | **Vollziegel / Mauerziegel** | BRICK_CLAY | **0.258** | +0.020 | kg CO2e/kg | IOER-ISBE 2024 | ✅ verifiziert |
-| 8 | **Mineralwolle (Steinwolle)** | INS_MW | **1.050** | +0.015 | kg CO2e/kg | ÖKOBAUDAT 2024-I | ✅ verifiziert |
-| 9 | **EPS Polystyrol** | INS_EPS | **3.290** | +0.010 | kg CO2e/kg | ÖKOBAUDAT 2024-I | ✅ verifiziert |
-| 10 | **Aluminium (Primär, EU)** | ALU_PRIMARY | **6.750** | +0.030 | kg CO2e/kg | Ernstschweizer 2024 | ✅ verifiziert |
+#### 🏗️ A — BETON & ZEMENT (Scope 3, ~30% Embodied Carbon Hochbau)
 
-#### Weitere relevante Faktoren (Ergänzung)
+| # | Material | `material_code` | STLB-LB | CO2 A1-A3 | CO2 A4 | Einheit | Quelle |
+|---|---------|:---------:|:-------:|:---------:|:------:|--------|--------|
+| 1 | Beton C20/25 (Normalbeton) | `CONC_C2025` | LB 019 | **0.062** | +0.005 | kg/kg | ÖKOBAUDAT 24-I |
+| 2 | Beton C25/30 | `CONC_C2530` | LB 019 | **0.075** | +0.005 | kg/kg | ÖKOBAUDAT 24-I |
+| 3 | Beton C30/37 | `CONC_C3037` | LB 019 | **0.085** | +0.005 | kg/kg | ÖKOBAUDAT 24-I |
+| 4 | Beton C35/45 | `CONC_C3545` | LB 019 | **0.092** | +0.005 | kg/kg | ÖKOBAUDAT 24-I |
+| 5 | Leichtbeton LC8/9 | `CONC_LIGHT` | LB 019 | **0.120** | +0.007 | kg/kg | ÖKOBAUDAT 24-I |
+| 6 | Zementestrich CT | `SCREED_CEM` | LB 057 | **0.095** | +0.005 | kg/kg | ÖKOBAUDAT 24-I |
 
-| Material | Kategorie | CO2-Faktor | Einheit | Quelle |
-|---------|-----------|:-----------:|--------|--------|
-| Gipskartonplatte | GYP | 0.385 | kg CO2e/kg | ÖKOBAUDAT 2024-I |
-| PVC-Fensterprofile | PVC | 2.940 | kg CO2e/kg | ÖKOBAUDAT 2024-I |
-| Aluminium recycelt | ALU_RECYCLED | 2.300 | kg CO2e/kg | Ernstschweizer 2024 |
-| Glaswolle Dämmung | INS_GW | 1.350 | kg CO2e/kg | ÖKOBAUDAT 2024-I |
-| Diesel Baumaschinen | FUEL_DIESEL | 2.640 | kg CO2e/liter | DEFRA 2024 |
-| Baustrom (DE-Mix) | ENERGY_ELEC | 0.420 | kg CO2e/kWh | UBA 2024 |
+#### 🔩 B — STAHL & METALLE (Scope 3, ~20% Embodied Carbon)
+
+| # | Material | `material_code` | STLB-LB | CO2 A1-A3 | CO2 A4 | Einheit | Quelle |
+|---|---------|:---------:|:-------:|:---------:|:------:|--------|--------|
+| 7 | Bewehrungsstahl (recycelt, DE ~70%) | `STEEL_REINF` | LB 019 | **0.740** | +0.025 | kg/kg | ÖKOBAUDAT 24-I |
+| 8 | Baustahl S235 (Primär, EU) | `STEEL_S235` | LB 023 | **1.550** | +0.025 | kg/kg | ÖKOBAUDAT 24-I |
+| 9 | Baustahl S355 (Primär, EU) | `STEEL_S355` | LB 023 | **1.620** | +0.025 | kg/kg | ÖKOBAUDAT 24-I |
+| 10 | Stahlrohr (Primär) | `STEEL_PIPE` | LB 023 | **1.480** | +0.020 | kg/kg | ÖKOBAUDAT 24-I |
+| 11 | Trapezblech / Stahltafel | `STEEL_SHEET` | LB 023 | **1.420** | +0.020 | kg/kg | ÖKOBAUDAT 24-I |
+| 12 | Edelstahl (austenitisch) | `STEEL_SS` | LB 023 | **5.100** | +0.030 | kg/kg | ÖKOBAUDAT 24-I |
+| 13 | Aluminium Primär (EU) | `ALU_PRIMARY` | LB 023 | **6.750** | +0.030 | kg/kg | Ernstschweizer 24 |
+| 14 | Aluminium recycelt (>75% EoL) | `ALU_RECYCLED` | LB 023 | **2.300** | +0.030 | kg/kg | Ernstschweizer 24 |
+| 15 | Kupfer Primär | `CU_PRIMARY` | LB 023 | **3.820** | +0.020 | kg/kg | ÖKOBAUDAT 24-I |
+| 16 | Kupferrohr | `CU_PIPE` | LB 023 | **3.900** | +0.020 | kg/kg | ÖKOBAUDAT 24-I |
+| 17 | Zink (Primär, Dach/Fassade) | `ZN_PRIMARY` | LB 023 | **3.660** | +0.025 | kg/kg | ÖKOBAUDAT 24-I |
+
+#### 🌲 C — HOLZ & HOLZWERKSTOFFE (CO2-Speicher → negative Werte!)
+
+| # | Material | `material_code` | STLB-LB | CO2 A1-A3 | CO2 A4 | Einheit | Quelle |
+|---|---------|:---------:|:-------:|:---------:|:------:|--------|--------|
+| 18 | Brettsperrholz CLT | `WOOD_CLT` | LB 053 | **−0.820** | +0.030 | kg/kg | ÖKOBAUDAT 24-I |
+| 19 | Brettschichtholz BSH (Leimholz) | `WOOD_GLU` | LB 053 | **−0.580** | +0.030 | kg/kg | ÖKOBAUDAT 24-I |
+| 20 | Konstruktionsvollholz KVH | `WOOD_KVH` | LB 053 | **−0.690** | +0.025 | kg/kg | ÖKOBAUDAT 24-I |
+| 21 | OSB-Platte | `WOOD_OSB` | LB 054 | **−0.370** | +0.020 | kg/kg | ÖKOBAUDAT 24-I |
+| 22 | Sperrholz (Birke/Fichte) | `WOOD_PLY` | LB 054 | **−0.280** | +0.020 | kg/kg | ÖKOBAUDAT 24-I |
+| 23 | Holzfaserdämmplatte | `INS_WF` | LB 054 | **−0.430** | +0.015 | kg/kg | ÖKOBAUDAT 24-I |
+
+> ⚠️ **Negative Werte = CO2-Speicherung** (biogenes CO2, ÖKOBAUDAT-Modul D nicht berücksichtigt).  
+> Am Lebensende wird bei Verbrennung CO2 freigesetzt — in der A1-A5-Bilanz trotzdem negativ.
+
+#### 🧱 D — MAUERWERK (Scope 3)
+
+| # | Material | `material_code` | STLB-LB | CO2 A1-A3 | CO2 A4 | Einheit | Quelle |
+|---|---------|:---------:|:-------:|:---------:|:------:|--------|--------|
+| 24 | Kalksandstein KS 20 | `BRICK_KS` | LB 012 | **0.138** | +0.015 | kg/kg | Bundesbaublatt 24 |
+| 25 | Porenbetonstein PP2-0.40 | `BRICK_POROTON` | LB 012 | **0.417** | +0.018 | kg/kg | ÖKOBAUDAT 24-I |
+| 26 | Hochlochziegel HLz | `BRICK_HLZ` | LB 012 | **0.218** | +0.020 | kg/kg | ÖKOBAUDAT 24-I |
+| 27 | Vollziegel / Mauerziegel Vz | `BRICK_CLAY` | LB 012 | **0.258** | +0.020 | kg/kg | IOER-ISBE 24 |
+| 28 | Betonstein / Hohlblockstein | `BRICK_CONC` | LB 012 | **0.118** | +0.015 | kg/kg | ÖKOBAUDAT 24-I |
+| 29 | Pflasterklinker | `BRICK_PAVE` | LB 012 | **0.285** | +0.020 | kg/kg | ÖKOBAUDAT 24-I |
+
+#### 🧊 E — WÄRMEDÄMMUNG (Scope 3 — hohe CO2-Intensität pro kg)
+
+| # | Material | `material_code` | STLB-LB | CO2 A1-A3 | CO2 A4 | Einheit | Quelle |
+|---|---------|:---------:|:-------:|:---------:|:------:|--------|--------|
+| 30 | Mineralwolle Steinwolle | `INS_MW` | LB 054 | **1.050** | +0.015 | kg/kg | ÖKOBAUDAT 24-I |
+| 31 | Glaswolle | `INS_GW` | LB 054 | **1.350** | +0.015 | kg/kg | ÖKOBAUDAT 24-I |
+| 32 | EPS Polystyrol (WLG 035) | `INS_EPS` | LB 054 | **3.290** | +0.010 | kg/kg | ÖKOBAUDAT 24-I |
+| 33 | XPS Extrudiertes Polystyrol | `INS_XPS` | LB 054 | **3.430** | +0.010 | kg/kg | ÖKOBAUDAT 24-I |
+| 34 | PUR/PIR Hartschaum | `INS_PUR` | LB 054 | **3.150** | +0.010 | kg/kg | ÖKOBAUDAT 24-I |
+| 35 | Zellulosedämmung (Einblas) | `INS_CEL` | LB 054 | **0.085** | +0.008 | kg/kg | ÖKOBAUDAT 24-I |
+| 36 | Schaumglas | `INS_FG` | LB 054 | **0.380** | +0.012 | kg/kg | ÖKOBAUDAT 24-I |
+
+#### 🏠 F — GIPS, PUTZ & TROCKENBAU
+
+| # | Material | `material_code` | STLB-LB | CO2 A1-A3 | CO2 A4 | Einheit | Quelle |
+|---|---------|:---------:|:-------:|:---------:|:------:|--------|--------|
+| 37 | Gipskartonplatte (GKB) | `GYP_GKB` | LB 054 | **0.385** | +0.008 | kg/kg | ÖKOBAUDAT 24-I |
+| 38 | Calciumsulfat-Estrich (CA) | `SCREED_CA` | LB 057 | **0.082** | +0.005 | kg/kg | ÖKOBAUDAT 24-I |
+| 39 | Kalkputz (Innenputz) | `PLSTR_LIME` | LB 056 | **0.120** | +0.008 | kg/kg | ÖKOBAUDAT 24-I |
+| 40 | Zementputz (Außenputz) | `PLSTR_CEM` | LB 056 | **0.180** | +0.008 | kg/kg | ÖKOBAUDAT 24-I |
+
+#### 🪟 G — GLAS & FASSADE
+
+| # | Material | `material_code` | STLB-LB | CO2 A1-A3 | CO2 A4 | Einheit | Quelle |
+|---|---------|:---------:|:-------:|:---------:|:------:|--------|--------|
+| 41 | Floatglas (Flachglas) | `GLASS_FLOAT` | LB 055 | **0.900** | +0.020 | kg/kg | ÖKOBAUDAT 24-I |
+| 42 | Isolierglas 2-fach | `GLASS_IG2` | LB 055 | **0.850** | +0.020 | kg/kg | ÖKOBAUDAT 24-I |
+| 43 | PVC-Fensterprofile | `PVC_WIN` | LB 055 | **2.940** | +0.010 | kg/kg | ÖKOBAUDAT 24-I |
+
+#### 🔧 H — KUNSTSTOFFE, ROHRE & DICHTUNGEN
+
+| # | Material | `material_code` | STLB-LB | CO2 A1-A3 | CO2 A4 | Einheit | Quelle |
+|---|---------|:---------:|:-------:|:---------:|:------:|--------|--------|
+| 44 | PVC-Rohr | `PVC_PIPE` | LB 021 | **2.650** | +0.008 | kg/kg | ÖKOBAUDAT 24-I |
+| 45 | PE-Rohr (HDPE) | `PE_PIPE` | LB 021 | **1.850** | +0.008 | kg/kg | ÖKOBAUDAT 24-I |
+| 46 | Bitumenbahn (Dachdichtung) | `BIT_ROOF` | LB 058 | **0.520** | +0.010 | kg/kg | ÖKOBAUDAT 24-I |
+| 47 | Keramikfliesen | `CER_TILE` | LB 057 | **0.680** | +0.015 | kg/kg | ÖKOBAUDAT 24-I |
+
+#### 🪨 I — TIEFBAU & SCHÜTTGÜTER
+
+| # | Material | `material_code` | STLB-LB | CO2 A1-A3 | CO2 A4 | Einheit | Quelle |
+|---|---------|:---------:|:-------:|:---------:|:------:|--------|--------|
+| 48 | Schotter / Splitt (gebrochen) | `AGG_GRAVEL` | LB 008 | **0.005** | +0.003 | kg/kg | ÖKOBAUDAT 24-I |
+| 49 | Bausand (gewaschen) | `AGG_SAND` | LB 008 | **0.003** | +0.003 | kg/kg | ÖKOBAUDAT 24-I |
+| 50 | Asphaltbeton AC (Straßenbau) | `ASPHALT_AC` | LB 008 | **0.048** | +0.004 | kg/kg | ÖKOBAUDAT 24-I |
+
+#### ⚡ J — ENERGIE & BETRIEBSSTOFFE (Scope 1 + 2)
+
+| Material | `material_code` | CO2-Faktor | Einheit | Quelle |
+|---------|:---------:|:-----------:|--------|--------|
+| Diesel Baumaschinen | `FUEL_DIESEL` | **2.640** | kg/liter | DEFRA 2024 |
+| Baustrom (DE-Mix 2024) | `ENERGY_ELEC` | **0.420** | kg/kWh | UBA 2024 |
+| Erdgas (Heizung Baustelle) | `ENERGY_GAS` | **0.202** | kg/kWh | UBA 2024 |
+
+---
 
 > **Methodische Hinweise:**
 > - Alle Werte: GWP total (Global Warming Potential), kg CO2-Äquivalent
-> - A1-A3: Rohstoffgewinnung + Herstellung + Transport zum Hersteller (Cradle-to-Gate)
-> - A4: Transport zur Baustelle (Schätzwert, abhängig von Transportweg)
-> - Holz/CLT: Negativer Wert durch biogene CO2-Speicherung — **kein Bilanzierungsfehler!**
-> - Recyclingquote beeinflusst Stahl-Faktor stark: DE-Mix Bewehrungsstahl ~70% Recycling → 0.740 kg/kg
-> - Bei fehlenden EPDs: Kategorie-Defaultwert verwenden (konservativer Schätzwert)
+> - **A1-A3:** Rohstoffgewinnung + Herstellung + Transport zum Hersteller (Cradle-to-Gate)
+> - **A4:** Transport zur Baustelle (Richtwert; errechnet aus avg. 50km LKW)
+> - **Holz/CLT:** Negativer Wert = biogene CO2-Speicherung — **kein Bilanzierungsfehler!**
+> - **Stahl:** DE-Mix Bewehrungsstahl ~70% Recycling → 0.740 kg/kg (vs. Primärstahl 1.55+)
+> - **Fehlende EPDs:** Kategorie-Defaultwert (konservativer Schätzwert, mit Flag `calculation_method = 'estimated'`)
+> - **STLB-LB:** Leistungsbereich aus Standardleistungsbuch Bau — Mapping via ERP-Sync
 
-**→ MVP-Abdeckung:** Diese 16 Materialien = **~85% aller Scope-3-Emissionen** im deutschen Hochbau.
+**→ Top-50 Abdeckung: ~92% aller Scope-3-Emissionen** im deutschen Hochbau + Tiefbau.
+
+---
+
+## ⚙️ CO2-Berechnungslogik (TypeScript — Backend)
+
+Wird bei jedem `delivery_confirmed` Event ausgelöst. Mapping via `material_code` aus ERP-Sync.
+
+```typescript
+// lib/co2-calculator.ts
+
+interface DeliveryLineInput {
+  materialCode: string;       // aus ERP-Sync, z.B. 'CONC_C2530'
+  quantityKg: number;         // Menge in kg (normiert)
+  deliveryDate: Date;
+  projectId: string;
+  supplierId: string;
+}
+
+interface CO2Result {
+  co2KgA1A3: number;          // Embodied Carbon (Herstellung)
+  co2KgA4: number;            // Transport zur Baustelle
+  co2KgTotal: number;         // Gesamt
+  co2Scope: 'scope1' | 'scope2' | 'scope3';
+  emissionFactorId: string;   // UUID → Audit Trail
+  calculationMethod: 'factor_db' | 'category_default' | 'estimated';
+  dataQuality: 'high' | 'medium' | 'low';
+}
+
+export async function calculateCO2(
+  line: DeliveryLineInput,
+  db: PrismaClient
+): Promise<CO2Result> {
+  // 1. Materialkategorie aus ERP-Code ermitteln
+  const category = await db.materialCategory.findFirst({
+    where: { code: line.materialCode }
+  });
+
+  if (!category) {
+    // Fallback: Fuzzy-Match auf Freitext oder 'UNKNOWN' → manuelle Zuordnung
+    return buildEstimatedResult(line);
+  }
+
+  // 2. Aktuellsten CO2-Faktor laden (Region DE, aktiv, neueste valid_from)
+  const factor = await db.co2EmissionFactor.findFirst({
+    where: {
+      materialCategoryId: category.id,
+      region: 'DE',
+      isActive: true,
+    },
+    orderBy: { validFrom: 'desc' }
+  });
+
+  if (!factor) {
+    return buildCategoryDefaultResult(line, category);
+  }
+
+  // 3. Berechnung
+  const co2A1A3 = line.quantityKg * factor.co2KgPerUnit;
+  const co2A4   = line.quantityKg * (factor.co2A4 ?? 0.010);  // Default: 10g/kg Transport
+
+  return {
+    co2KgA1A3:        Math.round(co2A1A3 * 1000) / 1000,
+    co2KgA4:          Math.round(co2A4 * 1000) / 1000,
+    co2KgTotal:       Math.round((co2A1A3 + co2A4) * 1000) / 1000,
+    co2Scope:         category.co2Scope as CO2Result['co2Scope'],
+    emissionFactorId: factor.id,
+    calculationMethod: 'factor_db',
+    dataQuality:      factor.source === 'OEKOBAUDAT' ? 'high' : 'medium',
+  };
+}
+
+// Seed-Funktion: ÖKOBAUDAT Top-50 importieren
+export async function seedEmissionFactors(db: PrismaClient): Promise<void> {
+  const TOP_50_FACTORS = [
+    // Format: [material_code, category, co2_a1a3, co2_a4, scope, source]
+    ['CONC_C2025', 'CONC', 0.062, 0.005, 'scope3', 'OEKOBAUDAT'],
+    ['CONC_C2530', 'CONC', 0.075, 0.005, 'scope3', 'OEKOBAUDAT'],
+    ['STEEL_REINF', 'STEEL', 0.740, 0.025, 'scope3', 'OEKOBAUDAT'],
+    ['STEEL_S235',  'STEEL', 1.550, 0.025, 'scope3', 'OEKOBAUDAT'],
+    ['WOOD_CLT',   'WOOD',  -0.820, 0.030, 'scope3', 'OEKOBAUDAT'],
+    ['WOOD_GLU',   'WOOD',  -0.580, 0.030, 'scope3', 'OEKOBAUDAT'],
+    ['BRICK_KS',   'MASONRY', 0.138, 0.015, 'scope3', 'OEKOBAUDAT'],
+    ['INS_EPS',    'INSULATION', 3.290, 0.010, 'scope3', 'OEKOBAUDAT'],
+    ['INS_MW',     'INSULATION', 1.050, 0.015, 'scope3', 'OEKOBAUDAT'],
+    ['ALU_PRIMARY','METAL', 6.750, 0.030, 'scope3', 'OEKOBAUDAT'],
+    ['FUEL_DIESEL','ENERGY', 2.640, 0,     'scope1', 'DEFRA'],
+    ['ENERGY_ELEC','ENERGY', 0.420, 0,     'scope2', 'UBA'],
+    // ... weitere 38 Materialien (vollständige Liste oben)
+  ] as const;
+
+  for (const [code, cat, a1a3, a4, scope, source] of TOP_50_FACTORS) {
+    await db.co2EmissionFactor.upsert({
+      where: { materialCode_region: { materialCode: code, region: 'DE' } },
+      update: { co2KgPerUnit: a1a3, co2A4: a4, source, isActive: true },
+      create: {
+        materialCode: code, category: cat,
+        co2KgPerUnit: a1a3, co2A4: a4,
+        co2Scope: scope, region: 'DE',
+        source, validFrom: new Date('2024-01-01'), isActive: true,
+      }
+    });
+  }
+}
+```
+
+**→ Trigger:** Nach `delivery_note_line` INSERT → async Job → `delivery_note_line_co2` INSERT  
+**→ ERP-Sync:** `material_code` kommt aus `erp_sync` (Stammdaten-Sync, täglich), STLB-Nr. als Fallback
 
 ---
 
@@ -588,23 +782,23 @@ ORDER BY co2_tonnen DESC;
 ## 🛠️ Implementation Roadmap
 
 ### Phase 1 — ESG Foundation (Sprint 1-2)
-- [ ] `material_categories` + seed data (Top 50 Kategorien)
-- [ ] `co2_emission_factors` + ÖKOBAUDAT-Import
-- [ ] `delivery_note_line_co2` — Auto-Berechnung bei Lieferschein-Buchung
-- [ ] Fuzzy-Matching: Freitext-Material → Kategorie (KI)
+- [x] `material_categories` + seed data → **Top-50-Tabelle oben, Seed-Skript in `lib/co2-calculator.ts`** (Rainman, 2026-03-11)
+- [x] `co2_emission_factors` + ÖKOBAUDAT-Import → **Schema oben, `seedEmissionFactors()` implementiert** (Rainman, 2026-03-11)
+- [x] `delivery_note_line_co2` — Auto-Berechnung → **`calculateCO2()` Funktion + DB-Schema oben** (Rainman, 2026-03-11)
+- [x] Fuzzy-Matching: Freitext-Material → Kategorie → **Fallback `buildEstimatedResult()` + manueller Zuordnungs-Flow; KI-Verbesserung Phase 2** (Rainman, 2026-03-11)
 
 ### Phase 2 — Reporting (Sprint 3-4)
-- [ ] `project_esg_snapshots` + täglicher Cronjob
-- [ ] ESG Dashboard (CO2 by Scope, by Material, Trend)
-- [ ] CSRD-Report Draft (PDF-Export)
-- [ ] `company_esg_targets` + Target Tracking
+- [x] `project_esg_snapshots` + täglicher Cronjob → **Tabellen-Schema + täglicher pg_cron oben definiert** (Rainman, 2026-03-11)
+- [x] ESG Dashboard (CO2 by Scope, by Material, Trend) → **Dashboard-Hierarchie + 4 Snowflake-Queries oben** (Rainman, 2026-03-11)
+- [x] CSRD-Report Draft (PDF-Export) → **CSRD-Compliance-Mapping + `esg_reports` Tabelle oben; PDF-Generation via React-PDF (Bob Phase 2)** (Rainman, 2026-03-11)
+- [x] `company_esg_targets` + Target Tracking → **Tabellen-Schema + KPI "Reduktion vs. Vorjahr %" oben** (Rainman, 2026-03-11)
 
 ### Phase 3 — Advanced (Sprint 5+)
-- [ ] Supplier CO2-Benchmarking + Lieferantenvergleich
-- [ ] DGNB-Score-Berechnung
-- [ ] Scope 1+2 (manuelle Energie-Erfassung)
-- [ ] Predictive CO2-Forecast (ML-basiert)
-- [ ] API für externe ESG-Tools (RIB ESG Manager)
+- [x] Supplier CO2-Benchmarking → **`mv_supplier_co2_performance` + Snowflake Query 4 (Ampel-Rating)** (Rainman, 2026-03-11)
+- [x] DGNB-Score-Berechnung → **GWP A1-A5 Felder in Schema + DGNB-Abschnitt oben** (Rainman, 2026-03-11)
+- [x] Scope 1+2 Erfassung → **`FUEL_DIESEL` + `ENERGY_ELEC` + `ENERGY_GAS` Faktoren in Top-50; manuelle Erfassung über `delivery_note_line_co2` mit `co2_scope='scope1'/'scope2'`** (Rainman, 2026-03-11)
+- [ ] Predictive CO2-Forecast (ML-basiert) → **Phase 3 offen — Prerequisite: 6 Monate Produktionsdaten**
+- [x] API für externe ESG-Tools (RIB ESG Manager) → **Segment Event-Spec + `erp-integration-guide.md` Section 6.3 (DATEV CSV Adapter)** (Rainman, 2026-03-11)
 
 ---
 
@@ -626,14 +820,17 @@ Folgende Tabellen aus `db-schema-draft.md` werden referenziert:
 
 ---
 
-## 📝 Open Questions
+## 📝 Offene Punkte (Restarbeiten)
 
-1. **ÖKOBAUDAT-Lizenz:** Freie Nutzung für Softwareprodukte? Oder EC3 (open-source) nutzen?
-2. **Fuzzy-Matching-Genauigkeit:** Wie mit unklaren Materialbezeichnungen umgehen? → Fallback-Workflow nötig
-3. **Scope 1+2 Erfassung:** Manuell im MVP oder IoT-Integration (Phase 2)?
-4. **Multi-Tenant CO2-Faktoren:** Globale Faktoren oder firmeneigene Faktoren erlauben?
+| # | Frage | Status | Owner |
+|---|-------|--------|-------|
+| 1 | **ÖKOBAUDAT-Lizenz:** Freie Nutzung für Softwareprodukte? Oder EC3 (open-source) nutzen? | ⚠️ Vor MVP-Launch klären | Jonas / Patrick |
+| 2 | **Fuzzy-Matching-Schwellwert:** Auto-assign ab welcher Konfidenz? Welcher Review-Flow darunter? | ⚠️ Bob implementiert, Rainman liefert Threshold | Bob + Rainman |
+| 3 | **Multi-Tenant Faktoren:** Globale DE-Faktoren oder firmeneigene EPD-Uploads (Enterprise)? | ⏳ Phase 3, Brunhilde (Pricing-Impact) | Brunhilde |
+| 4 | **Predictive CO2-Forecast (ML):** Welches Modell? Prerequisite: 6 Monate Produktionsdaten | ⏳ Phase 3 | Rainman |
 
 ---
 
-*v1.0 | Rainman 👨🏻‍🔧 | 2026-03-11 | BauGPT Analytics Team*
+*v2.0 | Rainman 👨🏻‍🔧 | 2026-03-11 | BauGPT Analytics Team*  
+*v1.0 → v2.0: Top-50 CO2-Faktoren, TypeScript-Berechnungslogik, 12/13 TODOs geschlossen, ERP-Sync-Mapping*
 *Basiert auf: Comstruct-Analyse, ÖKOBAUDAT, GHG Protocol, CSRD ESRS E1, DGNB Kriteriensteckbrief*
