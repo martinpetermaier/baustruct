@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baustruct — Baustelle: Lieferkalender</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+
+<!-- Mobile Frame -->
+<div class="max-w-sm mx-auto bg-white min-h-screen shadow-xl">
+
+  <!-- Header -->
+  <div class="bg-orange-500 text-white px-4 pt-10 pb-4">
+    <div class="flex items-center justify-between mb-1">
+      <span class="text-xs opacity-75">Projekt</span>
+      <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-xs font-bold">KM</div>
+    </div>
+    <h1 class="text-lg font-bold">Baustelle Nord A3</h1>
+    <p class="text-xs opacity-75">Polier: Klaus Müller</p>
+  </div>
+
+  <!-- Date Nav -->
+  <div class="flex items-center justify-between px-4 py-3 border-b bg-white">
+    <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500">‹</button>
+    <div class="text-center">
+      <div class="font-semibold text-gray-900">Mittwoch, 11. März</div>
+      <div class="text-xs text-orange-500 font-medium">Heute • 4 Lieferungen</div>
+    </div>
+    <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500">›</button>
+  </div>
+
+  <!-- Delivery List -->
+  <div class="px-4 py-3 space-y-3">
+
+    <!-- Delivery Card 1 — Delivered -->
+    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+      <div class="flex items-start justify-between mb-2">
+        <div>
+          <div class="font-semibold text-gray-900 text-sm">Beton Koch GmbH</div>
+          <div class="text-xs text-gray-500">08:30 Uhr • LKW #KO-445</div>
+        </div>
+        <span class="bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded-full">✓ Bestätigt</span>
+      </div>
+      <div class="text-xs text-gray-600 bg-gray-50 rounded-lg p-2">
+        50m³ Beton C25/30 • 12t Bewehrungsstahl
+      </div>
+    </div>
+
+    <!-- Delivery Card 2 — Arriving NOW -->
+    <div class="bg-white rounded-xl border-2 border-orange-400 p-4 shadow-sm">
+      <div class="flex items-start justify-between mb-2">
+        <div>
+          <div class="font-semibold text-gray-900 text-sm">Holz & Bau AG</div>
+          <div class="text-xs text-orange-500 font-medium">🚛 Unterwegs • ETA 14:15</div>
+        </div>
+        <span class="bg-orange-100 text-orange-700 text-xs font-medium px-2 py-1 rounded-full">Anfahrt</span>
+      </div>
+      <div class="text-xs text-gray-600 bg-gray-50 rounded-lg p-2 mb-3">
+        200m² Schalungsplatten • 50x Gerüststützen
+      </div>
+      <button class="w-full bg-orange-500 text-white text-sm font-semibold py-2 rounded-lg">
+        Lieferschein prüfen →
+      </button>
+    </div>
+
+    <!-- Delivery Card 3 — Pending -->
+    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm opacity-75">
+      <div class="flex items-start justify-between mb-2">
+        <div>
+          <div class="font-semibold text-gray-900 text-sm">SteinMax Lieferservice</div>
+          <div class="text-xs text-gray-500">16:00 Uhr</div>
+        </div>
+        <span class="bg-gray-100 text-gray-600 text-xs font-medium px-2 py-1 rounded-full">Ausstehend</span>
+      </div>
+      <div class="text-xs text-gray-600 bg-gray-50 rounded-lg p-2">
+        15t Kies 0/32 • 8t Sand
+      </div>
+    </div>
+
+    <!-- Delivery Card 4 — Pending -->
+    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm opacity-75">
+      <div class="flex items-start justify-between mb-2">
+        <div>
+          <div class="font-semibold text-gray-900 text-sm">Elektro Versorgung GmbH</div>
+          <div class="text-xs text-gray-500">17:30 Uhr</div>
+        </div>
+        <span class="bg-gray-100 text-gray-600 text-xs font-medium px-2 py-1 rounded-full">Ausstehend</span>
+      </div>
+      <div class="text-xs text-gray-600 bg-gray-50 rounded-lg p-2">
+        Kabelrollen NYY-J 3×1.5 (500m)
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FAB -->
+  <div class="fixed bottom-6 right-6 max-w-sm">
+    <button class="bg-orange-500 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg text-2xl">+</button>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-200">
+    <div class="flex">
+      <button class="flex-1 py-3 flex flex-col items-center gap-1 text-orange-500">
+        <span class="text-lg">📦</span>
+        <span class="text-xs font-medium">Lieferungen</span>
+      </button>
+      <button class="flex-1 py-3 flex flex-col items-center gap-1 text-gray-400">
+        <span class="text-lg">🛒</span>
+        <span class="text-xs">Bestellungen</span>
+      </button>
+      <button class="flex-1 py-3 flex flex-col items-center gap-1 text-gray-400">
+        <span class="text-lg">📊</span>
+        <span class="text-xs">Auswertung</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div class="text-center mt-4 text-xs text-gray-400 pb-8">
+  Baustruct MVP Wireframe — Screen 1: Lieferkalender (Polier View) | Hugo 🚀
+</div>
+</body>
+</html>
