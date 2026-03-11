@@ -160,15 +160,46 @@ Basierend auf Markt-Research für Construction Procurement Software 2025/2026:
 |---------|-----------|------------------------------|
 | Lieferkalender | ✅ | ✅ |
 | Digitale Lieferscheine | ✅ | ✅ |
-| Foto-Upload | ✅ | ✅ |
-| Offline-Mode | ✅ | ✅ |
-| Bestellung aufgeben | ✅ | ✅ |
+| Foto-Upload (Schäden) | ✅ | ✅ |
+| Offline-Mode | ✅ | ✅ + PWA Fallback |
+| Bestellung aufgeben (Mobile) | ✅ Guided Flow | ✅ Guided Flow |
+| Entwurf speichern | ✅ | ✅ |
 | Verbrauchsauswertung | ✅ | ✅ |
+| Änderungshistorie/Audit Trail | ✅ Jede Änderung | ✅ |
+| Supplier-Benachrichtigung | ✅ E-Mail + Web | ✅ E-Mail + Push + WhatsApp |
 | Free Tier | ❌ | ✅ ← Differenzierung |
-| KI-Dokumentenverstehen | Basis | ✅ Advanced (BauGPT Pro) |
+| Self-Service Signup | ❌ | ✅ ← Differenzierung |
+| KI-Dokumentenverstehen | Basis-OCR | ✅ Advanced NLP (BauGPT Pro) |
+| KI-Insights im Dashboard | ❌ | ✅ ("Du sparst €X Skonto") |
 | Recruiting-Integration | ❌ | ✅ ← Unique |
+
+### Comstruct Field App — UX Details (Google Play, verifiziert)
+
+**App Name:** "Comstruct Field App"  
+**Core Features (aus App Store Description):**
+1. **Lieferungen & Bestellungen sichtbar** — Team sieht alle Infos zu Orders + Deliveries
+2. **Lieferschein-Detail** — Ankunftszeit, Supplier-Info, Materialien, Mengen
+3. **Edit Delivery Notes** — Änderungen (Menge, Zeit, Material) direkt in der App
+4. **Supplier-Notification** — Jede Änderung wird per E-Mail + Web App an Supplier gesendet
+5. **Change History** — Vollständige Änderungshistorie pro Lieferschein (Audit Trail!)
+6. **Checked/Unchecked** — Einfaches Bestätigen durch Polier (1-Tap)
+7. **Bestellung aufgeben** — Guided Flow: Supplier → Produkt → Details → Senden oder Entwurf
+
+**UX Pattern:** "Sequel of inputs" — kein großes Formular, sondern Step-by-Step Wizard für Bestellungen.
+
+→ Vollständige UX Flow Dokumentation: `docs/ux-flows.md`
 
 ---
 
-*Erstellt: Hugo 🚀 | 2026-03-11 18:30 | Sprint Run #2*
-*Quellen: comstruct.com, Procore Marketplace, Web Research, Tracxn, PitchBook*
+## 💰 Funding Update (verifiziert)
+
+- **Series A:** Februar 2025 — €12.5M+ (GV, 20VC, Foundamental)
+- **Früherer Raise:** ~€3M Seed
+- **Gesamtfinanzierung:** ~€15.5M+
+- **Gründungsjahr:** 2022, Hamburg/Deutschland
+- **Mitglied:** BDBau (Bundesvereinigung Bauwirtschaft)
+
+---
+
+*Erstellt: Hugo 🚀 | 2026-03-11 18:30 | Aktualisiert: Sprint Run #5*
+*Quellen: comstruct.com, Google Play Store, Procore Marketplace, Tracxn, PitchBook, BDBau*
