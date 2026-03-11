@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baustruct — Supplier Portal Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; }
+    
+    /* Header */
+    .header { background: #1a1a2e; color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .header-logo { font-size: 20px; font-weight: 700; }
+    .header-logo span { color: #4ade80; }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .header-badge { background: #4ade80; color: #1a1a2e; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .header-company { font-size: 14px; opacity: 0.8; }
+    
+    /* Navigation */
+    .nav { background: white; border-bottom: 1px solid #e5e5e5; padding: 0 24px; display: flex; gap: 0; }
+    .nav-item { padding: 14px 20px; font-size: 14px; font-weight: 500; color: #666; cursor: pointer; border-bottom: 2px solid transparent; }
+    .nav-item.active { color: #1a1a2e; border-bottom-color: #4ade80; }
+    .nav-item:hover { color: #1a1a2e; }
+    
+    /* Main Content */
+    .main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    
+    /* Stats Row */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .stat-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .stat-value { font-size: 28px; font-weight: 700; }
+    .stat-sub { font-size: 12px; color: #888; margin-top: 4px; }
+    .stat-value.green { color: #16a34a; }
+    .stat-value.orange { color: #ea580c; }
+    .stat-value.blue { color: #2563eb; }
+    
+    /* Section */
+    .section { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 24px; overflow: hidden; }
+    .section-header { padding: 20px 24px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+    .section-title { font-size: 16px; font-weight: 600; }
+    .section-action { background: #1a1a2e; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; }
+    .section-action:hover { background: #2a2a4e; }
+    
+    /* Table */
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: 12px 24px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; border-bottom: 1px solid #f0f0f0; }
+    td { padding: 14px 24px; font-size: 14px; border-bottom: 1px solid #f8f8f8; }
+    tr:hover { background: #fafafa; }
+    
+    /* Status Badges */
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+    .badge-new { background: #eff6ff; color: #2563eb; }
+    .badge-new::before { background: #2563eb; }
+    .badge-confirmed { background: #f0fdf4; color: #16a34a; }
+    .badge-confirmed::before { background: #16a34a; }
+    .badge-pending { background: #fffbeb; color: #d97706; }
+    .badge-pending::before { background: #d97706; }
+    .badge-paid { background: #f0fdf4; color: #16a34a; }
+    .badge-paid::before { background: #16a34a; }
+    .badge-processing { background: #faf5ff; color: #9333ea; }
+    .badge-processing::before { background: #9333ea; }
+    
+    /* Quick Actions */
+    .quick-actions { display: flex; gap: 12px; padding: 20px 24px; }
+    .quick-action { flex: 1; border: 2px dashed #e5e5e5; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .quick-action:hover { border-color: #4ade80; background: #f0fdf4; }
+    .quick-action-icon { font-size: 28px; margin-bottom: 8px; }
+    .quick-action-label { font-size: 13px; font-weight: 500; }
+    .quick-action-sub { font-size: 11px; color: #888; margin-top: 4px; }
+    
+    /* Payment Timeline */
+    .payment-row { display: flex; align-items: center; gap: 12px; padding: 16px 24px; border-bottom: 1px solid #f8f8f8; }
+    .payment-bar { flex: 1; height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
+    .payment-fill { height: 100%; border-radius: 4px; }
+    .payment-fill.green { background: #4ade80; }
+    .payment-fill.orange { background: #fb923c; }
+    .payment-fill.blue { background: #60a5fa; }
+    .payment-amount { font-size: 14px; font-weight: 600; min-width: 100px; text-align: right; }
+    .payment-label { font-size: 13px; min-width: 180px; }
+    .payment-date { font-size: 12px; color: #888; min-width: 100px; }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .quick-actions { flex-direction: column; }
+    }
+    
+    /* Footer */
+    .footer { text-align: center; padding: 40px 24px; color: #888; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-logo">Bau<span>struct</span> — Supplier Portal</div>
+    <div class="header-right">
+      <span class="header-badge">Lieferant</span>
+      <span class="header-company">Münchner Baustoffhandel GmbH</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav">
+    <div class="nav-item active">Dashboard</div>
+    <div class="nav-item">Bestellungen (12)</div>
+    <div class="nav-item">Lieferscheine</div>
+    <div class="nav-item">Rechnungen</div>
+    <div class="nav-item">Mein Profil</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Offene Bestellungen</div>
+        <div class="stat-value">12</div>
+        <div class="stat-sub">3 neue seit gestern</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Lieferscheine diese Woche</div>
+        <div class="stat-value green">8</div>
+        <div class="stat-sub">6 bestätigt, 2 offen</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Offene Rechnungen</div>
+        <div class="stat-value orange">€ 47.230</div>
+        <div class="stat-sub">5 Rechnungen</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ø Zahlungsziel</div>
+        <div class="stat-value blue">23 Tage</div>
+        <div class="stat-sub">↓ 7 Tage vs. vor Baustruct</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Schnellaktionen</div>
+      </div>
+      <div class="quick-actions">
+        <div class="quick-action">
+          <div class="quick-action-icon">📄</div>
+          <div class="quick-action-label">Lieferschein erstellen</div>
+          <div class="quick-action-sub">Für offene Bestellung</div>
+        </div>
+        <div class="quick-action">
+          <div class="quick-action-icon">🧾</div>
+          <div class="quick-action-label">Rechnung hochladen</div>
+          <div class="quick-action-sub">PDF → KI-Prüfung</div>
+        </div>
+        <div class="quick-action">
+          <div class="quick-action-icon">💰</div>
+          <div class="quick-action-label">Skonto anbieten</div>
+          <div class="quick-action-sub">Schnellere Zahlung</div>
+        </div>
+        <div class="quick-action">
+          <div class="quick-action-icon">📊</div>
+          <div class="quick-action-label">Preisliste aktualisieren</div>
+          <div class="quick-action-sub">CSV/Excel Upload</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Aktuelle Bestellungen</div>
+        <button class="section-action">Alle anzeigen →</button>
+      </div>
+      <table>
+        <tr>
+          <th>Bestell-Nr.</th>
+          <th>Kunde / Projekt</th>
+          <th>Material</th>
+          <th>Lieferdatum</th>
+          <th>Betrag</th>
+          <th>Status</th>
+        </tr>
+        <tr>
+          <td><strong>PO-2026-0847</strong></td>
+          <td>Wagner Bau GmbH<br><small style="color:#888">Projekt Olympiapark</small></td>
+          <td>Transportbeton C30/37</td>
+          <td>12.03.2026</td>
+          <td>€ 8.450</td>
+          <td><span class="badge badge-new">Neu</span></td>
+        </tr>
+        <tr>
+          <td><strong>PO-2026-0839</strong></td>
+          <td>Huber & Partner<br><small style="color:#888">Residenz Am See</small></td>
+          <td>Bewehrungsstahl BSt 500</td>
+          <td>13.03.2026</td>
+          <td>€ 12.890</td>
+          <td><span class="badge badge-new">Neu</span></td>
+        </tr>
+        <tr>
+          <td><strong>PO-2026-0821</strong></td>
+          <td>Wagner Bau GmbH<br><small style="color:#888">Projekt Olympiapark</small></td>
+          <td>Schalungsplatten 21mm</td>
+          <td>11.03.2026</td>
+          <td>€ 3.220</td>
+          <td><span class="badge badge-confirmed">Geliefert</span></td>
+        </tr>
+        <tr>
+          <td><strong>PO-2026-0815</strong></td>
+          <td>Meier Hochbau AG<br><small style="color:#888">Bürokomplex Nord</small></td>
+          <td>Dämmmaterial XPS 100mm</td>
+          <td>10.03.2026</td>
+          <td>€ 5.670</td>
+          <td><span class="badge badge-confirmed">Geliefert</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Invoice Status / Payment Timeline -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Zahlungs-Übersicht</div>
+        <button class="section-action">Rechnung hochladen</button>
+      </div>
+      <table>
+        <tr>
+          <th>Rechnung</th>
+          <th>Kunde</th>
+          <th>Betrag</th>
+          <th>Eingereicht</th>
+          <th>Voraus. Zahlung</th>
+          <th>Status</th>
+        </tr>
+        <tr>
+          <td><strong>RE-2026-1102</strong></td>
+          <td>Wagner Bau GmbH</td>
+          <td>€ 14.890</td>
+          <td>08.03.2026</td>
+          <td><strong style="color:#16a34a">14.03.2026</strong></td>
+          <td><span class="badge badge-confirmed">Freigegeben</span></td>
+        </tr>
+        <tr>
+          <td><strong>RE-2026-1098</strong></td>
+          <td>Huber & Partner</td>
+          <td>€ 8.340</td>
+          <td>07.03.2026</td>
+          <td>~20.03.2026</td>
+          <td><span class="badge badge-processing">KI-Prüfung</span></td>
+        </tr>
+        <tr>
+          <td><strong>RE-2026-1091</strong></td>
+          <td>Meier Hochbau AG</td>
+          <td>€ 24.000</td>
+          <td>05.03.2026</td>
+          <td>~25.03.2026</td>
+          <td><span class="badge badge-pending">Abweichung Pos. 3</span></td>
+        </tr>
+        <tr>
+          <td><strong>RE-2026-1084</strong></td>
+          <td>Wagner Bau GmbH</td>
+          <td>€ 6.780</td>
+          <td>01.03.2026</td>
+          <td>✅ 09.03.2026</td>
+          <td><span class="badge badge-paid">Bezahlt</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Notifications -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">🔔 Benachrichtigungen</div>
+      </div>
+      <div style="padding: 16px 24px; border-bottom: 1px solid #f8f8f8; display: flex; gap: 12px; align-items: start;">
+        <span style="font-size: 18px;">✅</span>
+        <div>
+          <div style="font-size: 14px;"><strong>Lieferschein LS-0821 bestätigt</strong> — Wagner Bau, Projekt Olympiapark</div>
+          <div style="font-size: 12px; color: #888; margin-top: 4px;">Heute, 14:32 — Polier M. Schmidt hat bestätigt, alle Positionen korrekt</div>
+        </div>
+      </div>
+      <div style="padding: 16px 24px; border-bottom: 1px solid #f8f8f8; display: flex; gap: 12px; align-items: start;">
+        <span style="font-size: 18px;">⚠️</span>
+        <div>
+          <div style="font-size: 14px;"><strong>Preisabweichung RE-1091</strong> — Position 3: Dämmplatten XPS</div>
+          <div style="font-size: 12px; color: #888; margin-top: 4px;">Heute, 11:15 — Vertragspreis €42/m² vs. Rechnung €45/m². Bitte Stellung nehmen.</div>
+        </div>
+      </div>
+      <div style="padding: 16px 24px; display: flex; gap: 12px; align-items: start;">
+        <span style="font-size: 18px;">📦</span>
+        <div>
+          <div style="font-size: 14px;"><strong>Neue Bestellung PO-0847</strong> — Wagner Bau GmbH</div>
+          <div style="font-size: 12px; color: #888; margin-top: 4px;">Heute, 09:00 — Transportbeton C30/37, 85m³, Lieferung gewünscht bis 12.03.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Baustruct by BauGPT — Supplier Portal v1.0 MVP Wireframe<br>
+    Erstellt: 2026-03-11 | Hugo 🚀
+  </div>
+
+</body>
+</html>
