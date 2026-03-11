@@ -1,6 +1,6 @@
 # ERP Integration Guide — BauGPT Procurement
-**Version:** 1.0 | **Stand:** 2026-03-11 | **Autor:** Hugo 🚀  
-**Status:** 🔧 Draft — Research + Architecture
+**Version:** 1.1 | **Stand:** 2026-03-11 | **Autor:** Hugo 🚀 | **Review:** Brunhilde 👩‍💻
+**Status:** 🔧 Draft — Research + Architecture | ⚠️ Konto-Mapping korrigiert (v1.1)
 
 ---
 
@@ -149,6 +149,19 @@ Aufwand: ~4-6 Wochen (Adapter + Testing)
 
 **Warum zuerst:** Gesetzliche Pflicht — 90%+ der deutschen Bau-KMU nutzen DATEV über ihren Steuerberater.
 
+**Korrigiertes Konto-Mapping (SKR03 + SKR04):**
+
+| Kategorie | SKR03 Konto | SKR04 Konto | Beschreibung |
+|-----------|-------------|-------------|--------------|
+| Baumaterial (Beton, Stahl, Holz, etc.) | **3200** | **5200** | Roh-, Hilfs- und Betriebsstoffe |
+| Handelswaren / Wiederverkauf | 3400 | 5400 | Nur wenn Material weiterverkauft wird |
+| Fremdleistungen / Subunternehmer | 3600 | 5900 | Nachunternehmerleistungen |
+| Transportkosten / Fracht | **4600** | **6800** | Frachtkosten, Nachnahme, Transportversicherung |
+| Kleinmaterial / Verbrauchsmaterial | 3100 | 5100 | Hilfs- und Betriebsstoffe |
+| Maschinenmiete | 4530 | 6130 | Miet- und Leasingkosten Maschinen |
+
+> ⚠️ **WICHTIG:** Konten 3400 (Waren) und 3800 (existiert nicht in Standard-SKR03) sind für Bau-Materialien FALSCH. Korrekte Konten sind 3200 / 4600 (SKR03) oder 5200 / 6800 (SKR04). Das KI-Auto-Mapping muss den Kontenrahmen des Kunden ermitteln und entsprechend mappen.
+
 **Integration-Approach:**
 ```
 Methode 1: DATEV-Buchungsstapel Export (Quick Win — MVP)
@@ -183,9 +196,17 @@ Aufwand: ~6-8 Wochen + Zertifizierungsprozess
 ```csv
 # DATEV Buchungsstapel — BauGPT Procurement Export
 # Header: Umsatz;S/H;Konto;Gegenkonto;BU;Datum;Buchungstext;Kostenstelle1;Belegfeld1
-1250.00;S;3400;70000;;1103;Lieferung Bewehrungsstahl Projekt München-Ost;4711;RE-2026-001
-892.50;S;3400;70000;;1103;Transportbeton C25/30 20m³;4711;RE-2026-002
+# SKR03: 3200 = Roh-, Hilfs- und Betriebsstoffe | 4600 = Frachtkosten | 70000 = Verbindlichkeiten LuL
+1250.00;S;3200;70000;;1103;Lieferung Bewehrungsstahl Projekt München-Ost;4711;RE-2026-001
+892.50;S;3200;70000;;1103;Transportbeton C25/30 20m³;4711;RE-2026-002
+185.00;S;4600;70000;;1103;Transportkosten Kies-Lieferung Projekt München-Ost;4711;RE-2026-003
 ```
+
+> ⚠️ **Konto-Mapping Review (Brunhilde, 2026-03-11):**
+> - **3400** ("Bezogene Waren") ist FALSCH für Baumaterialien — das ist das Konto für Handelswaren (Wiederverkauf). Korrekt ist **3200** "Roh-, Hilfs- und Betriebsstoffe" für Materialien die im Bau verbaut werden.
+> - **3800** existiert in DATEV SKR03 NICHT als Transportkonto. Korrekt ist **4600** "Frachtkosten" (Nachnahmegebühren, Transportversicherungen).
+> - Für SKR04-Nutzer: Material → **5200**, Transport → **6800** (Frachtkosten)
+> - Das KI-Auto-Mapping muss beide Kontenrahmen (SKR03 + SKR04) unterstützen.
 
 ### 4.3 Nevaris (P0 — MVP)
 
@@ -412,9 +433,9 @@ Schritt 2: Verbindung konfigurieren
 │  WJ-Beginn:       [01.01.2026]               │
 │                                              │
 │  📋 Konto-Mapping:                           │
-│  Material Beton    → Konto [3400]            │
-│  Material Stahl    → Konto [3400]            │
-│  Transportkosten   → Konto [3800]            │
+│  Material Beton    → Konto [3200]            │
+│  Material Stahl    → Konto [3200]            │
+│  Transportkosten   → Konto [4600]            │
 │  ...                                         │
 │                                              │
 │  [Verbindung testen]  [Speichern & Aktivieren]│
@@ -485,7 +506,7 @@ Schritt 3: Bestätigung
 
 | # | Entscheidung | Optionen | Empfehlung | Owner |
 |---|-------------|----------|------------|-------|
-| 1 | DATEV Zertifizierung jetzt oder später? | MVP ohne, Phase 2 mit | Phase 2 — CSV-Export reicht für MVP | Bob + Jonas |
+| 1 | DATEV Zertifizierung jetzt oder später? | MVP ohne, Phase 2 mit | **Phase 2 bestätigt** — CSV-Export reicht für MVP. Begründung: (1) Zertifizierungsprozess 6–8 Wochen + bürokratischer Overhead, (2) 90% der KMU-Kunden haben einen Steuerberater, der die CSV manuell importiert — das ist der tatsächliche Workflow, (3) Live-API-Sync ist ein Enterprise-Feature, kein MVP-Feature. Risiko: Kein DATEV-Logo auf der Preisseite → minimal, da Zielgruppe KMU, die CSV verstehen. | Brunhilde ✅ |
 | 2 | iTWO API vs. nur GAEB? | API = besser UX, GAEB = schneller | GAEB für MVP, API für Phase 2 | Bob |
 | 3 | Eigenes Export-UI oder Zapier-artig? | Custom UI / Zapier / Make.com | Custom UI — Bau-ERPs haben keine Zapier-Anbindung | Bob + Hugo |
 | 4 | XRechnung-Validierung selbst oder Service? | Eigene Lib / Peppol-Service | Eigene Lib (kosinus-xml) — Kontrolle | Bob |
