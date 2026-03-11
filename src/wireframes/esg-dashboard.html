@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baustruct — ESG Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; }
+    .sidebar { width: 240px; }
+    .donut-ring { fill: none; stroke-width: 3; }
+    .gauge-bg { fill: none; stroke: #e2e8f0; stroke-width: 8; stroke-linecap: round; }
+    .gauge-fill { fill: none; stroke: #22c55e; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s; }
+    .bar { height: 24px; border-radius: 4px; transition: width 0.6s ease; }
+    .trend-dot { r: 4; fill: white; stroke-width: 2; }
+  </style>
+</head>
+<body class="min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="sidebar bg-slate-900 text-white min-h-screen p-4 flex flex-col">
+    <div class="flex items-center gap-2 mb-8">
+      <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center font-bold text-sm">B</div>
+      <span class="font-semibold text-lg">Baustruct</span>
+    </div>
+    <nav class="flex-1 space-y-1">
+      <a href="procurement-dashboard.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white text-sm">
+        <span>📦</span> Dashboard
+      </a>
+      <a href="order-list.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white text-sm">
+        <span>📋</span> Bestellungen
+      </a>
+      <a href="delivery-confirm.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white text-sm">
+        <span>🚚</span> Lieferungen
+      </a>
+      <a href="invoice-list.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white text-sm">
+        <span>💰</span> Rechnungen
+      </a>
+      <a href="supplier-dashboard.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white text-sm">
+        <span>🏭</span> Lieferanten
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-slate-800 text-white text-sm font-medium">
+        <span>🌱</span> ESG & CO2
+      </a>
+      <a href="field-calendar.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white text-sm">
+        <span>📅</span> Kalender
+      </a>
+    </nav>
+    <div class="border-t border-slate-700 pt-4">
+      <div class="flex items-center gap-3 px-3 py-2">
+        <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-xs font-bold">AD</div>
+        <div>
+          <div class="text-sm font-medium">Andi Duschl</div>
+          <div class="text-xs text-slate-400">Admin</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8 overflow-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">ESG & Nachhaltigkeit</h1>
+        <p class="text-slate-500 text-sm mt-1">CO2-Tracking über alle Projekte — automatisch aus Lieferscheinen</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <select class="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white">
+          <option>2026</option>
+          <option>2025</option>
+        </select>
+        <button class="bg-white border border-slate-300 rounded-lg px-4 py-2 text-sm hover:bg-slate-50 flex items-center gap-2">
+          📄 Export PDF
+        </button>
+        <button class="bg-blue-600 text-white rounded-lg px-4 py-2 text-sm hover:bg-blue-700 flex items-center gap-2">
+          📊 CSRD Report
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI Cards Row -->
+    <div class="grid grid-cols-4 gap-4 mb-6">
+      <!-- Total CO2 -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm text-slate-500">Gesamt CO2e</span>
+          <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">Scope 1-3</span>
+        </div>
+        <div class="text-3xl font-bold text-slate-900">847 t</div>
+        <div class="text-sm text-green-600 mt-1">↓ -8.2% vs. Vorjahr</div>
+      </div>
+      <!-- Scope 3 -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm text-slate-500">Scope 3 (Material)</span>
+          <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">90%</span>
+        </div>
+        <div class="text-3xl font-bold text-slate-900">762 t</div>
+        <div class="text-sm text-slate-400 mt-1">aus 2.847 Lieferscheinen</div>
+      </div>
+      <!-- CO2 Intensity -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm text-slate-500">CO2-Intensität</span>
+          <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">↓ besser</span>
+        </div>
+        <div class="text-3xl font-bold text-slate-900">0.045</div>
+        <div class="text-sm text-slate-400 mt-1">kg CO2e / € Einkaufsvolumen</div>
+      </div>
+      <!-- Jahresziel -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm text-slate-500">Jahresziel 2026</span>
+          <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">On Track</span>
+        </div>
+        <div class="text-3xl font-bold text-green-600">55%</div>
+        <div class="text-sm text-slate-400 mt-1">Ziel: -15% vs. 2025</div>
+        <!-- Mini gauge bar -->
+        <div class="w-full bg-slate-100 rounded-full h-2 mt-3">
+          <div class="bg-green-500 h-2 rounded-full" style="width: 55%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-3 gap-4 mb-6">
+      <!-- Scope Donut -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5">
+        <h3 class="font-semibold text-slate-900 mb-4">Scope Breakdown</h3>
+        <div class="flex items-center justify-center">
+          <svg viewBox="0 0 120 120" class="w-40 h-40">
+            <!-- Scope 3 (90%) -->
+            <circle cx="60" cy="60" r="50" class="donut-ring" stroke="#3b82f6" stroke-dasharray="283" stroke-dashoffset="28" transform="rotate(-90 60 60)"/>
+            <!-- Scope 2 (7%) -->
+            <circle cx="60" cy="60" r="50" class="donut-ring" stroke="#f97316" stroke-dasharray="283" stroke-dashoffset="263" transform="rotate(234 60 60)"/>
+            <!-- Scope 1 (3%) -->
+            <circle cx="60" cy="60" r="50" class="donut-ring" stroke="#ef4444" stroke-dasharray="283" stroke-dashoffset="274" transform="rotate(259 60 60)"/>
+            <text x="60" y="56" text-anchor="middle" class="text-sm font-bold fill-slate-900" font-size="14">847 t</text>
+            <text x="60" y="72" text-anchor="middle" class="text-xs fill-slate-400" font-size="10">CO2e gesamt</text>
+          </svg>
+        </div>
+        <div class="flex justify-center gap-4 mt-4 text-xs">
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span> Scope 3 (90%)</span>
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-orange-500 inline-block"></span> Scope 2 (7%)</span>
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span> Scope 1 (3%)</span>
+        </div>
+      </div>
+
+      <!-- CO2 Trend Chart (12 months) -->
+      <div class="col-span-2 bg-white rounded-xl border border-slate-200 p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-semibold text-slate-900">CO2-Verlauf (12 Monate)</h3>
+          <div class="flex gap-2 text-xs">
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span> Scope 3</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-orange-500 inline-block"></span> Scope 2</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span> Scope 1</span>
+          </div>
+        </div>
+        <svg viewBox="0 0 600 200" class="w-full h-48">
+          <!-- Grid -->
+          <line x1="40" y1="20" x2="40" y2="170" stroke="#e2e8f0" stroke-width="1"/>
+          <line x1="40" y1="170" x2="580" y2="170" stroke="#e2e8f0" stroke-width="1"/>
+          <line x1="40" y1="95" x2="580" y2="95" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="4"/>
+          <line x1="40" y1="20" x2="580" y2="20" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="4"/>
+          <!-- Y axis labels -->
+          <text x="35" y="175" text-anchor="end" font-size="9" fill="#94a3b8">0t</text>
+          <text x="35" y="100" text-anchor="end" font-size="9" fill="#94a3b8">50t</text>
+          <text x="35" y="25" text-anchor="end" font-size="9" fill="#94a3b8">100t</text>
+          <!-- Scope 3 area (stacked) -->
+          <polygon points="40,50 85,55 130,40 175,60 220,45 265,65 310,55 355,50 400,70 445,60 490,75 535,65 580,55 580,170 40,170" fill="#3b82f6" opacity="0.15"/>
+          <polyline points="40,50 85,55 130,40 175,60 220,45 265,65 310,55 355,50 400,70 445,60 490,75 535,65 580,55" fill="none" stroke="#3b82f6" stroke-width="2"/>
+          <!-- Scope 2 area -->
+          <polygon points="40,145 85,148 130,142 175,150 220,144 265,147 310,146 355,143 400,149 445,146 490,150 535,148 580,145 580,170 40,170" fill="#f97316" opacity="0.15"/>
+          <polyline points="40,145 85,148 130,142 175,150 220,144 265,147 310,146 355,143 400,149 445,146 490,150 535,148 580,145" fill="none" stroke="#f97316" stroke-width="2"/>
+          <!-- X axis month labels -->
+          <text x="40" y="188" text-anchor="middle" font-size="9" fill="#94a3b8">Apr</text>
+          <text x="85" y="188" text-anchor="middle" font-size="9" fill="#94a3b8">Mai</text>
+          <text x="130" y="188" text-anchor="middle" font-size="9" fill="#94a3b8">Jun</text>
+          <text x="175" y="188" text-anchor="middle" font-size="9" fill="#94a3b8">Jul</text>
+          <text x="220" y="188" text-anchor="middle" font-size="9" fill="#94a3b8">Aug</text>
+          <text x="265" y="188" text-anchor="middle" font-size="9" fill="#94a3b8">Sep</text>
+          <text x="310" y="188" text-anchor="middle" font-size="9" fill="#94a3b8">Okt</text>
+          <text x="355" y="188" text-anchor="middle" font-size="9" fill="#94a3b8">Nov</text>
+          <text x="400" y="188" text-anchor="middle" font-size="9" fill="#94a3b8">Dez</text>
+          <text x="445" y="188" text-anchor="middle" font-size="9" fill="#94a3b8">Jan</text>
+          <text x="490" y="188" text-anchor="middle" font-size="9" fill="#94a3b8">Feb</text>
+          <text x="535" y="188" text-anchor="middle" font-size="9" fill="#94a3b8">Mär</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Middle Row: Top Projects + Top Materials -->
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <!-- Top CO2 Projects -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5">
+        <h3 class="font-semibold text-slate-900 mb-4">🏗️ Top CO2-Projekte</h3>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-slate-700">Neubau Hamburger Allee</span>
+              <span class="font-semibold text-slate-900">247 t</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="bg-blue-500 h-2.5 rounded-full" style="width: 100%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-slate-700">Sanierung Müller-Haus</span>
+              <span class="font-semibold text-slate-900">189 t</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="bg-blue-400 h-2.5 rounded-full" style="width: 76%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-slate-700">Gewerbepark Ost</span>
+              <span class="font-semibold text-slate-900">142 t</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="bg-blue-300 h-2.5 rounded-full" style="width: 57%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-slate-700">KiTa Sonnenschein</span>
+              <span class="font-semibold text-slate-900">98 t</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="bg-blue-200 h-2.5 rounded-full" style="width: 40%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-slate-700">Brücke Isarkanal</span>
+              <span class="font-semibold text-slate-900">71 t</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="bg-blue-100 h-2.5 rounded-full" style="width: 29%"></div>
+            </div>
+          </div>
+        </div>
+        <button class="text-blue-600 text-sm mt-4 hover:underline">Alle Projekte anzeigen →</button>
+      </div>
+
+      <!-- Top CO2 Materials -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5">
+        <h3 class="font-semibold text-slate-900 mb-4">🏭 Top CO2-Materialien</h3>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-slate-700">Beton / Transportbeton</span>
+              <span class="font-semibold text-slate-900">48%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="bg-amber-500 h-2.5 rounded-full" style="width: 96%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-slate-700">Bewehrungsstahl</span>
+              <span class="font-semibold text-slate-900">22%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="bg-amber-400 h-2.5 rounded-full" style="width: 44%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-slate-700">Dämmstoffe (EPS/XPS)</span>
+              <span class="font-semibold text-slate-900">8%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="bg-amber-300 h-2.5 rounded-full" style="width: 16%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-slate-700">Ziegel / Mauerwerk</span>
+              <span class="font-semibold text-slate-900">7%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="bg-amber-200 h-2.5 rounded-full" style="width: 14%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <div class="flex items-center gap-2">
+                <span class="text-slate-700">Holz (BSH/KVH)</span>
+                <span class="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">CO2-Speicher ✅</span>
+              </div>
+              <span class="font-semibold text-green-600">-3%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="bg-green-400 h-2.5 rounded-full" style="width: 6%"></div>
+            </div>
+          </div>
+        </div>
+        <button class="text-blue-600 text-sm mt-4 hover:underline">Alle Materialien anzeigen →</button>
+      </div>
+    </div>
+
+    <!-- Supplier CO2 Performance Table -->
+    <div class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold text-slate-900">🚚 Lieferanten CO2-Performance</h3>
+        <div class="flex gap-2">
+          <input type="text" placeholder="Lieferant suchen..." class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm w-48">
+          <select class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm bg-white">
+            <option>Alle Ratings</option>
+            <option>🟢 Green</option>
+            <option>🟡 Yellow</option>
+            <option>🔴 Red</option>
+          </select>
+        </div>
+      </div>
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-slate-200">
+            <th class="text-left py-3 px-2 text-slate-500 font-medium">Lieferant</th>
+            <th class="text-left py-3 px-2 text-slate-500 font-medium">Kategorie</th>
+            <th class="text-right py-3 px-2 text-slate-500 font-medium">Lieferungen</th>
+            <th class="text-right py-3 px-2 text-slate-500 font-medium">CO2/€</th>
+            <th class="text-right py-3 px-2 text-slate-500 font-medium">Trend (YoY)</th>
+            <th class="text-center py-3 px-2 text-slate-500 font-medium">Rating</th>
+            <th class="text-right py-3 px-2 text-slate-500 font-medium">Datenqualität</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-2 font-medium text-slate-900">Betonwerk Müller GmbH</td>
+            <td class="py-3 px-2 text-slate-600">Transportbeton</td>
+            <td class="py-3 px-2 text-right text-slate-700">342</td>
+            <td class="py-3 px-2 text-right font-mono text-slate-900">0.045</td>
+            <td class="py-3 px-2 text-right text-green-600">↓ -3.2%</td>
+            <td class="py-3 px-2 text-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">🟢 GREEN</span></td>
+            <td class="py-3 px-2 text-right"><span class="bg-green-50 text-green-700 px-2 py-0.5 rounded text-xs">ÖKOBAUDAT</span></td>
+          </tr>
+          <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-2 font-medium text-slate-900">Stahlhandel Süd AG</td>
+            <td class="py-3 px-2 text-slate-600">Bewehrungsstahl</td>
+            <td class="py-3 px-2 text-right text-slate-700">187</td>
+            <td class="py-3 px-2 text-right font-mono text-slate-900">0.082</td>
+            <td class="py-3 px-2 text-right text-slate-500">→ 0%</td>
+            <td class="py-3 px-2 text-center"><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-medium">🟡 YELLOW</span></td>
+            <td class="py-3 px-2 text-right"><span class="bg-green-50 text-green-700 px-2 py-0.5 rounded text-xs">ÖKOBAUDAT</span></td>
+          </tr>
+          <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-2 font-medium text-slate-900">Isolierungen Weber GmbH</td>
+            <td class="py-3 px-2 text-slate-600">Dämmstoffe</td>
+            <td class="py-3 px-2 text-right text-slate-700">94</td>
+            <td class="py-3 px-2 text-right font-mono text-slate-900">0.134</td>
+            <td class="py-3 px-2 text-right text-red-600">↑ +5.1%</td>
+            <td class="py-3 px-2 text-center"><span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-medium">🔴 RED</span></td>
+            <td class="py-3 px-2 text-right"><span class="bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded text-xs">Schätzwert</span></td>
+          </tr>
+          <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-3 px-2 font-medium text-slate-900">Holzwerk Alpenland</td>
+            <td class="py-3 px-2 text-slate-600">BSH / KVH</td>
+            <td class="py-3 px-2 text-right text-slate-700">56</td>
+            <td class="py-3 px-2 text-right font-mono text-green-600">-0.012</td>
+            <td class="py-3 px-2 text-right text-green-600">↓ -1.8%</td>
+            <td class="py-3 px-2 text-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">🟢 GREEN</span></td>
+            <td class="py-3 px-2 text-right"><span class="bg-green-50 text-green-700 px-2 py-0.5 rounded text-xs">ÖKOBAUDAT</span></td>
+          </tr>
+          <tr class="hover:bg-slate-50">
+            <td class="py-3 px-2 font-medium text-slate-900">Ziegel-Union Bayern</td>
+            <td class="py-3 px-2 text-slate-600">Mauerwerk</td>
+            <td class="py-3 px-2 text-right text-slate-700">128</td>
+            <td class="py-3 px-2 text-right font-mono text-slate-900">0.067</td>
+            <td class="py-3 px-2 text-right text-green-600">↓ -2.4%</td>
+            <td class="py-3 px-2 text-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">🟢 GREEN</span></td>
+            <td class="py-3 px-2 text-right"><span class="bg-green-50 text-green-700 px-2 py-0.5 rounded text-xs">ÖKOBAUDAT</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Data Quality & CSRD Status -->
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <!-- Data Quality -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5">
+        <h3 class="font-semibold text-slate-900 mb-4">📊 Datenqualität</h3>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500"></span> ÖKOBAUDAT (hoch)</span>
+              <span class="font-medium">82%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-3">
+              <div class="bg-green-500 h-3 rounded-full" style="width: 82%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-yellow-500"></span> Schätzwert (mittel)</span>
+              <span class="font-medium">14%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-3">
+              <div class="bg-yellow-500 h-3 rounded-full" style="width: 14%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-red-500"></span> Unbekannt (niedrig)</span>
+              <span class="font-medium">4%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-3">
+              <div class="bg-red-500 h-3 rounded-full" style="width: 4%"></div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-slate-400 mt-4">⚠️ 4% der Positionen ohne Material-Mapping — manuell prüfen</p>
+      </div>
+
+      <!-- CSRD Readiness -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5">
+        <h3 class="font-semibold text-slate-900 mb-4">📋 CSRD-Bereitschaft</h3>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between p-3 rounded-lg bg-green-50">
+            <span class="text-sm text-slate-700">✅ Scope 1 — Direkte Emissionen</span>
+            <span class="text-sm font-medium text-green-700">12.4 t CO2e</span>
+          </div>
+          <div class="flex items-center justify-between p-3 rounded-lg bg-green-50">
+            <span class="text-sm text-slate-700">✅ Scope 2 — Energie</span>
+            <span class="text-sm font-medium text-green-700">8.7 t CO2e</span>
+          </div>
+          <div class="flex items-center justify-between p-3 rounded-lg bg-green-50">
+            <span class="text-sm text-slate-700">✅ Scope 3 — Lieferkette</span>
+            <span class="text-sm font-medium text-green-700">826 t CO2e</span>
+          </div>
+          <div class="flex items-center justify-between p-3 rounded-lg bg-yellow-50">
+            <span class="text-sm text-slate-700">⚠️ 3 Positionen ohne Kategorie</span>
+            <button class="text-xs text-blue-600 hover:underline">Jetzt zuordnen →</button>
+          </div>
+          <div class="flex items-center justify-between p-3 rounded-lg bg-yellow-50">
+            <span class="text-sm text-slate-700">⚠️ Stromlieferant nicht verknüpft</span>
+            <button class="text-xs text-blue-600 hover:underline">Verknüpfen →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center text-xs text-slate-400 py-4">
+      Baustruct ESG Dashboard — Wireframe v1.0 | Basierend auf Rainman's esg-dashboard-spec.md | Hugo 🚀 Sprint Run
+    </div>
+  </main>
+
+</body>
+</html>
