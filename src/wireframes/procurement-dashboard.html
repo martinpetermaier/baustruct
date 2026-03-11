@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BauGPT Procurement — Einkauf Dashboard</title>
+<style>
+  :root {
+    --primary: #1a56db;
+    --primary-light: #e8edfb;
+    --success: #059669;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,.1);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-50); color: var(--gray-900); }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed; left:0; top:0; bottom:0; width: 240px;
+    background: var(--gray-900); color: #fff; padding: 24px 16px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .sidebar .logo { font-size: 20px; font-weight: 700; margin-bottom: 32px; padding: 0 8px; }
+  .sidebar .logo span { color: var(--primary); }
+  .sidebar a {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    color: var(--gray-300); text-decoration: none; border-radius: 8px;
+    font-size: 14px; transition: all .15s;
+  }
+  .sidebar a:hover { background: rgba(255,255,255,.08); color: #fff; }
+  .sidebar a.active { background: var(--primary); color: #fff; }
+  .sidebar .section-label { font-size: 11px; text-transform: uppercase; color: var(--gray-500); padding: 16px 12px 6px; letter-spacing: .5px; }
+
+  /* Main */
+  .main { margin-left: 240px; padding: 32px; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+  .topbar h1 { font-size: 24px; font-weight: 700; }
+  .topbar .actions { display: flex; gap: 10px; }
+  .btn {
+    padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600;
+    border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-outline { background: #fff; border: 1px solid var(--gray-200); color: var(--gray-700); }
+
+  /* KPI Cards */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .kpi-card {
+    background: #fff; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+    border-left: 4px solid var(--primary);
+  }
+  .kpi-card.success { border-left-color: var(--success); }
+  .kpi-card.warning { border-left-color: var(--warning); }
+  .kpi-card.danger { border-left-color: var(--danger); }
+  .kpi-label { font-size: 13px; color: var(--gray-500); margin-bottom: 6px; }
+  .kpi-value { font-size: 28px; font-weight: 700; }
+  .kpi-sub { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+
+  /* Panels */
+  .panels { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+  .panel {
+    background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+  }
+  .panel-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 20px; border-bottom: 1px solid var(--gray-200);
+  }
+  .panel-header h3 { font-size: 15px; font-weight: 600; }
+
+  /* Orders Table */
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 10px 20px; font-size: 12px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: .3px; background: var(--gray-50); }
+  td { padding: 12px 20px; font-size: 14px; border-top: 1px solid var(--gray-100); }
+  tr:hover td { background: var(--gray-50); }
+
+  /* Status Badges */
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-yellow { background: #fef3c7; color: #92400e; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-gray { background: var(--gray-100); color: var(--gray-700); }
+
+  /* Alerts List */
+  .alert-item {
+    display: flex; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--gray-100);
+    align-items: flex-start;
+  }
+  .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .alert-text { font-size: 13px; color: var(--gray-700); line-height: 1.5; }
+  .alert-text strong { color: var(--gray-900); }
+  .alert-time { font-size: 11px; color: var(--gray-500); margin-top: 4px; }
+
+  /* Filter Bar */
+  .filter-bar {
+    display: flex; gap: 10px; margin-bottom: 20px; align-items: center;
+  }
+  .filter-bar select, .filter-bar input {
+    padding: 8px 12px; border: 1px solid var(--gray-200); border-radius: 8px;
+    font-size: 13px; background: #fff;
+  }
+  .filter-bar input { width: 260px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--gray-200); margin-bottom: 20px; }
+  .tab {
+    padding: 10px 20px; font-size: 14px; font-weight: 500; color: var(--gray-500);
+    border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer;
+  }
+  .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+</style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<nav class="sidebar">
+  <div class="logo">Bau<span>Struct</span></div>
+  <div class="section-label">Übersicht</div>
+  <a href="#" class="active">📊 Dashboard</a>
+  <a href="#">📦 Bestellungen</a>
+  <a href="#">📋 Lieferscheine</a>
+  <a href="#">🧾 Rechnungen</a>
+  <div class="section-label">Einkauf</div>
+  <a href="#">📚 Produktkatalog</a>
+  <a href="#">🏢 Lieferanten</a>
+  <a href="#">📈 Auswertungen</a>
+  <a href="#">💰 Preisvergleich</a>
+  <div class="section-label">System</div>
+  <a href="#">🔌 ERP-Integration</a>
+  <a href="#">⚙️ Einstellungen</a>
+  <a href="#">❓ Hilfe</a>
+</nav>
+
+<!-- Main Content -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <h1>Einkauf Dashboard</h1>
+      <p style="color:var(--gray-500); font-size:14px; margin-top:4px;">Projekt: Neubau Therme Bad Aibling — KW 11/2026</p>
+    </div>
+    <div class="actions">
+      <button class="btn btn-outline">📥 Export CSV</button>
+      <button class="btn btn-primary">+ Neue Bestellung</button>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Offene Bestellungen</div>
+      <div class="kpi-value">23</div>
+      <div class="kpi-sub">↑ 3 seit gestern</div>
+    </div>
+    <div class="kpi-card success">
+      <div class="kpi-label">3-Way-Match Rate</div>
+      <div class="kpi-value">94.2%</div>
+      <div class="kpi-sub">Ziel: >95% — fast da! 🎯</div>
+    </div>
+    <div class="kpi-card warning">
+      <div class="kpi-label">Preisabweichungen</div>
+      <div class="kpi-value">7</div>
+      <div class="kpi-sub">€12.340 Gesamtdifferenz</div>
+    </div>
+    <div class="kpi-card danger">
+      <div class="kpi-label">Skonto verfällt</div>
+      <div class="kpi-value">3</div>
+      <div class="kpi-sub">€4.890 in nächsten 48h</div>
+    </div>
+  </div>
+
+  <!-- Filter & Tabs -->
+  <div class="tabs">
+    <div class="tab active">Alle Bestellungen</div>
+    <div class="tab">Lieferscheine offen</div>
+    <div class="tab">Rechnungen (AI-geprüft)</div>
+    <div class="tab">Preisabweichungen</div>
+  </div>
+
+  <div class="filter-bar">
+    <input type="text" placeholder="🔍 Suche: Bestellnr., Lieferant, Material...">
+    <select>
+      <option>Alle Projekte</option>
+      <option selected>Neubau Therme Bad Aibling</option>
+      <option>Bürokomplex München-Ost</option>
+      <option>Wohnanlage Rosenheim</option>
+    </select>
+    <select>
+      <option>Alle Status</option>
+      <option>Offen</option>
+      <option>Geliefert</option>
+      <option>Abgeglichen</option>
+      <option>Abweichung</option>
+    </select>
+    <select>
+      <option>Alle Lieferanten</option>
+      <option>Baustoff Meier GmbH</option>
+      <option>Stahl Schmidt KG</option>
+      <option>Beton Bayern AG</option>
+    </select>
+  </div>
+
+  <!-- Main Panels -->
+  <div class="panels">
+    <!-- Orders Table -->
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Aktuelle Bestellungen</h3>
+        <span style="font-size:13px; color:var(--gray-500);">23 Ergebnisse</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Bestellnr.</th>
+            <th>Lieferant</th>
+            <th>Material</th>
+            <th>Wert</th>
+            <th>Status</th>
+            <th>Match</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>B-2026-0847</strong></td>
+            <td>Baustoff Meier GmbH</td>
+            <td>Bewehrungsstahl BSt 500</td>
+            <td>€18.420</td>
+            <td><span class="badge badge-green">Geliefert</span></td>
+            <td><span class="badge badge-green">✅ Match</span></td>
+          </tr>
+          <tr>
+            <td><strong>B-2026-0846</strong></td>
+            <td>Beton Bayern AG</td>
+            <td>Transportbeton C30/37</td>
+            <td>€9.750</td>
+            <td><span class="badge badge-yellow">Teillieferung</span></td>
+            <td><span class="badge badge-gray">⏳ Offen</span></td>
+          </tr>
+          <tr>
+            <td><strong>B-2026-0845</strong></td>
+            <td>Stahl Schmidt KG</td>
+            <td>Stahlträger HEB 300</td>
+            <td>€34.200</td>
+            <td><span class="badge badge-green">Geliefert</span></td>
+            <td><span class="badge badge-red">⚠️ Abweichung</span></td>
+          </tr>
+          <tr>
+            <td><strong>B-2026-0844</strong></td>
+            <td>Dämm & Co GmbH</td>
+            <td>XPS Dämmplatten 120mm</td>
+            <td>€6.890</td>
+            <td><span class="badge badge-blue">Bestellt</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+          </tr>
+          <tr>
+            <td><strong>B-2026-0843</strong></td>
+            <td>Baustoff Meier GmbH</td>
+            <td>Schalungsplatten 27mm</td>
+            <td>€4.560</td>
+            <td><span class="badge badge-green">Geliefert</span></td>
+            <td><span class="badge badge-green">✅ Match</span></td>
+          </tr>
+          <tr>
+            <td><strong>B-2026-0842</strong></td>
+            <td>Beton Bayern AG</td>
+            <td>Pumpbeton C25/30</td>
+            <td>€7.200</td>
+            <td><span class="badge badge-yellow">Unterwegs</span></td>
+            <td><span class="badge badge-gray">—</span></td>
+          </tr>
+          <tr>
+            <td><strong>B-2026-0841</strong></td>
+            <td>Elektro Huber</td>
+            <td>NYM-J 5x2.5 Kabel</td>
+            <td>€2.340</td>
+            <td><span class="badge badge-green">Geliefert</span></td>
+            <td><span class="badge badge-red">⚠️ Abweichung</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Right Sidebar: Alerts + Quick Actions -->
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <!-- AI Alerts -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>🤖 KI-Alerts</h3>
+          <span style="font-size:12px; color:var(--danger); font-weight:600;">4 neu</span>
+        </div>
+        <div class="alert-item">
+          <span class="alert-icon">🔴</span>
+          <div>
+            <div class="alert-text"><strong>Preisabweichung +8.3%</strong> — Stahl Schmidt KG hat €2.840 mehr berechnet als Vertragspreis (HEB 300).</div>
+            <div class="alert-time">vor 23 Min. · B-2026-0845</div>
+          </div>
+        </div>
+        <div class="alert-item">
+          <span class="alert-icon">🟡</span>
+          <div>
+            <div class="alert-text"><strong>Skonto-Frist läuft ab</strong> — Baustoff Meier: €1.230 Skonto in 18h (2% / 14 Tage).</div>
+            <div class="alert-time">vor 1 Std. · R-2026-1102</div>
+          </div>
+        </div>
+        <div class="alert-item">
+          <span class="alert-icon">🟡</span>
+          <div>
+            <div class="alert-text"><strong>Mengenabweichung</strong> — Elektro Huber: 480m statt 500m NYM-Kabel geliefert (−4%).</div>
+            <div class="alert-time">vor 2 Std. · B-2026-0841</div>
+          </div>
+        </div>
+        <div class="alert-item">
+          <span class="alert-icon">🟢</span>
+          <div>
+            <div class="alert-text"><strong>Auto-Match erfolgreich</strong> — 3 Rechnungen automatisch abgeglichen & buchungsfertig (€31.670).</div>
+            <div class="alert-time">vor 3 Std.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Suppliers -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Top Lieferanten (KW 11)</h3>
+        </div>
+        <div style="padding: 16px 20px;">
+          <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--gray-100); font-size:14px;">
+            <span>🏢 Baustoff Meier GmbH</span>
+            <span style="font-weight:600;">€42.8K</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--gray-100); font-size:14px;">
+            <span>🏗️ Stahl Schmidt KG</span>
+            <span style="font-weight:600;">€34.2K</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--gray-100); font-size:14px;">
+            <span>🧱 Beton Bayern AG</span>
+            <span style="font-weight:600;">€16.9K</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:8px 0; font-size:14px;">
+            <span>⚡ Elektro Huber</span>
+            <span style="font-weight:600;">€8.7K</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Savings -->
+      <div class="panel" style="border-left: 4px solid var(--success);">
+        <div style="padding: 20px;">
+          <div style="font-size:13px; color:var(--gray-500);">💰 Einsparungen diesen Monat</div>
+          <div style="font-size:32px; font-weight:700; color:var(--success); margin:8px 0;">€8.420</div>
+          <div style="font-size:13px; color:var(--gray-500);">
+            durch KI-Preisabgleich (€5.1K)<br>
+            + Skonto-Optimierung (€3.3K)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>BauGPT Procurement — Vollständiger Pitch</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body { 
+    font-family: 'Inter', system-ui, sans-serif;
+    background: white;
+    color: #111;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 20mm 22mm;
+    page-break-after: always;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media print {
+    .page { page-break-after: always; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media screen {
+    body { background: #e5e7eb; }
+    .page { 
+      margin: 20px auto;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+      background: white;
+    }
+  }
+
+  /* Cover */
+  .cover { background: linear-gradient(145deg, #0f172a 0%, #1e3a5f 60%, #0f3460 100%); color: white; }
+  .cover-accent { background: linear-gradient(135deg, #ea580c, #f97316); }
+
+  /* Section headers */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #ea580c;
+    margin-bottom: 8px;
+  }
+  
+  h1 { font-size: 42px; font-weight: 900; line-height: 1.05; color: #0f172a; }
+  h2 { font-size: 28px; font-weight: 800; line-height: 1.1; color: #0f172a; }
+  h3 { font-size: 18px; font-weight: 700; color: #0f172a; }
+  h4 { font-size: 14px; font-weight: 700; color: #374151; }
+  
+  p { color: #374151; margin-bottom: 12px; }
+  
+  .lead { font-size: 17px; color: #374151; line-height: 1.7; margin-bottom: 20px; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  th { background: #f8fafc; font-weight: 700; color: #374151; padding: 10px 12px; text-align: left; border-bottom: 2px solid #e2e8f0; }
+  td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; color: #374151; }
+  tr:hover td { background: #f8fafc; }
+  .td-green { color: #16a34a; font-weight: 600; }
+  .td-red { color: #dc2626; }
+  .td-orange { color: #ea580c; font-weight: 600; }
+  .row-highlight td { background: #fff7ed; }
+
+  /* Cards */
+  .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; }
+  .card-orange { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px; padding: 18px; }
+  .card-green { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 18px; }
+  .card-blue { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 18px; }
+  .card-red { background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 18px; }
+
+  /* Grids */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+
+  /* Stats */
+  .stat-box { text-align: center; padding: 20px 12px; }
+  .stat-num { font-size: 36px; font-weight: 900; color: #ea580c; line-height: 1; }
+  .stat-label { font-size: 11px; color: #6b7280; margin-top: 4px; line-height: 1.4; }
+
+  /* Flow */
+  .flow { display: flex; align-items: center; gap: 8px; margin: 16px 0; }
+  .flow-step { flex: 1; text-align: center; background: #f1f5f9; border-radius: 8px; padding: 14px 8px; font-size: 12px; }
+  .flow-step-active { background: #fff7ed; border: 1px solid #fed7aa; }
+  .flow-arrow { color: #9ca3af; font-size: 18px; flex-shrink: 0; }
+  .flow-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+  .flow-title { font-weight: 700; font-size: 11px; color: #374151; }
+  .flow-sub { font-size: 10px; color: #6b7280; margin-top: 2px; }
+
+  /* Check list */
+  .checklist { list-style: none; }
+  .checklist li { display: flex; gap: 8px; margin-bottom: 8px; font-size: 13px; color: #374151; }
+  .checklist li::before { content: "✓"; color: #16a34a; font-weight: 700; flex-shrink: 0; }
+  .xlist li::before { content: "✗"; color: #dc2626; }
+
+  /* Quote */
+  .quote { border-left: 3px solid #ea580c; padding: 12px 16px; background: #fff7ed; border-radius: 0 8px 8px 0; font-style: italic; color: #374151; margin: 16px 0; }
+  .quote-author { font-style: normal; font-weight: 600; font-size: 12px; color: #6b7280; margin-top: 6px; }
+
+  /* Page number */
+  .page-footer { margin-top: auto; padding-top: 16px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af; }
+
+  /* Divider */
+  hr { border: none; border-top: 1px solid #e2e8f0; margin: 18px 0; }
+
+  /* Highlight box */
+  .highlight { background: linear-gradient(135deg, #ea580c, #f97316); color: white; border-radius: 10px; padding: 18px; }
+  .highlight h3 { color: white; }
+  .highlight p { color: rgba(255,255,255,0.85); margin-bottom: 0; }
+
+  /* Phase badge */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; }
+  .badge-orange { background: #fed7aa; color: #9a3412; }
+  .badge-blue { background: #bfdbfe; color: #1e40af; }
+  .badge-green { background: #bbf7d0; color: #14532d; }
+  .badge-gray { background: #e5e7eb; color: #374151; }
+
+  /* Timeline */
+  .timeline-item { display: flex; gap: 16px; margin-bottom: 16px; }
+  .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: #ea580c; flex-shrink: 0; margin-top: 4px; }
+  .timeline-line { width: 2px; background: #e2e8f0; margin: 16px auto 0; flex-shrink: 0; }
+
+  /* Cover styles */
+  .cover h1 { color: white; font-size: 48px; }
+  .cover p { color: rgba(255,255,255,0.75); }
+  .cover .section-label { color: #fb923c; }
+  .cover-tag { display: inline-block; padding: 5px 14px; border-radius: 100px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.85); margin-right: 8px; margin-top: 8px; }
+
+  .toc-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dotted #e2e8f0; font-size: 13px; }
+  .toc-num { color: #9ca3af; font-size: 12px; }
+
+  .risk-item { display: grid; grid-template-columns: 2fr 1fr 1fr 2fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 12px; align-items: center; }
+  .risk-high { color: #dc2626; font-weight: 600; }
+  .risk-med { color: #d97706; font-weight: 600; }
+  .risk-low { color: #16a34a; font-weight: 600; }
+  
+  .kpi-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 8px; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 12px; align-items: center; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="page cover">
+  <div style="margin-bottom: auto">
+    <div style="width:52px;height:52px;background:#ea580c;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:40px">🏗️</div>
+    <div class="section-label">Produktidee · Vertraulich · März 2026</div>
+    <h1 style="margin-bottom:8px">BauGPT<br>Procurement</h1>
+    <div style="width:60px;height:4px;background:#ea580c;margin:20px 0"></div>
+    <p style="font-size:20px;color:rgba(255,255,255,0.8);max-width:480px;line-height:1.5">Automatische Materialbeschaffung und Rechnungsprüfung für Bauunternehmen — gebaut auf BauGPT's KI-Infrastruktur und 1.000+ Kundenbasis.</p>
+    <div style="margin-top:32px">
+      <span class="cover-tag">Neues Produktmodul</span>
+      <span class="cover-tag">1.000+ Bestandskunden</span>
+      <span class="cover-tag">€480M TAM DACH</span>
+    </div>
+  </div>
+  <div style="margin-top:60px">
+    <p style="font-size:12px;color:rgba(255,255,255,0.4)">Erstellt: März 2026 | BauGPT Marketing | VERTRAULICH — nur für interne Verwendung</p>
+  </div>
+</div>
+
+<!-- PAGE 2: INHALTSVERZEICHNIS -->
+<div class="page">
+  <div class="section-label">Inhalt</div>
+  <h2 style="margin-bottom:28px">Inhaltsverzeichnis</h2>
+  
+  <div class="toc-item"><span><strong>1. Executive Summary</strong></span><span class="toc-num">3</span></div>
+  <div class="toc-item"><span>2. Das Problem — Rechnungschaos im Bau</span><span class="toc-num">4</span></div>
+  <div class="toc-item"><span>3. Marktvalidierung — Comstruct als Beweis</span><span class="toc-num">5</span></div>
+  <div class="toc-item"><span>4. Marktgröße & TAM Analyse</span><span class="toc-num">6</span></div>
+  <div class="toc-item"><span>5. Die Lösung — BauGPT Procurement</span><span class="toc-num">7</span></div>
+  <div class="toc-item"><span>6. Produktfunktionen & User Personas</span><span class="toc-num">8–9</span></div>
+  <div class="toc-item"><span>7. KI-Technologie & Differenzierung</span><span class="toc-num">10</span></div>
+  <div class="toc-item"><span>8. Wettbewerbsanalyse & Positionierung</span><span class="toc-num">11–12</span></div>
+  <div class="toc-item"><span>9. BauGPT's strategische Vorteile</span><span class="toc-num">13</span></div>
+  <div class="toc-item"><span>10. Business Model & Pricing</span><span class="toc-num">14–15</span></div>
+  <div class="toc-item"><span>11. Unit Economics & Finanzmodell</span><span class="toc-num">16–17</span></div>
+  <div class="toc-item"><span>12. ROI-Analyse für Kunden</span><span class="toc-num">18</span></div>
+  <div class="toc-item"><span>13. Go-to-Market Strategie</span><span class="toc-num">19–20</span></div>
+  <div class="toc-item"><span>14. Technische Architektur</span><span class="toc-num">21–22</span></div>
+  <div class="toc-item"><span>15. Produktroadmap (18 Monate)</span><span class="toc-num">23–24</span></div>
+  <div class="toc-item"><span>16. ESG & Nachhaltigkeits-Reporting</span><span class="toc-num">25</span></div>
+  <div class="toc-item"><span>17. Risiken & Mitigierungsstrategien</span><span class="toc-num">26</span></div>
+  <div class="toc-item"><span>18. Team & Ressourcenbedarf</span><span class="toc-num">27</span></div>
+  <div class="toc-item"><span>19. Milestones & Erfolgskennzahlen</span><span class="toc-num">28</span></div>
+  <div class="toc-item"><span>20. Entscheidungsmatrix & Next Steps</span><span class="toc-num">29</span></div>
+  <div class="toc-item"><span>Anhang: Detaillierte Finanzkalkulation</span><span class="toc-num">30</span></div>
+  
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 2</span></div>
+</div>
+
+<!-- PAGE 3: EXECUTIVE SUMMARY -->
+<div class="page">
+  <div class="section-label">1. Executive Summary</div>
+  <h2 style="margin-bottom:16px">Die Chance auf einen Blick</h2>
+  
+  <div class="highlight" style="margin-bottom:20px">
+    <h3 style="margin-bottom:8px">Bottom Line</h3>
+    <p>BauGPT kann mit einem neuen Procurement-Modul den €480M DACH-Markt für digitale Materialbeschaffung adressieren — mit dem entscheidenden Vorteil: 1.000+ Bestandskunden und bestehende KI-Infrastruktur. Comstruct hat dafür €12,5M Funding benötigt und 2 Jahre gebraucht. Wir starten mit Distribution Day 1.</p>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h4 style="margin-bottom:10px">Problem</h4>
+      <p style="font-size:13px">Bauunternehmen verschwenden täglich 2–3 Stunden pro Buchhalter mit manueller Rechnungsprüfung. Papier-Lieferscheine, fehlende Transparenz, verpasste Skonti und manuelle Fehler kosten die Branche Milliarden.</p>
+    </div>
+    <div>
+      <h4 style="margin-bottom:10px">Lösung</h4>
+      <p style="font-size:13px">BauGPT Procurement automatisiert den kompletten Procure-to-Pay-Prozess: Von der digitalen Bestellung über KI-gestützte Lieferscheinerkennung bis zur automatischen Rechnungsprüfung und ERP-Buchung.</p>
+    </div>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:16px">
+    <div class="card" style="text-align:center">
+      <div class="stat-num">€480M</div>
+      <div class="stat-label">TAM DACH<br>pro Jahr</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div class="stat-num" style="font-size:28px">1.000+</div>
+      <div class="stat-label">Bestandskunden<br>als Startbasis</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div class="stat-num">95%</div>
+      <div class="stat-label">Rechnungen<br>buchungsfertig</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div class="stat-num">5Mo</div>
+      <div class="stat-label">MVP bis<br>Public Launch</div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card-green">
+      <h4 style="margin-bottom:6px;color:#14532d">✓ Strategische Stärken</h4>
+      <ul class="checklist" style="font-size:12px">
+        <li>Existierende Kundenbasis</li>
+        <li>KI-Infrastruktur vorhanden</li>
+        <li>Brand-Trust in Baubranche</li>
+        <li>Cross-Sell zu BauGPT Pro</li>
+      </ul>
+    </div>
+    <div class="card-orange">
+      <h4 style="margin-bottom:6px">⚡ Quick Wins</h4>
+      <ul class="checklist" style="font-size:12px">
+        <li>20 Beta-Kunden in 8 Wochen</li>
+        <li>€1.750 MRR nach 3 Monaten</li>
+        <li>Procore Integration (Marktplatz)</li>
+        <li>CSRD-konformes ESG Reporting</li>
+      </ul>
+    </div>
+    <div class="card-blue">
+      <h4 style="margin-bottom:6px;color:#1e40af">📈 Wachstumspotenzial</h4>
+      <ul class="checklist" style="font-size:12px">
+        <li>€80–120k ARR in Jahr 1</li>
+        <li>>130% NRR (Vol. wächst)</li>
+        <li>Enterprise Deal Potenzial</li>
+        <li>EU Expansion ab Jahr 2</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 3</span></div>
+</div>
+
+<!-- PAGE 4: DAS PROBLEM -->
+<div class="page">
+  <div class="section-label">2. Das Problem</div>
+  <h2 style="margin-bottom:6px">Rechnungsprüfung im Bau ist gebrochen</h2>
+  <p class="lead">Jedes Bauunternehmen kennt das Problem. Aber kaum jemand hat es bisher gelöst.</p>
+
+  <div class="grid-3" style="margin-bottom:18px">
+    <div class="card-red" style="text-align:center">
+      <div style="font-size:32px;font-weight:900;color:#dc2626">2–3h</div>
+      <div style="font-size:12px;color:#7f1d1d;margin-top:4px">täglich pro Buchhalter für manuelle Rechnungsprüfung</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:32px;font-weight:900;color:#ea580c">12%</div>
+      <div style="font-size:12px;color:#6b7280;margin-top:4px">Mehrkosten durch Fehler bei manueller Mengenerfassung und Rechnungsstellung</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:32px;font-weight:900;color:#d97706">68%</div>
+      <div style="font-size:12px;color:#6b7280;margin-top:4px">der Bauunternehmen kämpfen mit Zahlungsverzögerungen durch Rechnungsfehler</div>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:12px">Die 5 größten Pain Points</h3>
+  
+  <div style="margin-bottom:10px">
+    <div class="card" style="margin-bottom:8px">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:20px;flex-shrink:0">📄</span>
+        <div><h4 style="margin-bottom:3px">1. Papier-Chaos auf der Baustelle</h4><p style="font-size:12px;margin:0">Lieferscheine werden handschriftlich ausgefüllt, oft unleserlich, häufig verloren. Der Polier hat keine digitale Ablage. Die Buchhaltung wartet Tage auf den Beleg.</p></div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:8px">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:20px;flex-shrink:0">🔍</span>
+        <div><h4 style="margin-bottom:3px">2. Manuelle Rechnungsprüfung frisst Zeit</h4><p style="font-size:12px;margin:0">Buchhalter müssen jede Rechnung manuell mit Lieferscheinen und Bestellungen abgleichen — Position für Position. ERNE AG: 2–3 Stunden täglich für diesen einen Prozess.</p></div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:8px">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:20px;flex-shrink:0">❌</span>
+        <div><h4 style="margin-bottom:3px">3. Falsch abgerechnete Positionen unbemerkt</h4><p style="font-size:12px;margin:0">Lieferanten rechnen Mengen oder Preise ab, die nicht dem Vertrag entsprechen. Ohne Positionsvergleich mit KI bleiben Abweichungen häufig unentdeckt.</p></div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:8px">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:20px;flex-shrink:0">⏰</span>
+        <div><h4 style="margin-bottom:3px">4. Skonti werden verpasst</h4><p style="font-size:12px;margin:0">Zahlungsziele von 10–14 Tagen werden verpasst, weil Rechnungen zu spät geprüft werden. Durchschnittlich 2–3% Skonto = tausende Euro Verlust pro Jahr.</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:20px;flex-shrink:0">🌍</span>
+        <div><h4 style="margin-bottom:3px">5. Kein ESG-Reporting möglich</h4><p style="font-size:12px;margin:0">CSRD (EU Corporate Sustainability Reporting Directive) verlangt ab 2026 CO₂-Reporting. Ohne digitale Materialdaten ist das unmöglich.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote">"Rechnungsprüfung und Freigabe dauerten täglich zwei bis drei Stunden wegen der vielen Rechnungen. Heute, dank comstruct, dauert es nur Minuten."
+    <div class="quote-author">— Adrian Wiederkehr, Finanzbuchhalter, Implenia Schweiz AG</div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 4</span></div>
+</div>
+
+<!-- PAGE 5: MARKTVALIDIERUNG -->
+<div class="page">
+  <div class="section-label">3. Marktvalidierung</div>
+  <h2 style="margin-bottom:6px">Comstruct beweist: der Markt zahlt</h2>
+  <p class="lead">Ein Münchner Startup hat in 3 Jahren bewiesen, dass Bauunternehmen für dieses Problem zahlen. Jetzt ist es Zeit für BauGPT.</p>
+
+  <div class="grid-2" style="margin-bottom:18px">
+    <div>
+      <div class="card-orange" style="margin-bottom:14px">
+        <h4 style="margin-bottom:8px">Comstruct — Factsheet</h4>
+        <table style="font-size:12px;margin:0">
+          <tr><td style="padding:4px 0;border:none;font-weight:600">Gegründet:</td><td style="border:none">2022, München</td></tr>
+          <tr><td style="padding:4px 0;border:none;font-weight:600">Funding:</td><td style="border:none">€12,5M (Feb 2025)</td></tr>
+          <tr><td style="padding:4px 0;border:none;font-weight:600">Investoren:</td><td style="border:none">GV (Google Ventures), 20VC</td></tr>
+          <tr><td style="padding:4px 0;border:none;font-weight:600">Kunden:</td><td style="border:none">HOCHTIEF, Implenia, ERNE AG</td></tr>
+          <tr><td style="padding:4px 0;border:none;font-weight:600">Märkte:</td><td style="border:none">DACH + SE, NO, FR, PL, CZ</td></tr>
+          <tr><td style="padding:4px 0;border:none;font-weight:600">Partnerschaft:</td><td style="border:none">RIB Software (März 2026)</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h4 style="margin-bottom:8px">Weitere Marktbeweise</h4>
+        <p style="font-size:12px"><strong>Schüttflix</strong> (Schüttgut-Logistik): €45M+ Funding — beweist Zahlungsbereitschaft für Bau-Digitalisierung</p>
+        <p style="font-size:12px;margin-bottom:0"><strong>Tacto</strong> (Einkauf-Software Bau): Series A — beweist Procurement-Nachfrage</p>
+      </div>
+    </div>
+    <div>
+      <h4 style="margin-bottom:10px">Was Comstruct validiert hat</h4>
+      <ul class="checklist" style="font-size:13px;margin-bottom:14px">
+        <li>Bauunternehmen zahlen für automatische Rechnungsprüfung</li>
+        <li>Per-Document Pricing funktioniert (kein Abo-Widerstand)</li>
+        <li>Großunternehmen (HOCHTIEF) kaufen — also auch Mid-Market</li>
+        <li>ERP-Integration ist Must-have (RIB Partnership)</li>
+        <li>ESG-Reporting ist ein echter Treiber (CSRD)</li>
+        <li>Mobile Field App ist zwingend (Polier-Nutzung)</li>
+      </ul>
+      <div class="highlight">
+        <h4 style="color:white;margin-bottom:6px">Der entscheidende Unterschied</h4>
+        <p style="font-size:13px">Comstruct musste €12,5M aufwenden um 1.000 Unternehmenskontakte aufzubauen. BauGPT <em>hat diese Kunden bereits.</em></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote">"comstruct ist ein schneller und zuverlässiger Partner. Sie haben genau verstanden, wo wir bei HOCHTIEF welche Herausforderungen mit Materialdaten hatten."
+    <div class="quote-author">— Maximilian von Wedel, HOCHTIEF</div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 5</span></div>
+</div>
+
+<!-- PAGE 6: MARKTGRÖSSE -->
+<div class="page">
+  <div class="section-label">4. Marktgröße & TAM Analyse</div>
+  <h2 style="margin-bottom:16px">€480M+ adressierbarer Markt in DACH</h2>
+
+  <div class="grid-3" style="margin-bottom:20px">
+    <div class="card" style="text-align:center">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#9ca3af;margin-bottom:8px">TAM — Gesamtmarkt</div>
+      <div style="font-size:28px;font-weight:900;color:#0f172a">€2,1 Mrd.</div>
+      <div style="font-size:11px;color:#6b7280;margin-top:4px">Europa gesamt<br>(Comstruct Expansion-Ziel)</div>
+    </div>
+    <div class="card-orange" style="text-align:center">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#9a3412;margin-bottom:8px">SAM — DACH Markt</div>
+      <div style="font-size:28px;font-weight:900;color:#ea580c">€480 Mio.</div>
+      <div style="font-size:11px;color:#9a3412;margin-top:4px">Deutschland + AT + CH<br>Unser Primärmarkt</div>
+    </div>
+    <div class="card-green" style="text-align:center">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#14532d;margin-bottom:8px">SOM — Erreichbar (3J)</div>
+      <div style="font-size:28px;font-weight:900;color:#16a34a">€4,8 Mio.</div>
+      <div style="font-size:11px;color:#14532d;margin-top:4px">1% DACH-Markt<br>= konservatives Ziel</div>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:12px">Bottom-up TAM Kalkulation</h3>
+  <table>
+    <thead><tr><th>Parameter</th><th>Basis</th><th>Konservativ</th><th>Optimistisch</th></tr></thead>
+    <tbody>
+      <tr><td>Bauunternehmen DACH</td><td>~80.000</td><td>80.000</td><td>80.000</td></tr>
+      <tr><td>Adressierbar (>10 MA)</td><td>~25.000</td><td>20.000</td><td>25.000</td></tr>
+      <tr class="row-highlight"><td><strong>Ø Dokumente/Monat</strong></td><td><strong>200</strong></td><td>100</td><td>300</td></tr>
+      <tr class="row-highlight"><td><strong>Ø Preis/Dokument</strong></td><td><strong>€0,40</strong></td><td>€0,35</td><td>€0,50</td></tr>
+      <tr><td><strong>TAM/Jahr</strong></td><td><strong>€480M</strong></td><td>€210M</td><td>€900M</td></tr>
+    </tbody>
+  </table>
+
+  <div class="grid-2" style="margin-top:16px">
+    <div class="card">
+      <h4 style="margin-bottom:8px">Warum jetzt der richtige Zeitpunkt</h4>
+      <ul class="checklist" style="font-size:12px">
+        <li>CSRD ab 2026: ESG-Reporting Pflicht für Unternehmen >250 MA</li>
+        <li>Fachkräftemangel treibt Automatisierung</li>
+        <li>ERP-Anbieter öffnen APIs (RIB, SAP)</li>
+        <li>Digitalisierungsbereitschaft nach Corona gestiegen</li>
+        <li>KI-Technologie jetzt preiswert genug für KMU</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-bottom:8px">BauGPT's erreichbares Segment</h4>
+      <ul class="checklist" style="font-size:12px">
+        <li>1.000+ bestehende BauGPT Pro Kunden (Sofort-Pipeline)</li>
+        <li>Mittelstand 50–500 MA (Hauptziel)</li>
+        <li>Subunternehmer (Einfacheres Produkt)</li>
+        <li>Totalunternehmer (Premium, Enterprise)</li>
+        <li>Lieferanten (Supplier Portal Add-on)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 6</span></div>
+</div>
+
+<!-- PAGE 7: DIE LÖSUNG -->
+<div class="page">
+  <div class="section-label">5. Die Lösung</div>
+  <h2 style="margin-bottom:6px">BauGPT Procurement — Vollautomatischer Procure-to-Pay</h2>
+  <p class="lead">Ein durchgängiger digitaler Prozess — von der Bestellung bis zur gebuchten Rechnung.</p>
+
+  <div class="flow" style="margin-bottom:20px">
+    <div class="flow-step">
+      <span class="flow-icon">🛒</span>
+      <div class="flow-title">Bestellung</div>
+      <div class="flow-sub">Einkäufer legt PO an<br>inkl. Vertragspreise</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step flow-step-active">
+      <span class="flow-icon">📱</span>
+      <div class="flow-title">Lieferschein</div>
+      <div class="flow-sub">Polier bestätigt<br>per App auf Baustelle</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="flow-icon">🤖</span>
+      <div class="flow-title">KI-Prüfung</div>
+      <div class="flow-sub">Automatischer<br>3-Way-Match</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="flow-icon">💡</span>
+      <div class="flow-title">Kontierung</div>
+      <div class="flow-sub">KI schlägt<br>Buchungskonto vor</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step flow-step-active">
+      <span class="flow-icon">✅</span>
+      <div class="flow-title">ERP-Buchung</div>
+      <div class="flow-sub">Direkt in RIB,<br>SAP, Abacus</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h3 style="margin-bottom:10px">Kern-Versprechen</h3>
+      <ul class="checklist">
+        <li><strong>>95%</strong> der Rechnungen direkt buchungsfertig</li>
+        <li>KI erkennt Preisabweichungen auf Positionsebene</li>
+        <li>Skonto-Management automatisch (keine verpassten Fristen)</li>
+        <li>Mobile App für Poliere (offline-fähig, iOS & Android)</li>
+        <li>Direkte ERP-Integration (kein manuelles Abtippen)</li>
+        <li>ESG / CO₂-Reporting (CSRD-konform)</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Was BauGPT Procurement NICHT ist</h3>
+      <ul style="list-style:none;font-size:13px">
+        <li style="display:flex;gap:8px;margin-bottom:8px;color:#374151"><span style="color:#dc2626">✗</span>Kein allgemeines ERP (nur Procurement-Layer)</li>
+        <li style="display:flex;gap:8px;margin-bottom:8px;color:#374151"><span style="color:#dc2626">✗</span>Kein Personalplanungs-Tool</li>
+        <li style="display:flex;gap:8px;margin-bottom:8px;color:#374151"><span style="color:#dc2626">✗</span>Kein Projektmanagement-System</li>
+        <li style="display:flex;gap:8px;margin-bottom:8px;color:#374151"><span style="color:#dc2626">✗</span>Kein Ersatz für das ERP — Ergänzung dazu</li>
+      </ul>
+      <div class="card" style="margin-top:12px;background:#f0fdf4;border-color:#bbf7d0">
+        <p style="font-size:12px;margin:0;color:#14532d"><strong>Positionierung:</strong> BauGPT Procurement ist der "letzte Meter" zwischen Baustelle, Lieferant und Buchhaltungssystem — und dieser Meter ist bisher vollständig analog.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+      <div style="text-align:center"><div style="font-size:24px;font-weight:900">2–3h</div><div style="font-size:11px;opacity:0.8">Rechnungsprüfung bisher täglich</div></div>
+      <div style="text-align:center;border-left:1px solid rgba(255,255,255,0.3);border-right:1px solid rgba(255,255,255,0.3)"><div style="font-size:24px;font-weight:900">→ Min.</div><div style="font-size:11px;opacity:0.8">mit BauGPT Procurement</div></div>
+      <div style="text-align:center"><div style="font-size:24px;font-weight:900">€25.500</div><div style="font-size:11px;opacity:0.8">ROI pro Kunde/Jahr</div></div>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 7</span></div>
+</div>
+
+<!-- PAGE 8: FEATURES BAUSTELLE + EINKAUF -->
+<div class="page">
+  <div class="section-label">6. Produktfunktionen</div>
+  <h2 style="margin-bottom:6px">Drei Personas. Drei Dashboards. Ein System.</h2>
+  <p style="margin-bottom:16px;color:#6b7280">Jede Rolle erhält genau die Funktionen, die sie braucht — nicht mehr, nicht weniger.</p>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <!-- Baustelle -->
+    <div>
+      <div style="background:#ea580c;color:white;border-radius:10px 10px 0 0;padding:14px 18px">
+        <div style="font-size:22px;margin-bottom:4px">🏗️</div>
+        <h3 style="color:white;font-size:16px">Baustelle</h3>
+        <p style="color:rgba(255,255,255,0.8);font-size:12px;margin:0">Polier & Bauleiter — Mobile First</p>
+      </div>
+      <div class="card" style="border-radius:0 0 10px 10px;border-top:none">
+        <h4 style="margin-bottom:8px;margin-top:4px">Lieferkalender</h4>
+        <p style="font-size:12px">Tages- und Wochenansicht aller geplanten Lieferungen. Wer kommt wann mit was? Inkl. Push-Notifications bei Verzögerungen.</p>
+        <h4 style="margin-bottom:8px">Digitaler Lieferschein</h4>
+        <p style="font-size:12px">Lieferscheine vom Lieferanten direkt in der App. Bestätigen mit einem Tap. Abweichungen markieren, Schäden fotografieren.</p>
+        <h4 style="margin-bottom:8px">Offline-Fähigkeit</h4>
+        <p style="font-size:12px">Baustellen haben selten gutes LTE. App funktioniert offline, synchronisiert wenn Verbindung verfügbar.</p>
+        <h4 style="margin-bottom:8px">Verbrauchsauswertung</h4>
+        <p style="font-size:12px;margin-bottom:0">Was wurde auf dieser Baustelle verbraucht? Vergleich zu Budget und Planung auf einen Blick.</p>
+      </div>
+    </div>
+    <!-- Einkauf -->
+    <div>
+      <div style="background:#1e40af;color:white;border-radius:10px 10px 0 0;padding:14px 18px">
+        <div style="font-size:22px;margin-bottom:4px">🛒</div>
+        <h3 style="color:white;font-size:16px">Einkauf</h3>
+        <p style="color:rgba(255,255,255,0.8);font-size:12px;margin:0">Procurement Manager — Web Dashboard</p>
+      </div>
+      <div class="card" style="border-radius:0 0 10px 10px;border-top:none">
+        <h4 style="margin-bottom:8px;margin-top:4px">Produktkatalog</h4>
+        <p style="font-size:12px">Bestellbare Produkte pro Projekt konfigurieren. Vertragspreise hinterlegen. Lieferanten zuordnen. CSV-Import möglich.</p>
+        <h4 style="margin-bottom:8px">Bestellfreigabe</h4>
+        <p style="font-size:12px">Bestellanfragen der Baustellen prüfen und freigeben. Mehrstufige Approval-Workflows konfigurierbar. Budgetlimits automatisch überwachen.</p>
+        <h4 style="margin-bottom:8px">Automatischer Rechnungsabgleich</h4>
+        <p style="font-size:12px">Eingehende Rechnungen automatisch mit hinterlegten Vertragspreisen vergleichen. Abweichungen sofort sichtbar.</p>
+        <h4 style="margin-bottom:8px">Lieferantenmanagement</h4>
+        <p style="font-size:12px;margin-bottom:0">Performance-Dashboard pro Lieferant: Pünktlichkeit, Qualität, Preisgenauigkeit. Grundlage für Verhandlungen.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="background:#f8fafc">
+    <div style="display:flex;gap:16px;align-items:center">
+      <span style="font-size:28px">📱</span>
+      <div>
+        <h4 style="margin-bottom:4px">Mobile App — iOS & Android</h4>
+        <p style="font-size:12px;margin:0">Die Baustellen-App ist für rauhe Bedingungen gebaut: großer Tap-Bereich, hoher Kontrast, Foto-Integration für Schadensfotos, Push-Notifications. Poliere haben die App vom ersten Tag an genutzt — so wie bei ERNE AG ("Unsere Poliere haben die Tools von Tag 1 an genutzt und es funktioniert heute noch wunderbar.").</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 8</span></div>
+</div>
+
+<!-- PAGE 9: FEATURES FINANZEN + LIEFERANT -->
+<div class="page">
+  <div class="section-label">6. Produktfunktionen (Fortsetzung)</div>
+  <h2 style="margin-bottom:16px">Finanzen & Lieferanten-Portal</h2>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <!-- Finanzen -->
+    <div>
+      <div style="background:#14532d;color:white;border-radius:10px 10px 0 0;padding:14px 18px">
+        <div style="font-size:22px;margin-bottom:4px">💼</div>
+        <h3 style="color:white;font-size:16px">Finanzen</h3>
+        <p style="color:rgba(255,255,255,0.8);font-size:12px;margin:0">Buchhalter & CFO — Web Dashboard</p>
+      </div>
+      <div class="card" style="border-radius:0 0 10px 10px;border-top:none">
+        <h4 style="margin-bottom:8px;margin-top:4px">Automatische Rechnungsprüfung</h4>
+        <p style="font-size:12px">KI liest eingehende Rechnungen per OCR aus. Automatischer 3-Way-Match: Bestellung ↔ Lieferschein ↔ Rechnung. >95% buchungsfertig.</p>
+        <h4 style="margin-bottom:8px">KI-Kontierungsvorschläge</h4>
+        <p style="font-size:12px">Für jede Rechnung: KI schlägt Sachkonto, Kostenstelle, Projekt vor. Basierend auf historischen Buchungen. Einmal-Klick-Übernahme.</p>
+        <h4 style="margin-bottom:8px">Skonto-Management</h4>
+        <p style="font-size:12px">Dashboard mit Zahlungsfristen, Ampel-System (grün/gelb/rot), Hochrechnung des Skonto-Potenzials. Keine verpassten Fristen mehr.</p>
+        <h4 style="margin-bottom:8px">ERP-Direktbuchung</h4>
+        <p style="font-size:12px;margin-bottom:0">Geprüfte Rechnungen direkt in ERP buchen: RIB, SAP, Abacus, Sorba. Kein manuelles Abtippen. Buchungsbeleg automatisch erstellt.</p>
+      </div>
+    </div>
+    <!-- Supplier Portal -->
+    <div>
+      <div style="background:#4c1d95;color:white;border-radius:10px 10px 0 0;padding:14px 18px">
+        <div style="font-size:22px;margin-bottom:4px">🏭</div>
+        <h3 style="color:white;font-size:16px">Supplier Portal</h3>
+        <p style="color:rgba(255,255,255,0.8);font-size:12px;margin:0">Lieferanten — Phase 2</p>
+      </div>
+      <div class="card" style="border-radius:0 0 10px 10px;border-top:none">
+        <h4 style="margin-bottom:8px;margin-top:4px">Digitale Lieferschein-Übermittlung</h4>
+        <p style="font-size:12px">Lieferanten können Lieferscheine direkt digital übermitteln — als strukturierte Daten oder PDF-Upload. Kein Papier mehr.</p>
+        <h4 style="margin-bottom:8px">Auftragsbestätigungen</h4>
+        <p style="font-size:12px">Bestellungen digital bestätigen. Liefertermin kommunizieren. Änderungen automatisch an Einkauf + Baustelle melden.</p>
+        <h4 style="margin-bottom:8px">Rechnungsstellung vereinfacht</h4>
+        <p style="font-size:12px">Rechnungen auf Basis bestätigter Lieferscheine erstellen. Automatische Prüfung gegen Bestelldaten spart Rückfragen.</p>
+        <h4 style="margin-bottom:8px">EDI-Integration</h4>
+        <p style="font-size:12px;margin-bottom:0">Für große Lieferanten: EDI-Anbindung für vollautomatischen Datenaustausch ohne manuellen Eingriff.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:10px">Übersicht aller Funktionen nach MVP-Priorität</h3>
+  <table style="font-size:12px">
+    <thead><tr><th>Funktion</th><th>Persona</th><th>MVP (Phase 1)</th><th>Phase 2</th><th>Phase 3</th></tr></thead>
+    <tbody>
+      <tr><td>Lieferkalender</td><td>Polier</td><td class="td-green">✓</td><td></td><td></td></tr>
+      <tr><td>Digitaler Lieferschein (App)</td><td>Polier</td><td class="td-green">✓</td><td></td><td></td></tr>
+      <tr><td>Produktkatalog</td><td>Einkauf</td><td class="td-green">✓</td><td></td><td></td></tr>
+      <tr><td>Automatische Rechnungsprüfung (KI)</td><td>Finanzen</td><td class="td-green">✓</td><td></td><td></td></tr>
+      <tr><td>KI-Kontierungsvorschläge</td><td>Finanzen</td><td class="td-green">✓</td><td></td><td></td></tr>
+      <tr><td>Bestellfreigabe (Workflow)</td><td>Einkauf</td><td class="td-green">✓</td><td></td><td></td></tr>
+      <tr><td>Skonto-Management</td><td>Finanzen</td><td></td><td class="td-orange">✓</td><td></td></tr>
+      <tr><td>Supplier Portal</td><td>Lieferant</td><td></td><td class="td-orange">✓</td><td></td></tr>
+      <tr><td>ERP-Integration (RIB, SAP)</td><td>Finanzen</td><td></td><td class="td-orange">✓</td><td></td></tr>
+      <tr><td>ESG / CO₂-Reporting</td><td>Alle</td><td></td><td class="td-orange">✓</td><td></td></tr>
+      <tr><td>Procore Marketplace</td><td>Alle</td><td></td><td></td><td>✓</td></tr>
+      <tr><td>Multi-Tenant Enterprise</td><td>Alle</td><td></td><td></td><td>✓</td></tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 9</span></div>
+</div>
+
+<!-- PAGE 10: KI TECHNOLOGIE -->
+<div class="page">
+  <div class="section-label">7. KI-Technologie</div>
+  <h2 style="margin-bottom:6px">KI ist der Kern — nicht ein Feature</h2>
+  <p class="lead">BauGPT's bestehende KI-Infrastruktur ist der entscheidende Technologievorteil gegenüber traditionellen Procurement-Lösungen.</p>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h3 style="margin-bottom:12px">KI-Pipeline: Rechnung → Buchung</h3>
+      <div class="timeline-item">
+        <div style="width:32px;height:32px;background:#ea580c;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:12px;flex-shrink:0">1</div>
+        <div><h4 style="margin-bottom:3px">OCR + PDF Parsing</h4><p style="font-size:12px;margin:0">PDF-Rechnung wird per OCR in Text konvertiert. Strukturierte Extraktion via GPT-4o: Lieferant, Datum, Positionen, Preise.</p></div>
+      </div>
+      <div class="timeline-item">
+        <div style="width:32px;height:32px;background:#ea580c;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:12px;flex-shrink:0">2</div>
+        <div><h4 style="margin-bottom:3px">Fuzzy Matching</h4><p style="font-size:12px;margin:0">KI ordnet Rechnungspositionen den entsprechenden Lieferschein-Positionen und Bestellpositionen zu — auch bei abweichenden Bezeichnungen.</p></div>
+      </div>
+      <div class="timeline-item">
+        <div style="width:32px;height:32px;background:#ea580c;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:12px;flex-shrink:0">3</div>
+        <div><h4 style="margin-bottom:3px">3-Way-Match</h4><p style="font-size:12px;margin:0">Automatischer Vergleich: Bestellung ↔ Lieferschein ↔ Rechnung. Toleranzgrenzen konfigurierbar (±2% Preis, ±5% Menge).</p></div>
+      </div>
+      <div class="timeline-item">
+        <div style="width:32px;height:32px;background:#16a34a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:12px;flex-shrink:0">4</div>
+        <div><h4 style="margin-bottom:3px">Kontierungsvorschlag</h4><p style="font-size:12px;margin:0">KI schlägt Sachkonto und Kostenstelle basierend auf historischen Buchungen vor. Selbstlernend — wird mit jedem Eintrag besser.</p></div>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:12px">KI-Performance Metriken</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>Metrik</th><th>Zielwert</th><th>Comstruct</th></tr></thead>
+        <tbody>
+          <tr><td>Rechnungen buchungsfertig</td><td class="td-green">>95%</td><td>>95%</td></tr>
+          <tr><td>OCR Genauigkeit</td><td class="td-green">>98%</td><td>k.A.</td></tr>
+          <tr><td>Verarbeitungszeit/Rechnung</td><td class="td-green">&lt;30 Sek.</td><td>k.A.</td></tr>
+          <tr><td>Falsch-Positiv Rate (Alarm)</td><td class="td-green">&lt;2%</td><td>k.A.</td></tr>
+          <tr><td>Kontierungs-Accuracy</td><td class="td-green">>90%</td><td>k.A.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card-orange" style="margin-top:14px">
+        <h4 style="margin-bottom:8px">BauGPT's bestehende KI-Assets</h4>
+        <ul class="checklist" style="font-size:12px">
+          <li>OpenAI GPT-4o API-Zugang (bereits integriert)</li>
+          <li>Dokumenten-Verständnis aus BauGPT Pro</li>
+          <li>DSGVO-konforme Datenverarbeitung (DE-Server)</li>
+          <li>KI-Team & Infrastruktur vorhanden</li>
+          <li>300+ Bau-Templates als Trainingsgrundlage</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h4 style="margin-bottom:6px">Selbstlernender Vorteil</h4>
+        <p style="font-size:12px;margin:0">Mit jedem genehmigten Buchungsvorschlag wird das System besser. BauGPT Procurement lernt die spezifischen Präferenzen jedes Unternehmens.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 10</span></div>
+</div>
+
+<!-- PAGE 11: WETTBEWERB -->
+<div class="page">
+  <div class="section-label">8. Wettbewerbsanalyse</div>
+  <h2 style="margin-bottom:16px">Marktposition & Differenzierung</h2>
+
+  <table style="font-size:12px;margin-bottom:16px">
+    <thead>
+      <tr>
+        <th style="width:20%">Anbieter</th>
+        <th>Fokus</th>
+        <th>Stärken</th>
+        <th>Schwächen</th>
+        <th>Pricing</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="row-highlight">
+        <td><strong>BauGPT Procurement</strong></td>
+        <td>P2P Bau, KI-native</td>
+        <td>1.000+ Kunden, KI-Infra, Bundle</td>
+        <td>Neu im Markt</td>
+        <td>Per-Doc</td>
+      </tr>
+      <tr>
+        <td>Comstruct</td>
+        <td>P2P Bau, spezifisch</td>
+        <td>Bau-Fokus, EU-Expansion</td>
+        <td>Kein Kundennetz, teuer</td>
+        <td>Per-Doc</td>
+      </tr>
+      <tr>
+        <td>Procore</td>
+        <td>Projektmanagement</td>
+        <td>Große Marktposition</td>
+        <td>Generisch, teuer, komplex</td>
+        <td>Abo</td>
+      </tr>
+      <tr>
+        <td>RIB Software</td>
+        <td>ERP Bau</td>
+        <td>ERP-Marktführer</td>
+        <td>Kein eigenständiges P2P-Tool</td>
+        <td>Lizenz</td>
+      </tr>
+      <tr>
+        <td>4PS / MS Dynamics</td>
+        <td>ERP (Enterprise)</td>
+        <td>Umfangreiche ERP-Funktionen</td>
+        <td>Komplex, teuer, langsam</td>
+        <td>Lizenz</td>
+      </tr>
+      <tr>
+        <td>openHandwerk</td>
+        <td>Handwerk, KMU</td>
+        <td>Einfach, deutsch</td>
+        <td>Kein Baufokus, kein KI</td>
+        <td>Abo</td>
+      </tr>
+      <tr>
+        <td>Tacto</td>
+        <td>Procurement allgemein</td>
+        <td>Modernes UI</td>
+        <td>Kein Baufokus, kein Feld-App</td>
+        <td>Abo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="grid-2">
+    <div class="card-green">
+      <h4 style="margin-bottom:8px;color:#14532d">BauGPT's klare Differenzierung</h4>
+      <ul class="checklist" style="font-size:12px">
+        <li><strong>Distribution:</strong> 1.000+ Kunden am Tag 1 — niemand sonst hat das</li>
+        <li><strong>Bundle:</strong> Recruiting + KI + Procurement = Full-Stack Bau-Plattform</li>
+        <li><strong>KI-native:</strong> Kein Bolt-on — KI ist der Kern des Produkts</li>
+        <li><strong>DSGVO:</strong> Deutsche Server, von Anfang an compliant</li>
+        <li><strong>Preis:</strong> Aggressiver durch Cross-Sell-Marge möglich</li>
+      </ul>
+    </div>
+    <div class="card-red">
+      <h4 style="margin-bottom:8px;color:#7f1d1d">Risiken im Wettbewerb</h4>
+      <ul style="list-style:none;font-size:12px">
+        <li style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#dc2626;flex-shrink:0">⚠</span>Comstruct könnte aggressiv auf BauGPT-Kunden zugehen</li>
+        <li style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#dc2626;flex-shrink:0">⚠</span>RIB könnte eigenständiges P2P-Modul entwickeln</li>
+        <li style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#dc2626;flex-shrink:0">⚠</span>Procore könnte europäischen Fokus verstärken</li>
+        <li style="display:flex;gap:8px"><span style="color:#dc2626;flex-shrink:0">⚠</span>SAP könnte KMU-Lösung launchen</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 11</span></div>
+</div>
+
+<!-- PAGE 12: FEATURE MATRIX -->
+<div class="page">
+  <div class="section-label">8. Wettbewerbsanalyse (Fortsetzung)</div>
+  <h2 style="margin-bottom:16px">Feature-Matrix im Detail</h2>
+
+  <table style="font-size:12px">
+    <thead>
+      <tr>
+        <th style="width:30%">Feature</th>
+        <th style="text-align:center">BauGPT</th>
+        <th style="text-align:center">Comstruct</th>
+        <th style="text-align:center">Procore</th>
+        <th style="text-align:center">RIB</th>
+        <th style="text-align:center">Tacto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="row-highlight"><td><strong>1.000+ Bestandskunden</strong></td><td class="td-green" style="text-align:center">✓</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td></tr>
+      <tr><td>Automatische Rechnungsprüfung</td><td class="td-green" style="text-align:center">✓</td><td class="td-green" style="text-align:center">✓</td><td style="text-align:center;color:#d97706">~</td><td style="text-align:center;color:#d97706">~</td><td class="td-red" style="text-align:center">✗</td></tr>
+      <tr><td>Mobile Field App (Polier)</td><td class="td-green" style="text-align:center">✓</td><td class="td-green" style="text-align:center">✓</td><td class="td-green" style="text-align:center">✓</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td></tr>
+      <tr class="row-highlight"><td><strong>Recruiting Bundle</strong></td><td class="td-green" style="text-align:center">✓</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td></tr>
+      <tr><td>ESG / CO₂ Reporting</td><td class="td-green" style="text-align:center">✓</td><td class="td-green" style="text-align:center">✓</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td></tr>
+      <tr><td>ERP-Integration (RIB, SAP)</td><td class="td-green" style="text-align:center">✓</td><td class="td-green" style="text-align:center">✓</td><td style="text-align:center;color:#d97706">~</td><td class="td-green" style="text-align:center">✓</td><td class="td-red" style="text-align:center">✗</td></tr>
+      <tr><td>Offline-fähige App</td><td class="td-green" style="text-align:center">✓</td><td class="td-green" style="text-align:center">✓</td><td style="text-align:center;color:#d97706">~</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td></tr>
+      <tr><td>Per-Document Pricing</td><td class="td-green" style="text-align:center">✓</td><td class="td-green" style="text-align:center">✓</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td></tr>
+      <tr><td>KI-Kontierungsvorschläge</td><td class="td-green" style="text-align:center">✓</td><td style="text-align:center;color:#d97706">~</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td><td class="td-red" style="text-align:center">✗</td></tr>
+      <tr class="row-highlight"><td><strong>DSGVO / DE-Server</strong></td><td class="td-green" style="text-align:center">✓</td><td class="td-green" style="text-align:center">✓</td><td style="text-align:center;color:#d97706">~</td><td class="td-green" style="text-align:center">✓</td><td style="text-align:center;color:#d97706">~</td></tr>
+      <tr><td>Skonto-Management</td><td class="td-green" style="text-align:center">✓</td><td class="td-green" style="text-align:center">✓</td><td class="td-red" style="text-align:center">✗</td><td style="text-align:center;color:#d97706">~</td><td style="text-align:center;color:#d97706">~</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:10px;color:#9ca3af;margin-top:6px">✓ = vollständig vorhanden | ~ = teilweise / indirekt | ✗ = nicht vorhanden</p>
+
+  <div class="highlight" style="margin-top:16px">
+    <p style="font-size:14px;margin:0"><strong>Fazit:</strong> BauGPT Procurement ist der einzige Anbieter, der Bau-Fokus + KI-native + Bestands-Kundenbasis + Recruiting-Bundle kombiniert. Diese Kombination ist nicht kopierbar.</p>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 12</span></div>
+</div>
+
+<!-- PAGE 13: STRATEGISCHE VORTEILE -->
+<div class="page">
+  <div class="section-label">9. BauGPT's Strategische Vorteile</div>
+  <h2 style="margin-bottom:16px">Unfaire Vorteile gegenüber dem Wettbewerb</h2>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card-orange" style="margin-bottom:0">
+      <h3 style="margin-bottom:12px">🎯 Vorteil 1: Distribution am Tag 1</h3>
+      <p style="font-size:13px">Comstruct musste €12,5M aufwenden, um Zugang zu HOCHTIEF und anderen Großkunden zu bekommen. BauGPT hat bereits <strong>1.000+ Unternehmenskunden</strong> die BauGPT Pro nutzen.</p>
+      <p style="font-size:13px;margin-bottom:0"><strong>Konsequenz:</strong> Wir können 20 Beta-Kunden in 2 Wochen onboarden — ohne Sales-Investition. Comstruct hat dafür 2 Jahre gebraucht.</p>
+    </div>
+    <div class="card-blue">
+      <h3 style="margin-bottom:12px;color:#1e40af">🤖 Vorteil 2: KI-Infrastruktur vorhanden</h3>
+      <p style="font-size:13px">BauGPT hat bereits eine funktionierende KI-Pipeline für Dokumentenverständnis (BauGPT Pro: 300+ Templates). Diese Infrastruktur kann für Procurement sofort genutzt werden.</p>
+      <p style="font-size:13px;margin-bottom:0"><strong>Konsequenz:</strong> 6 Monate Entwicklungszeit gespart. Comstruct hat diese KI-Basis von Grund auf aufgebaut.</p>
+    </div>
+  </div>
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card-green">
+      <h3 style="margin-bottom:12px;color:#14532d">📦 Vorteil 3: Cross-Sell & Bundle</h3>
+      <p style="font-size:13px">BauGPT Procurement + BauGPT Pro + BauGPT Recruiting = die einzige Full-Stack Plattform für Bauunternehmen. Kein Wettbewerber hat alle drei.</p>
+      <p style="font-size:13px;margin-bottom:0"><strong>Konsequenz:</strong> Höhere Retention, niedrigerer Churn. Kunden die 3 Produkte nutzen, wechseln praktisch nicht.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">🏗️ Vorteil 4: Branchenwissen</h3>
+      <p style="font-size:13px">BauGPT kennt die Baubranche durch 70.000+ Nutzer, 1.000+ Unternehmenskunden und jahrelange Daten. Dieses Wissen fließt in das Produkt ein.</p>
+      <p style="font-size:13px;margin-bottom:0"><strong>Konsequenz:</strong> Bessere Produktentscheidungen, schnellere KI-Verbesserung durch mehr Trainingsdaten aus der Baubranche.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:10px">Cross-Sell Opportunity im Bestandsnetz</h3>
+  <table style="font-size:12px">
+    <thead><tr><th>Produkt</th><th>Bestandskunden</th><th>Conversion Rate</th><th>Procurement-Potenzial</th></tr></thead>
+    <tbody>
+      <tr><td>BauGPT Pro Kunden</td><td>~1.000</td><td>20% (konservativ)</td><td class="td-green">200 sofortige Leads</td></tr>
+      <tr><td>BauGPT Chat Nutzer</td><td>~70.000</td><td>0,5%</td><td class="td-green">350 potenzielle Leads</td></tr>
+      <tr><td>Recruiting-Kunden</td><td>~1.200</td><td>15%</td><td class="td-green">180 potenzielle Leads</td></tr>
+      <tr class="row-highlight"><td><strong>Gesamt Pipeline</strong></td><td><strong>~72.200</strong></td><td></td><td class="td-orange"><strong>700+ qualifizierte Leads</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 13</span></div>
+</div>
+
+<!-- PAGE 14: BUSINESS MODEL -->
+<div class="page">
+  <div class="section-label">10. Business Model & Pricing</div>
+  <h2 style="margin-bottom:6px">Per-Document Pricing — kein Abo-Widerstand</h2>
+  <p class="lead">Das Per-Document Modell aligniert perfekt mit dem Kundennutzen: Je mehr Dokumente verarbeitet werden, desto mehr Wert wird geliefert.</p>
+
+  <div class="grid-3" style="margin-bottom:20px">
+    <div class="card">
+      <div style="text-align:center;padding:12px 0;margin-bottom:14px;border-bottom:1px solid #e2e8f0">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#6b7280;margin-bottom:6px">Starter</div>
+        <div style="font-size:32px;font-weight:900;color:#0f172a">€0,50</div>
+        <div style="font-size:12px;color:#6b7280">pro Dokument</div>
+        <div style="font-size:11px;color:#9ca3af;margin-top:4px">bis 500 Docs/Monat</div>
+      </div>
+      <ul class="checklist" style="font-size:12px;margin-bottom:12px">
+        <li>Bis 10 Nutzer</li>
+        <li>Mobile App (iOS, Android)</li>
+        <li>Digitale Lieferscheine</li>
+        <li>Basis-Rechnungsprüfung</li>
+        <li>Standard-Dashboard</li>
+      </ul>
+      <ul style="list-style:none;font-size:12px" class="xlist">
+        <li style="display:flex;gap:8px;color:#9ca3af;margin-bottom:4px"><span style="color:#dc2626">✗</span>ERP-Integration</li>
+        <li style="display:flex;gap:8px;color:#9ca3af"><span style="color:#dc2626">✗</span>ESG Reporting</li>
+      </ul>
+    </div>
+    <div class="card-orange">
+      <div style="text-align:center;padding:12px 0;margin-bottom:14px;border-bottom:1px solid #fed7aa">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#ea580c;margin-bottom:4px">⭐ Empfohlen</div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#9a3412;margin-bottom:6px">Business</div>
+        <div style="font-size:32px;font-weight:900;color:#ea580c">€0,35</div>
+        <div style="font-size:12px;color:#9a3412">pro Dokument</div>
+        <div style="font-size:11px;color:#c2410c;margin-top:4px">500–5.000 Docs/Monat</div>
+      </div>
+      <ul class="checklist" style="font-size:12px">
+        <li>Bis 50 Nutzer</li>
+        <li>Alles aus Starter</li>
+        <li>ERP-Integration</li>
+        <li>KI-Kontierungsvorschläge</li>
+        <li>ESG / CO₂ Reporting</li>
+        <li>Skonto-Management</li>
+        <li>Priority Support</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div style="text-align:center;padding:12px 0;margin-bottom:14px;border-bottom:1px solid #e2e8f0">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#6b7280;margin-bottom:6px">Enterprise</div>
+        <div style="font-size:32px;font-weight:900;color:#0f172a">Auf Anfrage</div>
+        <div style="font-size:12px;color:#6b7280">individuelles Angebot</div>
+        <div style="font-size:11px;color:#9ca3af;margin-top:4px">>5.000 Docs/Monat</div>
+      </div>
+      <ul class="checklist" style="font-size:12px">
+        <li>Unbegrenzte Nutzer</li>
+        <li>Alles aus Business</li>
+        <li>Custom Integrationen</li>
+        <li>Dedicated Account Manager</li>
+        <li>SLA-Garantie (99,9%)</li>
+        <li>On-Premise Option</li>
+        <li>HOCHTIEF-Niveau Features</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h4 style="margin-bottom:8px">Warum Per-Document?</h4>
+      <ul class="checklist" style="font-size:12px">
+        <li>Kein Abo-Widerstand beim Erstkauf</li>
+        <li>Alignment mit Kundennutzen (mehr Docs = mehr Wert)</li>
+        <li>Skaliert automatisch mit Projektgröße</li>
+        <li>Einfach zu verstehen und zu rechtfertigen</li>
+        <li>Comstruct hat bewiesen: Markt akzeptiert dieses Modell</li>
+      </ul>
+    </div>
+    <div class="card-green">
+      <h4 style="margin-bottom:8px;color:#14532d">Sonderkonditionen BauGPT Pro</h4>
+      <p style="font-size:12px"><strong>20% Rabatt</strong> für bestehende BauGPT Pro Kunden im ersten Jahr.</p>
+      <p style="font-size:12px">Business: €0,28/Doc (statt €0,35)</p>
+      <p style="font-size:12px;margin-bottom:0"><strong>Begründung:</strong> Cross-Sell Marge macht das möglich. Ziel ist schnelle Adoption im Bestandsnetz — nicht maximaler ARPU in Phase 1.</p>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 14</span></div>
+</div>
+
+<!-- PAGE 15: BUSINESS MODEL FORTSETZUNG -->
+<div class="page">
+  <div class="section-label">10. Business Model (Fortsetzung)</div>
+  <h2 style="margin-bottom:16px">Umsatzquellen & Wachstumshebel</h2>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h3 style="margin-bottom:12px">Primäre Umsatzquellen</h3>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:4px">1. Document Processing Fees (Core)</h4>
+        <p style="font-size:12px;margin:0">Pro verarbeitetem Dokument (Lieferschein, Rechnung, Bestellung). Volumen wächst automatisch mit Projektanzahl der Kunden.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:4px">2. Enterprise License Fees</h4>
+        <p style="font-size:12px;margin:0">Für Kunden >5.000 Docs/Monat: Pauschalpreis mit Mengenrabatt. Stabile, vorhersehbare Einnahmen.</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-bottom:4px">3. Integration & Setup Fees</h4>
+        <p style="font-size:12px;margin:0">Einmalige Onboarding-Gebühr für ERP-Integrationen (€500–2.000 je nach Komplexität). Kostendeckend, nicht Profit-orientiert.</p>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:12px">Wachstumshebel</h3>
+      <div class="card-orange" style="margin-bottom:10px">
+        <h4 style="margin-bottom:4px">🔄 Natural Expansion (NRR >130%)</h4>
+        <p style="font-size:12px;margin:0">Kunden verarbeiten mehr Dokumente wenn mehr Projekte laufen. Volume wächst ohne Upsell-Aufwand — automatischer Revenue-Boost.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:4px">📈 Tier-Upgrades</h4>
+        <p style="font-size:12px;margin:0">Starter → Business wenn Volumen >500 Docs/Monat überschritten wird. Automatisches Upgrade-Prompt.</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-bottom:4px">🔗 Cross-Sell zu Pro & Recruiting</h4>
+        <p style="font-size:12px;margin:0">Procurement-Kunden konvertieren mit hoher Rate zu BauGPT Pro (KI-Dokumentenverständnis) und BauGPT Recruiting.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:10px">12-Monats Umsatzplanung (Szenario-basiert)</h3>
+  <table style="font-size:12px">
+    <thead><tr><th>Szenario</th><th>Kunden (M12)</th><th>Ø Docs/Monat</th><th>Ø Preis</th><th>MRR (M12)</th><th>ARR (M12)</th></tr></thead>
+    <tbody>
+      <tr><td>Pessimistisch</td><td>50</td><td>150</td><td>€0,40</td><td class="td-red">€3.000</td><td class="td-red">€36.000</td></tr>
+      <tr class="row-highlight"><td><strong>Basis</strong></td><td><strong>150</strong></td><td><strong>250</strong></td><td><strong>€0,38</strong></td><td class="td-orange"><strong>€14.250</strong></td><td class="td-orange"><strong>€171.000</strong></td></tr>
+      <tr><td>Optimistisch</td><td>300</td><td>400</td><td>€0,40</td><td class="td-green">€48.000</td><td class="td-green">€576.000</td></tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 15</span></div>
+</div>
+
+<!-- PAGE 16: UNIT ECONOMICS -->
+<div class="page">
+  <div class="section-label">11. Unit Economics & Finanzmodell</div>
+  <h2 style="margin-bottom:16px">Unit Economics im Detail</h2>
+
+  <div class="grid-3" style="margin-bottom:20px">
+    <div class="card" style="text-align:center">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#6b7280;margin-bottom:6px">Customer Acquisition Cost</div>
+      <div style="font-size:32px;font-weight:900;color:#ea580c">€60</div>
+      <div style="font-size:11px;color:#6b7280;margin-top:4px">Bestandskunde via Cross-Sell<br>(kein Sales-Aufwand)</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#6b7280;margin-bottom:6px">Lifetime Value (Business)</div>
+      <div style="font-size:32px;font-weight:900;color:#16a34a">€25.200</div>
+      <div style="font-size:11px;color:#6b7280;margin-top:4px">36 Monate × €700 MRR<br>(500 Docs × €0,35 × 4 Baust.)</div>
+    </div>
+    <div class="card-green" style="text-align:center">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#14532d;margin-bottom:6px">LTV:CAC Ratio</div>
+      <div style="font-size:32px;font-weight:900;color:#16a34a">420:1</div>
+      <div style="font-size:11px;color:#14532d;margin-top:4px">Klasse-A SaaS = >3:1<br>Wir: 420:1</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h3 style="margin-bottom:10px">Gross Margin Kalkulation</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>Position</th><th>pro Dokument</th><th>%</th></tr></thead>
+        <tbody>
+          <tr><td>Revenue</td><td>€0,35</td><td>100%</td></tr>
+          <tr><td>OpenAI API Kosten (OCR + GPT)</td><td>€0,04</td><td>11%</td></tr>
+          <tr><td>Supabase / Hosting</td><td>€0,01</td><td>3%</td></tr>
+          <tr><td>Support (anteilig)</td><td>€0,02</td><td>6%</td></tr>
+          <tr class="row-highlight"><td><strong>Gross Profit</strong></td><td class="td-green"><strong>€0,28</strong></td><td class="td-green"><strong>80%</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="card-green" style="margin-top:10px">
+        <p style="font-size:12px;margin:0"><strong>80% Gross Margin</strong> ist exzellent für SaaS. Ermöglicht aggressives Pricing ohne Verluste.</p>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Payback Period</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>Segment</th><th>CAC</th><th>MRR</th><th>Payback</th></tr></thead>
+        <tbody>
+          <tr><td>Bestandskunde (Cross-Sell)</td><td>€60</td><td>€88</td><td class="td-green">&lt;1 Monat</td></tr>
+          <tr><td>Neukunde (Outbound)</td><td>€800</td><td>€88</td><td>9 Monate</td></tr>
+          <tr><td>Enterprise (Inbound)</td><td>€2.000</td><td>€700+</td><td class="td-orange">3 Monate</td></tr>
+        </tbody>
+      </table>
+      <div class="card-orange" style="margin-top:10px">
+        <p style="font-size:12px;margin:0"><strong>Strategie:</strong> Primär Cross-Sell an Bestandskunden. Neue Kunden erst wenn Produkt bewährt. Enterprise aktiv mit Direct Sales.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;text-align:center">
+      <div><div style="font-size:20px;font-weight:900">80%</div><div style="font-size:11px;opacity:0.8">Gross Margin</div></div>
+      <div style="border-left:1px solid rgba(255,255,255,0.3);border-right:1px solid rgba(255,255,255,0.3)"><div style="font-size:20px;font-weight:900">&lt;1 Monat</div><div style="font-size:11px;opacity:0.8">Payback (Bestandskunde)</div></div>
+      <div><div style="font-size:20px;font-weight:900">420:1</div><div style="font-size:11px;opacity:0.8">LTV:CAC Ratio</div></div>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 16</span></div>
+</div>
+
+<!-- PAGE 17: FINANZPROJEKTION -->
+<div class="page">
+  <div class="section-label">11. Finanzmodell (Fortsetzung)</div>
+  <h2 style="margin-bottom:16px">3-Jahres Finanzprojektion</h2>
+
+  <table style="font-size:12px;margin-bottom:16px">
+    <thead>
+      <tr><th>KPI</th><th>Q1 2026</th><th>Q2 2026</th><th>Q3 2026</th><th>Q4 2026</th><th>FY 2026</th><th>FY 2027</th><th>FY 2028</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Kunden gesamt</td><td>20</td><td>60</td><td>120</td><td>200</td><td>200</td><td>600</td><td>1.500</td></tr>
+      <tr><td>Ø Docs/Kunde/Mo</td><td>150</td><td>200</td><td>250</td><td>300</td><td>225</td><td>350</td><td>450</td></tr>
+      <tr><td>Gesamte Docs/Mo</td><td>3.000</td><td>12.000</td><td>30.000</td><td>60.000</td><td>26.250</td><td>210.000</td><td>675.000</td></tr>
+      <tr><td>Ø Preis/Doc</td><td>€0,38</td><td>€0,37</td><td>€0,36</td><td>€0,36</td><td>€0,37</td><td>€0,38</td><td>€0,40</td></tr>
+      <tr class="row-highlight"><td><strong>MRR (Monatsende)</strong></td><td class="td-red"><strong>€1.140</strong></td><td class="td-orange"><strong>€4.440</strong></td><td class="td-orange"><strong>€10.800</strong></td><td class="td-green"><strong>€21.600</strong></td><td></td><td></td><td></td></tr>
+      <tr class="row-highlight"><td><strong>ARR</strong></td><td></td><td></td><td></td><td></td><td class="td-orange"><strong>€116.550</strong></td><td class="td-green"><strong>€958.000</strong></td><td class="td-green"><strong>€3.240.000</strong></td></tr>
+      <tr><td>Gross Margin</td><td>80%</td><td>80%</td><td>80%</td><td>80%</td><td>80%</td><td>82%</td><td>84%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="grid-2">
+    <div class="card">
+      <h4 style="margin-bottom:8px">Investitionsbedarf für MVP (Phase 1)</h4>
+      <table style="font-size:12px;margin:0">
+        <tr><td style="border:none;padding:4px 0">Engineering (Bob, 8 Wochen)</td><td style="border:none;text-align:right">intern</td></tr>
+        <tr><td style="border:none;padding:4px 0">Design & UX (intern, Hugo)</td><td style="border:none;text-align:right">intern</td></tr>
+        <tr><td style="border:none;padding:4px 0">Supabase Pro Plan</td><td style="border:none;text-align:right">€25/Mo</td></tr>
+        <tr><td style="border:none;padding:4px 0">OpenAI API (Beta-Phase)</td><td style="border:none;text-align:right">~€200/Mo</td></tr>
+        <tr><td style="border:none;padding:4px 0">Vercel Pro</td><td style="border:none;text-align:right">€20/Mo</td></tr>
+        <tr style="border-top:1px solid #e2e8f0"><td style="padding-top:8px;font-weight:700">Gesamtkosten Phase 1</td><td style="text-align:right;font-weight:700;color:#16a34a">~€245/Mo</td></tr>
+      </table>
+      <p style="font-size:11px;color:#6b7280;margin-top:8px;margin-bottom:0">Hauptkosten sind Engineering-Zeit (intern). Infrastruktur-Kosten minimal.</p>
+    </div>
+    <div class="card-green">
+      <h4 style="margin-bottom:8px;color:#14532d">Break-Even Analyse</h4>
+      <p style="font-size:12px"><strong>Infrastruktur Break-Even:</strong> ~0,6 Kunden bei Business-Tier</p>
+      <p style="font-size:12px"><strong>Vollkosten Break-Even</strong> (inkl. Entwicklungszeit): ~10 Kunden</p>
+      <p style="font-size:12px"><strong>Cashflow-positiv:</strong> Ab Monat 3 (20 Kunden)</p>
+      <p style="font-size:12px;margin-bottom:0"><strong>Fazit:</strong> Extrem niedriges Risiko. Infrastrukturkosten sind vernachlässigbar. Das Hauptinvestment ist Engineering-Zeit.</p>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 17</span></div>
+</div>
+
+<!-- PAGE 18: ROI ANALYSE -->
+<div class="page">
+  <div class="section-label">12. ROI-Analyse für Kunden</div>
+  <h2 style="margin-bottom:6px">Konkreter ROI für Bauunternehmen</h2>
+  <p class="lead">Ein Bauunternehmen mit 50 Mitarbeitern amortisiert BauGPT Procurement in unter 10 Tagen.</p>
+
+  <div class="grid-2" style="margin-bottom:18px">
+    <div>
+      <h3 style="margin-bottom:12px">Einsparungen pro Jahr (Mittelstand, 50 MA)</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>Einsparkategorie</th><th>Berechnung</th><th>Betrag/Jahr</th></tr></thead>
+        <tbody>
+          <tr><td>Zeitersparnis Buchhaltung</td><td>2h/Tag × €35 × 250 Tage</td><td class="td-green">€17.500</td></tr>
+          <tr><td>Verpasste Skonti (vorher)</td><td>Ø 2% auf €160k Einkauf</td><td class="td-green">€3.200</td></tr>
+          <tr><td>Vermiedene Fehler</td><td>12% von €40k Fehlbuchungen</td><td class="td-green">€4.800</td></tr>
+          <tr class="row-highlight"><td><strong>Gesamt-Einsparung</strong></td><td></td><td class="td-green"><strong>€25.500</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="card" style="margin-top:12px">
+        <h4 style="margin-bottom:6px">BauGPT Procurement Kosten</h4>
+        <table style="font-size:12px;margin:0">
+          <tr><td style="border:none;padding:3px 0">Ø Docs/Monat</td><td style="border:none;text-align:right">500</td></tr>
+          <tr><td style="border:none;padding:3px 0">Preis/Doc (Business)</td><td style="border:none;text-align:right">€0,35</td></tr>
+          <tr><td style="border:none;padding:3px 0">Monatliche Kosten</td><td style="border:none;text-align:right">€175</td></tr>
+          <tr style="border-top:1px solid #e2e8f0"><td style="padding-top:8px;font-weight:700">Jahreskosten</td><td style="text-align:right;font-weight:700;color:#ea580c">€2.100</td></tr>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="card-green" style="margin-bottom:14px">
+        <h4 style="color:#14532d;margin-bottom:8px">ROI-Zusammenfassung</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center">
+          <div><div style="font-size:24px;font-weight:900;color:#16a34a">1.114%</div><div style="font-size:11px;color:#14532d">ROI im ersten Jahr</div></div>
+          <div><div style="font-size:24px;font-weight:900;color:#16a34a">€23.400</div><div style="font-size:11px;color:#14532d">Netto-Gewinn/Jahr</div></div>
+        </div>
+        <hr style="border-color:#bbf7d0;margin:12px 0"/>
+        <p style="font-size:12px;margin:0;color:#14532d"><strong>Break-Even:</strong> Die Kosten sind nach <strong>9 Tagen</strong> durch Einsparungen gedeckt.</p>
+      </div>
+      <div class="card-orange">
+        <h4 style="margin-bottom:8px">Für den Pitch: "Der Rechner"</h4>
+        <p style="font-size:12px">Demo-Rechner auf der Landing Page: Kunde gibt ein:</p>
+        <ul style="list-style:none;font-size:12px">
+          <li style="margin-bottom:4px">• Anzahl Baustellen</li>
+          <li style="margin-bottom:4px">• Rechnungen/Monat</li>
+          <li style="margin-bottom:4px">• Buchhalter-Stundensatz</li>
+        </ul>
+        <p style="font-size:12px;margin-bottom:0">→ Sofortiger ROI und Amortisationszeit wird angezeigt. <strong>Konvertierungs-Booster für Sales.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <p style="font-size:15px;margin:0"><strong>Für den Gründer-Pitch:</strong> Der ROI von 1.114% bei einem Jahreskostenaufwand von €2.100 macht Einwände gegenstandslos. Kein CFO eines Bauunternehmens wird "Nein" sagen wenn die Rechnung stimmt.</p>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 18</span></div>
+</div>
+
+<!-- PAGE 19: GTM STRATEGIE -->
+<div class="page">
+  <div class="section-label">13. Go-to-Market Strategie</div>
+  <h2 style="margin-bottom:6px">Von 0 zu 200 Kunden in 12 Monaten</h2>
+  <p class="lead">Drei Phasen, klare Prioritäten, konsequent auf die Stärke der Bestandskundenbasis gesetzt.</p>
+
+  <div class="grid-3" style="margin-bottom:18px">
+    <div class="card-orange">
+      <span class="badge badge-orange" style="margin-bottom:10px">Phase 1 — Monat 1-3</span>
+      <h4 style="margin-bottom:8px">Beta & Validation</h4>
+      <p style="font-size:12px"><strong>Ziel:</strong> 20 Beta-Kunden, Produkt-Market-Fit validieren</p>
+      <ul class="checklist" style="font-size:12px">
+        <li>Email-Kampagne an BauGPT Pro Top-100</li>
+        <li>Persönliches Onboarding durch Andi</li>
+        <li>Wöchentliche Feedback-Calls</li>
+        <li>Erste Case Study aufbauen</li>
+        <li>KPI: NPS >50</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="badge badge-blue" style="margin-bottom:10px">Phase 2 — Monat 4-8</span>
+      <h4 style="margin-bottom:8px">Skalierung im Bestandsnetz</h4>
+      <p style="font-size:12px"><strong>Ziel:</strong> 100 zahlende Kunden</p>
+      <ul class="checklist" style="font-size:12px">
+        <li>Public Launch + Landing Page live</li>
+        <li>LinkedIn-Kampagne (Andi + BauGPT)</li>
+        <li>Case Study mit ROI-Zahlen</li>
+        <li>Partner-Programm (Steuerberater, Bausoftware)</li>
+        <li>Messen: DigitalBAU, BAU München</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="badge badge-green" style="margin-bottom:10px">Phase 3 — Monat 9-12</span>
+      <h4 style="margin-bottom:8px">Enterprise & Neukunden</h4>
+      <p style="font-size:12px"><strong>Ziel:</strong> 200 Kunden, erste Enterprise-Deals</p>
+      <ul class="checklist" style="font-size:12px">
+        <li>Procore Marketplace Launch</li>
+        <li>Direct Enterprise Sales (>200 MA)</li>
+        <li>RIB Partnership ausbauen</li>
+        <li>Content Marketing (SEO)</li>
+        <li>Erstes Enterprise-Case-Study</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:10px">Channel-Strategie & erwartete Konversionsraten</h3>
+  <table style="font-size:12px">
+    <thead><tr><th>Channel</th><th>Zielgruppe</th><th>Reach</th><th>Conv.-Rate</th><th>Leads/Mo (steady)</th><th>Kosten</th></tr></thead>
+    <tbody>
+      <tr class="row-highlight"><td><strong>Cross-Sell (Bestandskunden)</strong></td><td>BauGPT Pro</td><td>1.000</td><td class="td-green">20%</td><td class="td-green">20</td><td class="td-green">sehr gering</td></tr>
+      <tr><td>LinkedIn (Andi organic)</td><td>Mittelstand Bau</td><td>5.000+</td><td>2%</td><td>5</td><td>gering</td></tr>
+      <tr><td>Google Ads (branded)</td><td>Suchende</td><td>variabel</td><td>8%</td><td>3–5</td><td>mittel</td></tr>
+      <tr><td>Messen (DigitalBAU)</td><td>Enterprise</td><td>500 Gespräche</td><td>10%</td><td>50 (einmalig)</td><td>mittel</td></tr>
+      <tr><td>Partner-Empfehlungen</td><td>KMU Bau</td><td>—</td><td>25%</td><td>3–8</td><td>gering</td></tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 19</span></div>
+</div>
+
+<!-- PAGE 20: GTM FORTSETZUNG -->
+<div class="page">
+  <div class="section-label">13. Go-to-Market (Fortsetzung)</div>
+  <h2 style="margin-bottom:16px">Kommunikationsstrategie & Messaging</h2>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h3 style="margin-bottom:10px">Core Messaging Framework</h3>
+      <div class="card-orange" style="margin-bottom:10px">
+        <h4 style="margin-bottom:4px">Headline</h4>
+        <p style="font-size:13px;margin:0;font-style:italic">"Von der Bestellung zur gebuchten Rechnung — automatisch."</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:4px">Problem Statement</h4>
+        <p style="font-size:12px;margin:0">"Deine Buchhaltung verbringt täglich 2-3 Stunden mit Aufgaben, die eine KI in Minuten erledigen kann."</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:4px">Hero Metric</h4>
+        <p style="font-size:12px;margin:0">"1.114% ROI im ersten Jahr. Break-even nach 9 Tagen."</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-bottom:4px">Trust Builder</h4>
+        <p style="font-size:12px;margin:0">"1.000+ Bauunternehmen vertrauen bereits auf BauGPT — jetzt kommt der nächste Schritt."</p>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Launch-Kommunikationsplan</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>Wann</th><th>Was</th><th>Kanal</th></tr></thead>
+        <tbody>
+          <tr><td>Woche 1</td><td>Waitlist Email an BauGPT Pro Top-100</td><td>Email</td></tr>
+          <tr><td>Woche 2</td><td>LinkedIn Announcement (Andi)</td><td>LinkedIn</td></tr>
+          <tr><td>Monat 2</td><td>Beta-Kunden onboarden (20 Stück)</td><td>Direct</td></tr>
+          <tr><td>Monat 3</td><td>Erste Case Study veröffentlichen</td><td>Website, LI</td></tr>
+          <tr><td>Monat 4</td><td>Public Launch + Landing Page live</td><td>Alle</td></tr>
+          <tr><td>Monat 5</td><td>DigitalBAU-Messe (Köln)</td><td>Messe</td></tr>
+          <tr><td>Monat 6</td><td>Procore Marketplace Listing</td><td>Procore</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card-orange" style="margin-top:12px">
+        <h4 style="margin-bottom:6px">LinkedIn Content Strategie</h4>
+        <p style="font-size:12px;margin-bottom:0">3 Posts/Woche von Andi's persönlichem Account: Zahlen, Behind-the-Scenes, Kundenstories. Kein Corporate-Speak. Authentisch. Hugo liefert Copy + Visuals.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="background:#f8fafc">
+    <h4 style="margin-bottom:8px">Priori-Sales Playbook: Wie wir die ersten 20 Beta-Kunden gewinnen</h4>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;font-size:11px;text-align:center">
+      <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:10px"><div style="font-weight:700;margin-bottom:4px">1. Identify</div><div style="color:#6b7280">Top-100 BauGPT Pro Kunden nach Rechnungsvolumen</div></div>
+      <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:10px"><div style="font-weight:700;margin-bottom:4px">2. Email</div><div style="color:#6b7280">Persönliche Email von Andi mit Exclusiv-Zugang</div></div>
+      <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:10px"><div style="font-weight:700;margin-bottom:4px">3. Demo</div><div style="color:#6b7280">30-Min Demo: echte Daten des Kunden</div></div>
+      <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:10px"><div style="font-weight:700;margin-bottom:4px">4. Onboard</div><div style="color:#6b7280">Persönliches Setup, erste Rechnung gemeinsam</div></div>
+      <div style="background:orange;border:1px solid #ea580c;border-radius:6px;padding:10px;color:white"><div style="font-weight:700;margin-bottom:4px">5. Case Study</div><div>ROI dokumentieren, Testimonial einholen</div></div>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 20</span></div>
+</div>
+
+<!-- PAGE 21: TECH ARCHITEKTUR -->
+<div class="page">
+  <div class="section-label">14. Technische Architektur</div>
