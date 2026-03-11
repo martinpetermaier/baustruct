@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BauGPT Procurement — Bestellübersicht (Screen 6)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; }
+  .app { display: flex; height: 100vh; background: #f8fafc; }
+
+  /* Sidebar - same as Screen 4 */
+  .sidebar { width: 240px; background: #0f172a; color: white; display: flex; flex-direction: column; flex-shrink: 0; }
+  .sidebar-logo { padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .sidebar-logo h1 { font-size: 16px; font-weight: 800; color: white; }
+  .sidebar-logo p { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .sidebar-nav { flex: 1; padding: 12px 0; }
+  .nav-section { padding: 8px 16px; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; }
+  .nav-item { padding: 10px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; border-radius: 8px; margin: 0 8px 2px; }
+  .nav-item.active { background: #f97316; }
+  .nav-item span { font-size: 18px; }
+  .nav-item p { font-size: 13px; font-weight: 500; }
+  .nav-badge { background: #dc2626; color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: auto; }
+  .sidebar-user { padding: 16px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+  .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #3b82f6; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+  .user-info p { font-size: 12px; font-weight: 600; }
+  .user-info span { font-size: 11px; color: rgba(255,255,255,0.5); }
+
+  /* Main */
+  .main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+  .topbar { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 24px; display: flex; align-items: center; gap: 16px; }
+  .topbar h2 { font-size: 20px; font-weight: 800; color: #0f172a; flex: 1; }
+  .btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; border: none; cursor: pointer; }
+  .btn-primary { background: #f97316; color: white; }
+  .btn-ghost { background: white; color: #374151; border: 1px solid #e2e8f0; }
+
+  /* KPI Strip */
+  .kpi-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+  .kpi-card { background: white; padding: 16px 20px; }
+  .kpi-label { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; }
+  .kpi-value { font-size: 22px; font-weight: 800; color: #0f172a; margin: 4px 0; }
+  .kpi-sub { font-size: 11px; color: #94a3b8; }
+
+  /* Budget bar */
+  .budget-section { background: white; padding: 16px 24px; border-bottom: 1px solid #f1f5f9; }
+  .budget-section h3 { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 10px; }
+  .budget-row { margin-bottom: 8px; }
+  .budget-meta { display: flex; justify-content: space-between; font-size: 12px; color: #64748b; margin-bottom: 4px; }
+  .budget-bar { height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; }
+  .budget-fill { height: 100%; border-radius: 4px; }
+  .budget-fill.orange { background: #f97316; }
+  .budget-fill.red { background: #dc2626; }
+  .budget-fill.green { background: #16a34a; }
+
+  /* Filter bar */
+  .filter-bar { background: white; padding: 12px 24px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 12px; }
+  .filter-btn { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #e2e8f0; background: white; color: #374151; }
+  .filter-btn.active { background: #0f172a; color: white; border-color: #0f172a; }
+  .search-box { margin-left: auto; display: flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px; }
+  .search-box input { border: none; background: transparent; font-size: 13px; outline: none; width: 200px; }
+  select { padding: 6px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; color: #374151; background: white; }
+
+  /* Table */
+  .table-wrap { padding: 16px 24px; flex: 1; }
+  table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  th { background: #f8fafc; padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; cursor: pointer; }
+  th:hover { background: #f1f5f9; }
+  td { padding: 12px 16px; border-bottom: 1px solid #f8fafc; font-size: 13px; color: #374151; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; cursor: pointer; }
+
+  .po-num { font-weight: 700; color: #0f172a; }
+  .po-date { font-size: 11px; color: #94a3b8; }
+
+  .status-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+  .draft { background: #f1f5f9; color: #64748b; }
+  .pending-approval { background: #fef3c7; color: #92400e; }
+  .approved { background: #dbeafe; color: #1e40af; }
+  .ordered { background: #dcfce7; color: #166534; }
+  .partial { background: #f3e8ff; color: #6b21a8; }
+  .complete { background: #f0fdf4; color: #166534; }
+  .cancelled { background: #fee2e2; color: #991b1b; }
+
+  .progress-mini { display: flex; align-items: center; gap: 6px; }
+  .progress-bar { height: 6px; background: #f1f5f9; border-radius: 3px; flex: 1; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; background: #16a34a; }
+  .progress-text { font-size: 11px; color: #64748b; white-space: nowrap; }
+
+  .amount { font-weight: 700; color: #0f172a; }
+
+  .action-cell { display: flex; gap: 6px; }
+  .action-btn { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; }
+  .action-btn.view { background: #f8fafc; color: #374151; border: 1px solid #e2e8f0; }
+  .action-btn.approve { background: #16a34a; color: white; }
+  .action-btn.warn { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+
+  .screen-label { text-align: center; padding: 12px; font-size: 13px; background: #0f172a; color: rgba(255,255,255,0.6); }
+</style>
+</head>
+<body>
+
+<div class="screen-label">🏗️ BauGPT Procurement — Screen 6: Bestellübersicht (Einkäufer-Ansicht, Desktop)</div>
+
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <h1>BauGPT</h1>
+      <p>Procurement · Beta</p>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section">Übersicht</div>
+      <div class="nav-item"><span>📊</span><p>Dashboard</p></div>
+      <div class="nav-item"><span>📅</span><p>Lieferkalender</p></div>
+
+      <div class="nav-section">Belege</div>
+      <div class="nav-item"><span>🧾</span><p>Rechnungen</p><div class="nav-badge">12</div></div>
+      <div class="nav-item"><span>📦</span><p>Lieferscheine</p></div>
+      <div class="nav-item active"><span>🛒</span><p>Bestellungen</p></div>
+
+      <div class="nav-section">Finanzen</div>
+      <div class="nav-item"><span>⏳</span><p>Skonto-Monitor</p><div class="nav-badge">3</div></div>
+      <div class="nav-item"><span>📈</span><p>Berichte</p></div>
+      <div class="nav-item"><span>🌱</span><p>ESG / CO₂</p></div>
+
+      <div class="nav-section">Einstellungen</div>
+      <div class="nav-item"><span>🔗</span><p>ERP-Verbindung</p></div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" style="background:#3b82f6">TK</div>
+      <div class="user-info">
+        <p>Thomas Klein</p>
+        <span>Einkauf · Manager</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <h2>Bestellübersicht</h2>
+      <button class="btn btn-ghost">📊 Export</button>
+      <button class="btn btn-ghost">📋 Vorlage</button>
+      <button class="btn btn-primary">+ Neue Bestellung</button>
+    </div>
+
+    <!-- KPI Strip -->
+    <div class="kpi-strip">
+      <div class="kpi-card">
+        <div class="kpi-label">Offen / Aktiv</div>
+        <div class="kpi-value" style="color:#f97316">24</div>
+        <div class="kpi-sub">Bestellungen in Bearbeitung</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Volumen März</div>
+        <div class="kpi-value">€1,24M</div>
+        <div class="kpi-sub">+18% vs. Vormonat</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Freigabe ausstehend</div>
+        <div class="kpi-value" style="color:#dc2626">4</div>
+        <div class="kpi-sub">Warten auf GF-Approval</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Liefertreue (30T)</div>
+        <div class="kpi-value" style="color:#16a34a">87%</div>
+        <div class="kpi-sub">↑ 3% vs. Vormonat</div>
+      </div>
+    </div>
+
+    <!-- Budget Bars -->
+    <div class="budget-section">
+      <h3>Projektbudgets (März)</h3>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+        <div class="budget-row">
+          <div class="budget-meta">
+            <span style="font-weight:700">Westpark B3</span>
+            <span>€340k / €500k (68%)</span>
+          </div>
+          <div class="budget-bar"><div class="budget-fill orange" style="width:68%"></div></div>
+        </div>
+        <div class="budget-row">
+          <div class="budget-meta">
+            <span style="font-weight:700">Büro Nord A1</span>
+            <span>€620k / €650k (95%)</span>
+          </div>
+          <div class="budget-bar"><div class="budget-fill red" style="width:95%"></div></div>
+        </div>
+        <div class="budget-row">
+          <div class="budget-meta">
+            <span style="font-weight:700">Schulbau Süd</span>
+            <span>€280k / €1.200k (23%)</span>
+          </div>
+          <div class="budget-bar"><div class="budget-fill green" style="width:23%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="filter-bar">
+      <button class="filter-btn active">Alle (24)</button>
+      <button class="filter-btn" style="background:#fef3c7; color:#92400e; border-color:#fde68a;">Freigabe (4)</button>
+      <button class="filter-btn" style="background:#dbeafe; color:#1e40af; border-color:#bfdbfe;">Bestellt (11)</button>
+      <button class="filter-btn" style="background:#f3e8ff; color:#6b21a8; border-color:#e9d5ff;">Teillieferung (3)</button>
+      <select>
+        <option>Alle Projekte</option>
+        <option>Westpark B3</option>
+        <option>Büro Nord A1</option>
+        <option>Schulbau Süd</option>
+      </select>
+      <select>
+        <option>Alle Lieferanten</option>
+        <option>Holzner Bau GmbH</option>
+        <option>Beton Müller KG</option>
+        <option>Stahlbau Fischer</option>
+      </select>
+      <div class="search-box">
+        <span>🔍</span>
+        <input placeholder="PO-Nr., Lieferant, Material…">
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><input type="checkbox"></th>
+            <th>Bestell-Nr. ↕</th>
+            <th>Lieferant</th>
+            <th>Projekt</th>
+            <th>Material</th>
+            <th>Betrag</th>
+            <th>Status</th>
+            <th>Lieferung</th>
+            <th>Fortschritt</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Freigabe nötig -->
+          <tr style="background:#fffbeb">
+            <td><input type="checkbox"></td>
+            <td>
+              <div class="po-num">PO-2024-1861</div>
+              <div class="po-date">11.03. · Thomas K.</div>
+            </td>
+            <td>Holzner Bau GmbH</td>
+            <td>Büro Nord A1</td>
+            <td>Ziegelsteine NF<br><span style="font-size:11px;color:#94a3b8">80.000 Stk · 24.000 kg</span></td>
+            <td><div class="amount">€44.800</div></td>
+            <td><span class="status-pill pending-approval">⏳ Freigabe nötig</span></td>
+            <td>20.03.2024</td>
+            <td><div class="progress-mini"><div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div><span class="progress-text">0%</span></div></td>
+            <td><div class="action-cell"><button class="action-btn approve">✓ Freigeben</button><button class="action-btn view">Detail</button></div></td>
+          </tr>
+          <!-- Bestellt -->
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <div class="po-num">PO-2024-1847</div>
+              <div class="po-date">08.03. · Thomas K.</div>
+            </td>
+            <td>Beton Müller KG</td>
+            <td>Westpark B3</td>
+            <td>Beton C25/30<br><span style="font-size:11px;color:#94a3b8">50 m³</span></td>
+            <td><div class="amount">€12.750</div></td>
+            <td><span class="status-pill ordered">✓ Bestellt</span></td>
+            <td>11.03.2024</td>
+            <td><div class="progress-mini"><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div><span class="progress-text">100%</span></div></td>
+            <td><button class="action-btn view">Detail</button></td>
+          </tr>
+          <!-- Teillieferung -->
+          <tr style="background:#fdf4ff">
+            <td><input type="checkbox"></td>
+            <td>
+              <div class="po-num">PO-2024-1839</div>
+              <div class="po-date">05.03. · Thomas K.</div>
+            </td>
+            <td>Stahlbau Fischer GmbH</td>
+            <td>Büro Nord A1</td>
+            <td>Bewehrungsstahl B500B<br><span style="font-size:11px;color:#94a3b8">2.500 kg → 2.200 kg geliefert</span></td>
+            <td><div class="amount">€5.375</div></td>
+            <td><span class="status-pill partial">⚡ Teillieferung</span></td>
+            <td>13.03. (Rest)</td>
+            <td><div class="progress-mini"><div class="progress-bar"><div class="progress-fill" style="width:88%; background:#7c3aed"></div></div><span class="progress-text">88%</span></div></td>
+            <td><button class="action-btn warn">Nachhaken</button></td>
+          </tr>
+          <!-- Complete -->
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <div class="po-num">PO-2024-1820</div>
+              <div class="po-date">01.03. · Thomas K.</div>
+            </td>
+            <td>Holzner Bau GmbH</td>
+            <td>Westpark B3</td>
+            <td>Schalung Doka Framax<br><span style="font-size:11px;color:#94a3b8">24 Stk</span></td>
+            <td><div class="amount">€67.200</div></td>
+            <td><span class="status-pill complete">✅ Abgeschlossen</span></td>
+            <td>08.03.2024</td>
+            <td><div class="progress-mini"><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div><span class="progress-text">100%</span></div></td>
+            <td><button class="action-btn view">Detail</button></td>
+          </tr>
+          <!-- Draft -->
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <div class="po-num">PO-2024-1870</div>
+              <div class="po-date">11.03. · Entwurf</div>
+            </td>
+            <td>— (nicht ausgewählt)</td>
+            <td>Schulbau Süd</td>
+            <td>Mineralwolle WLG 035<br><span style="font-size:11px;color:#94a3b8">500 m² · KI-Lieferant-Vorschlag</span></td>
+            <td><div class="amount" style="color:#94a3b8">€8.500 (est.)</div></td>
+            <td><span class="status-pill draft">📝 Entwurf</span></td>
+            <td>—</td>
+            <td><div class="progress-mini"><div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div><span class="progress-text">0%</span></div></td>
+            <td><div class="action-cell"><button class="action-btn approve">Abschicken</button><button class="action-btn view">Bearbeiten</button></div></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="padding: 10px 0; font-size: 12px; color: #94a3b8; text-align: center;">Zeige 5 von 24 Bestellungen · Seite 1/5</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

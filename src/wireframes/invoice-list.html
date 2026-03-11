@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BauGPT Procurement — Rechnungsliste (Screen 4)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; }
+
+  /* Desktop Finance View */
+  .app { display: flex; height: 100vh; background: #f8fafc; }
+
+  /* Sidebar */
+  .sidebar { width: 240px; background: #0f172a; color: white; display: flex; flex-direction: column; flex-shrink: 0; }
+  .sidebar-logo { padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .sidebar-logo h1 { font-size: 16px; font-weight: 800; color: white; }
+  .sidebar-logo p { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .sidebar-nav { flex: 1; padding: 12px 0; }
+  .nav-section { padding: 8px 16px; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; }
+  .nav-item { padding: 10px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; border-radius: 8px; margin: 0 8px 2px; }
+  .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); }
+  .nav-item.active { background: #f97316; }
+  .nav-item span { font-size: 18px; }
+  .nav-item p { font-size: 13px; font-weight: 500; }
+  .nav-badge { background: #dc2626; color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: auto; }
+  .sidebar-user { padding: 16px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+  .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f97316; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+  .user-info p { font-size: 12px; font-weight: 600; }
+  .user-info span { font-size: 11px; color: rgba(255,255,255,0.5); }
+
+  /* Main content */
+  .main { flex: 1; overflow-y: auto; }
+
+  /* Top bar */
+  .topbar { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 24px; display: flex; align-items: center; gap: 16px; }
+  .topbar h2 { font-size: 20px; font-weight: 800; color: #0f172a; flex: 1; }
+
+  /* KPI strip */
+  .kpi-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+  .kpi-card { background: white; padding: 16px 20px; }
+  .kpi-label { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi-value { font-size: 22px; font-weight: 800; color: #0f172a; margin: 4px 0; }
+  .kpi-value.orange { color: #f97316; }
+  .kpi-value.red { color: #dc2626; }
+  .kpi-value.green { color: #16a34a; }
+  .kpi-sub { font-size: 11px; color: #94a3b8; }
+
+  /* Filter bar */
+  .filter-bar { background: white; padding: 12px 24px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 12px; }
+  .filter-btn { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #e2e8f0; background: white; color: #374151; }
+  .filter-btn.active { background: #0f172a; color: white; border-color: #0f172a; }
+  .filter-btn.orange { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
+  .filter-btn.red { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+  .search-box { margin-left: auto; display: flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px; }
+  .search-box input { border: none; background: transparent; font-size: 13px; outline: none; width: 200px; }
+
+  /* Table */
+  .table-wrap { padding: 16px 24px; }
+  table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  th { background: #f8fafc; padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+  td { padding: 12px 16px; border-bottom: 1px solid #f8fafc; font-size: 13px; color: #374151; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+  tr.selected td { background: #fff7ed; }
+
+  .status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+  .status-pill.pending { background: #fef3c7; color: #92400e; }
+  .status-pill.review { background: #dbeafe; color: #1e40af; }
+  .status-pill.approved { background: #dcfce7; color: #166534; }
+  .status-pill.rejected { background: #fee2e2; color: #991b1b; }
+  .status-pill.skonto { background: #f3e8ff; color: #6b21a8; }
+
+  .ai-score { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; }
+  .ai-score.high { color: #16a34a; }
+  .ai-score.med { color: #f59e0b; }
+  .ai-score.low { color: #dc2626; }
+
+  .amount { font-size: 13px; font-weight: 700; color: #0f172a; }
+  .amount.large { color: #dc2626; }
+
+  .action-btn { padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; }
+  .action-btn.primary { background: #f97316; color: white; }
+  .action-btn.ghost { background: #f1f5f9; color: #374151; }
+
+  .skonto-tag { font-size: 11px; color: #7c3aed; font-weight: 700; }
+  .overdue-tag { font-size: 11px; color: #dc2626; font-weight: 700; }
+
+  /* Right panel */
+  .right-panel { width: 320px; background: white; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; flex-shrink: 0; }
+  .panel-header { padding: 16px; border-bottom: 1px solid #e2e8f0; }
+  .panel-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; }
+  .panel-header p { font-size: 12px; color: #64748b; margin-top: 2px; }
+  .panel-body { padding: 16px; flex: 1; overflow-y: auto; }
+  .detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f8fafc; }
+  .detail-label { font-size: 12px; color: #64748b; }
+  .detail-value { font-size: 12px; font-weight: 600; color: #0f172a; text-align: right; }
+  .match-section { margin: 12px 0; }
+  .match-section h4 { font-size: 12px; font-weight: 700; color: #374151; margin-bottom: 8px; }
+  .match-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border-radius: 8px; margin-bottom: 4px; font-size: 12px; }
+  .match-item.ok { background: #f0fdf4; }
+  .match-item.warn { background: #fff7ed; }
+  .panel-actions { padding: 16px; border-top: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 8px; }
+  .panel-btn { padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 700; border: none; cursor: pointer; text-align: center; }
+  .panel-btn.approve { background: #16a34a; color: white; }
+  .panel-btn.reject { background: white; color: #dc2626; border: 1px solid #fecaca; }
+  .panel-btn.escalate { background: #f8fafc; color: #374151; border: 1px solid #e2e8f0; }
+
+  .screen-label { text-align: center; padding: 12px; font-size: 13px; color: #64748b; background: #0f172a; color: rgba(255,255,255,0.6); }
+</style>
+</head>
+<body>
+
+<div class="screen-label">🏗️ BauGPT Procurement — Screen 4: Rechnungseingang & KI-Prüfung (Finance-Ansicht, Desktop)</div>
+
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <h1>BauGPT</h1>
+      <p>Procurement · Beta</p>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section">Übersicht</div>
+      <div class="nav-item"><span>📊</span><p>Dashboard</p></div>
+      <div class="nav-item"><span>📅</span><p>Lieferkalender</p></div>
+
+      <div class="nav-section">Belege</div>
+      <div class="nav-item active"><span>🧾</span><p>Rechnungen</p><div class="nav-badge">12</div></div>
+      <div class="nav-item"><span>📦</span><p>Lieferscheine</p></div>
+      <div class="nav-item"><span>🛒</span><p>Bestellungen</p></div>
+
+      <div class="nav-section">Finanzen</div>
+      <div class="nav-item"><span>⏳</span><p>Skonto-Monitor</p><div class="nav-badge">3</div></div>
+      <div class="nav-item"><span>📈</span><p>Berichte</p></div>
+      <div class="nav-item"><span>🌱</span><p>ESG / CO₂</p></div>
+
+      <div class="nav-section">Einstellungen</div>
+      <div class="nav-item"><span>🔗</span><p>ERP-Verbindung</p></div>
+      <div class="nav-item"><span>⚙️</span><p>Einstellungen</p></div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar">MS</div>
+      <div class="user-info">
+        <p>Maria Schmidt</p>
+        <span>Finance · Admin</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Top bar -->
+    <div class="topbar">
+      <h2>Rechnungseingang</h2>
+      <button class="action-btn primary" style="font-size:13px; padding: 8px 16px;">+ Rechnung hochladen</button>
+    </div>
+
+    <!-- KPI Strip -->
+    <div class="kpi-strip">
+      <div class="kpi-card">
+        <div class="kpi-label">Offen</div>
+        <div class="kpi-value orange">12</div>
+        <div class="kpi-sub">Rechnungen zur Prüfung</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Skonto fällig</div>
+        <div class="kpi-value red">3</div>
+        <div class="kpi-sub">In &lt;48h abgelaufen</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Volumen (offen)</div>
+        <div class="kpi-value">€284k</div>
+        <div class="kpi-sub">Rechnungsvolumen</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">KI-Genauigkeit</div>
+        <div class="kpi-value green">94,2%</div>
+        <div class="kpi-sub">Diese Woche (Ø)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Ø Prüfdauer</div>
+        <div class="kpi-value">4,2 Min</div>
+        <div class="kpi-sub">vs. 2,5h manuell</div>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <button class="filter-btn active">Alle (12)</button>
+      <button class="filter-btn orange">⏳ Ausstehend (7)</button>
+      <button class="filter-btn red">⚠ Abweichung (3)</button>
+      <button class="filter-btn" style="background:#f3e8ff; color:#6b21a8; border-color:#e9d5ff;">⚡ Skonto (3)</button>
+      <button class="filter-btn" style="background:#f0fdf4; color:#166534; border-color:#bbf7d0;">✓ Freigegeben (2)</button>
+      <div class="search-box">
+        <span>🔍</span>
+        <input placeholder="Lieferant, RE-Nr., Betrag…">
+      </div>
+    </div>
+
+    <!-- Invoice Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><input type="checkbox"></th>
+            <th>Rechnungs-Nr.</th>
+            <th>Lieferant</th>
+            <th>Projekt</th>
+            <th>Betrag</th>
+            <th>KI-Score</th>
+            <th>Status</th>
+            <th>Fällig</th>
+            <th>Aktion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- SKONTO URGENT -->
+          <tr style="background: #fdf4ff;">
+            <td><input type="checkbox"></td>
+            <td>
+              <div style="font-weight:700">RE-2024-08841</div>
+              <div class="skonto-tag">⚡ Skonto: 2% bis morgen</div>
+            </td>
+            <td>Holzner Bau GmbH</td>
+            <td>Westpark B3</td>
+            <td><div class="amount large">€38.450,00</div><div class="skonto-tag">Ersparnis: €769</div></td>
+            <td><div class="ai-score high">🤖 96% ✓</div></td>
+            <td><span class="status-pill skonto">⚡ Skonto</span></td>
+            <td><div style="color:#7c3aed; font-weight:700">Morgen 14:00</div></td>
+            <td><button class="action-btn primary">Freigeben</button></td>
+          </tr>
+          <!-- MISMATCH -->
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <div style="font-weight:700">RE-2024-08839</div>
+              <div style="font-size:11px; color: #94a3b8;">11.03.2024</div>
+            </td>
+            <td>Beton Müller KG</td>
+            <td>Westpark B3</td>
+            <td><div class="amount">€12.750,00</div></td>
+            <td><div class="ai-score low">🤖 61% ⚠</div></td>
+            <td><span class="status-pill pending">⚠ Abweichung</span></td>
+            <td><div class="overdue-tag">Fällig: 25.03.</div></td>
+            <td><button class="action-btn ghost">Prüfen</button></td>
+          </tr>
+          <!-- REVIEW -->
+          <tr class="selected">
+            <td><input type="checkbox" checked></td>
+            <td>
+              <div style="font-weight:700">RE-2024-08837</div>
+              <div style="font-size:11px; color: #94a3b8;">10.03.2024 · Ausgewählt</div>
+            </td>
+            <td>Stahlbau Fischer GmbH</td>
+            <td>Büro Nord A1</td>
+            <td><div class="amount">€67.200,00</div></td>
+            <td><div class="ai-score high">🤖 91% ✓</div></td>
+            <td><span class="status-pill review">🔍 In Prüfung</span></td>
+            <td>28.03.</td>
+            <td><button class="action-btn ghost">Öffnen</button></td>
+          </tr>
+          <!-- APPROVED -->
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <div style="font-weight:700">RE-2024-08830</div>
+              <div style="font-size:11px; color: #94a3b8;">08.03.2024</div>
+            </td>
+            <td>Holzner Bau GmbH</td>
+            <td>Westpark B3</td>
+            <td><div class="amount">€24.500,00</div></td>
+            <td><div class="ai-score high">🤖 98% ✓</div></td>
+            <td><span class="status-pill approved">✓ Freigegeben</span></td>
+            <td>22.03.</td>
+            <td><button class="action-btn ghost">Details</button></td>
+          </tr>
+          <!-- PENDING -->
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <div style="font-weight:700">RE-2024-08825</div>
+              <div style="font-size:11px; color: #94a3b8;">07.03.2024</div>
+            </td>
+            <td>Dachdecker Gruber</td>
+            <td>Büro Nord A1</td>
+            <td><div class="amount">€8.920,00</div></td>
+            <td><div class="ai-score med">🤖 78% ~</div></td>
+            <td><span class="status-pill pending">⏳ Ausstehend</span></td>
+            <td>30.03.</td>
+            <td><button class="action-btn ghost">Prüfen</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="padding: 10px 0; font-size: 12px; color: #94a3b8; text-align: center;">Zeige 5 von 12 Rechnungen · Seite 1/3</div>
+    </div>
+  </div>
+
+  <!-- Right Detail Panel (selected invoice) -->
+  <div class="right-panel">
+    <div class="panel-header">
+      <h3>RE-2024-08837 · Detail</h3>
+      <p>Stahlbau Fischer GmbH · KI-Score: 91%</p>
+    </div>
+    <div class="panel-body">
+      <div class="detail-row">
+        <span class="detail-label">Rechnungsbetrag</span>
+        <span class="detail-value" style="font-size:16px; color:#0f172a">€67.200,00</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Bestellbetrag (PO)</span>
+        <span class="detail-value">€67.200,00</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Differenz</span>
+        <span class="detail-value" style="color:#16a34a">€0,00 ✓</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Lieferschein</span>
+        <span class="detail-value" style="color:#16a34a">✓ Bestätigt (10.03.)</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">MwSt.</span>
+        <span class="detail-value">19% (§13b USt.)</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Zahlungsziel</span>
+        <span class="detail-value">28.03.2024 (netto 30)</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">DATEV-Konto</span>
+        <span class="detail-value">3400 (KI-Vorschlag) ✓</span>
+      </div>
+
+      <div class="match-section">
+        <h4>3-Way-Match</h4>
+        <div class="match-item ok">
+          <span>📋 Bestellung PO-1847</span>
+          <span style="color:#16a34a; font-weight:700">✓</span>
+        </div>
+        <div class="match-item ok">
+          <span>📦 Lieferschein LS-08391</span>
+          <span style="color:#16a34a; font-weight:700">✓</span>
+        </div>
+        <div class="match-item ok">
+          <span>🧾 Rechnung RE-08837</span>
+          <span style="color:#16a34a; font-weight:700">✓</span>
+        </div>
+      </div>
+
+      <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px; margin: 8px 0;">
+        <p style="font-size: 12px; color: #166534; font-weight: 600;">🤖 KI-Empfehlung: Freigeben</p>
+        <p style="font-size: 11px; color: #15803d; margin-top: 4px;">Alle 3 Belege stimmen überein. DATEV-Konto 3400 mit 94% Konfidenz vorgeschlagen.</p>
+      </div>
+    </div>
+    <div class="panel-actions">
+      <button class="panel-btn approve">✅ Rechnung freigeben</button>
+      <button class="panel-btn reject">❌ Ablehnen</button>
+      <button class="panel-btn escalate">↗ An Geschäftsführung</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BauGPT Procurement — Neue Bestellung (Screen 7)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; }
+  .app { display: flex; height: 100vh; }
+
+  /* Sidebar compact */
+  .sidebar { width: 60px; background: #0f172a; display: flex; flex-direction: column; align-items: center; padding: 16px 0; gap: 8px; flex-shrink: 0; }
+  .sidebar-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
+  .sidebar-icon.active { background: #f97316; }
+  .sidebar-icon:hover { background: rgba(255,255,255,0.1); }
+  .sidebar-sep { width: 30px; height: 1px; background: rgba(255,255,255,0.1); margin: 4px 0; }
+  .logo-icon { width: 40px; height: 40px; border-radius: 10px; background: #f97316; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: white; margin-bottom: 8px; }
+
+  /* Main 3-column layout */
+  .main { flex: 1; display: flex; overflow: hidden; }
+
+  /* Left panel: Form */
+  .form-panel { width: 480px; background: white; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto; }
+  .panel-header { padding: 20px 24px 16px; border-bottom: 1px solid #f1f5f9; }
+  .panel-header h2 { font-size: 18px; font-weight: 800; color: #0f172a; }
+  .panel-header p { font-size: 13px; color: #64748b; margin-top: 4px; }
+  .progress-steps { display: flex; gap: 0; padding: 12px 24px; border-bottom: 1px solid #f1f5f9; }
+  .step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; }
+  .step::after { content: ''; position: absolute; top: 14px; left: 50%; width: 100%; height: 2px; background: #e2e8f0; z-index: 0; }
+  .step:last-child::after { display: none; }
+  .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; z-index: 1; }
+  .step-dot.done { background: #16a34a; color: white; }
+  .step-dot.active { background: #f97316; color: white; }
+  .step-dot.todo { background: #f1f5f9; color: #94a3b8; border: 2px solid #e2e8f0; }
+  .step-label { font-size: 10px; color: #64748b; font-weight: 600; }
+  .step-label.active { color: #f97316; }
+
+  /* Form body */
+  .form-body { padding: 20px 24px; flex: 1; }
+  .form-section { margin-bottom: 20px; }
+  .form-section h3 { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .form-group { margin-bottom: 12px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 5px; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; color: #374151; background: white;
+  }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: #f97316; box-shadow: 0 0 0 3px #fff7ed; }
+  .form-group .hint { font-size: 11px; color: #94a3b8; margin-top: 3px; }
+
+  /* AI suggestion badge */
+  .ai-suggestion { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 8px 12px; margin-top: 4px; display: flex; align-items: flex-start; gap: 8px; }
+  .ai-suggestion span { font-size: 16px; flex-shrink: 0; }
+  .ai-text { font-size: 12px; color: #92400e; }
+  .ai-text strong { display: block; margin-bottom: 2px; }
+  .ai-accept { font-size: 11px; font-weight: 700; color: #f97316; cursor: pointer; margin-top: 4px; }
+
+  /* Position list in form */
+  .position-list { border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+  .position-header-row { background: #f8fafc; padding: 8px 12px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 36px; gap: 8px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+  .position-row { padding: 10px 12px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 36px; gap: 8px; align-items: center; border-top: 1px solid #f1f5f9; }
+  .position-row input { padding: 5px 8px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; }
+  .position-row select { padding: 5px 8px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; }
+  .pos-delete { width: 28px; height: 28px; border-radius: 6px; background: #fee2e2; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .add-position-btn { padding: 8px 14px; border: 2px dashed #e2e8f0; border-radius: 8px; background: transparent; color: #64748b; font-size: 13px; cursor: pointer; width: 100%; text-align: center; }
+  .add-position-btn:hover { border-color: #f97316; color: #f97316; }
+
+  /* Approval workflow */
+  .approval-flow { display: flex; align-items: center; gap: 8px; background: #f8fafc; border-radius: 10px; padding: 12px; margin-bottom: 12px; }
+  .approval-step { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .approval-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .approval-icon.done { background: #dcfce7; }
+  .approval-icon.active { background: #fef3c7; }
+  .approval-icon.todo { background: #f1f5f9; }
+  .approval-name { font-size: 10px; color: #374151; font-weight: 600; text-align: center; }
+  .approval-arrow { font-size: 18px; color: #cbd5e1; }
+
+  /* Form footer */
+  .form-footer { padding: 16px 24px; border-top: 1px solid #f1f5f9; display: flex; gap: 10px; }
+  .btn { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; border: none; cursor: pointer; }
+  .btn-primary { background: #f97316; color: white; flex: 1; }
+  .btn-secondary { background: #f1f5f9; color: #374151; }
+  .btn-ghost { background: transparent; color: #64748b; border: 1px solid #e2e8f0; }
+
+  /* Center panel: Preview */
+  .preview-panel { flex: 1; display: flex; flex-direction: column; background: #f8fafc; }
+  .preview-header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+  .preview-header h3 { font-size: 14px; font-weight: 700; color: #374151; }
+  .preview-body { flex: 1; padding: 20px; overflow-y: auto; }
+  .po-preview { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .po-preview-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #f97316; }
+  .po-company h2 { font-size: 18px; font-weight: 800; color: #0f172a; }
+  .po-company p { font-size: 12px; color: #64748b; }
+  .po-badge { background: #fef3c7; color: #92400e; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 6px; }
+  .po-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; font-size: 12px; }
+  .po-meta-item { background: #f8fafc; padding: 8px 10px; border-radius: 6px; }
+  .po-meta-item label { display: block; color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+  .po-meta-item span { font-weight: 600; color: #0f172a; }
+  .po-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 16px; }
+  .po-table th { text-align: left; padding: 6px 8px; background: #f8fafc; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #64748b; }
+  .po-table td { padding: 8px; border-top: 1px solid #f1f5f9; }
+  .po-total { display: flex; justify-content: flex-end; }
+  .po-total-box { width: 200px; }
+  .po-total-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
+  .po-total-row.final { border-top: 2px solid #0f172a; margin-top: 4px; padding-top: 8px; font-size: 14px; font-weight: 800; }
+  .po-sig-area { display: flex; gap: 16px; margin-top: 20px; padding-top: 16px; border-top: 1px solid #f1f5f9; }
+  .po-sig { flex: 1; text-align: center; }
+  .po-sig-line { border-top: 1px solid #374151; padding-top: 4px; margin-top: 24px; font-size: 10px; color: #94a3b8; }
+
+  /* Right panel: Supplier suggestions */
+  .supplier-panel { width: 280px; background: white; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+  .supplier-header { padding: 16px; border-bottom: 1px solid #f1f5f9; }
+  .supplier-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; }
+  .supplier-header p { font-size: 11px; color: #64748b; margin-top: 2px; }
+  .supplier-card { padding: 12px 16px; border-bottom: 1px solid #f8fafc; cursor: pointer; }
+  .supplier-card:hover { background: #f8fafc; }
+  .supplier-card.selected { background: #fff7ed; border-left: 3px solid #f97316; }
+  .supplier-name { font-size: 13px; font-weight: 700; color: #0f172a; }
+  .supplier-meta { font-size: 11px; color: #64748b; margin-top: 2px; }
+  .supplier-price { font-size: 14px; font-weight: 800; color: #f97316; margin-top: 6px; }
+  .supplier-price span { font-size: 11px; color: #94a3b8; font-weight: 400; }
+  .supplier-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+  .tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+  .tag-green { background: #dcfce7; color: #166534; }
+  .tag-blue { background: #dbeafe; color: #1e40af; }
+  .tag-orange { background: #fff7ed; color: #c2410c; }
+  .tag-gray { background: #f1f5f9; color: #64748b; }
+
+  .ai-note { margin: 12px 16px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 10px; font-size: 12px; color: #92400e; }
+
+  .screen-label { text-align: center; padding: 12px; font-size: 13px; background: #0f172a; color: rgba(255,255,255,0.6); }
+</style>
+</head>
+<body>
+
+<div class="screen-label">🏗️ BauGPT Procurement — Screen 7: Neue Bestellung erstellen (Einkäufer-Ansicht, Desktop)</div>
+
+<div class="app">
+  <!-- Compact sidebar -->
+  <div class="sidebar">
+    <div class="logo-icon">BG</div>
+    <div class="sidebar-sep"></div>
+    <div class="sidebar-icon">📊</div>
+    <div class="sidebar-icon">📅</div>
+    <div class="sidebar-icon">🧾</div>
+    <div class="sidebar-icon">📦</div>
+    <div class="sidebar-icon active">🛒</div>
+    <div class="sidebar-sep"></div>
+    <div class="sidebar-icon">📈</div>
+    <div class="sidebar-icon">🌱</div>
+    <div class="sidebar-icon">🔗</div>
+    <div class="sidebar-icon" style="margin-top:auto">⚙️</div>
+  </div>
+
+  <!-- Main 3-column -->
+  <div class="main">
+
+    <!-- LEFT: Form -->
+    <div class="form-panel">
+      <div class="panel-header">
+        <h2>Neue Bestellung</h2>
+        <p>Schritt 2 von 3 — Positionen & Lieferant</p>
+      </div>
+
+      <!-- Progress steps -->
+      <div class="progress-steps">
+        <div class="step">
+          <div class="step-dot done">✓</div>
+          <div class="step-label">Projekt</div>
+        </div>
+        <div class="step">
+          <div class="step-dot active">2</div>
+          <div class="step-label active">Positionen</div>
+        </div>
+        <div class="step">
+          <div class="step-dot todo">3</div>
+          <div class="step-label">Freigabe</div>
+        </div>
+      </div>
+
+      <div class="form-body">
+        <!-- Step 1 Summary -->
+        <div class="form-section">
+          <h3>📋 Schritt 1 (abgeschlossen)</h3>
+          <div style="background: #f0fdf4; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #166534;">
+            <strong>Projekt:</strong> Westpark B3 · <strong>Baustelle:</strong> Block 3, EG<br>
+            <strong>Lieferant:</strong> Holzner Bau GmbH · <strong>Lieferdatum:</strong> 18.03.2024
+          </div>
+        </div>
+
+        <!-- Positions -->
+        <div class="form-section">
+          <h3>📦 Positionen</h3>
+          <div class="position-list">
+            <div class="position-header-row">
+              <span>Material</span>
+              <span>Menge</span>
+              <span>Einheit</span>
+              <span>Einzelpreis</span>
+              <span></span>
+            </div>
+            <div class="position-row">
+              <input type="text" value="Beton C25/30">
+              <input type="number" value="50">
+              <select><option selected>m³</option><option>kg</option><option>Stk</option><option>m²</option></select>
+              <input type="text" value="€255,00">
+              <button class="pos-delete">🗑</button>
+            </div>
+            <div class="position-row">
+              <input type="text" value="Bewehrungsstahl B500B Ø12">
+              <input type="number" value="2500">
+              <select><option>m³</option><option selected>kg</option><option>Stk</option></select>
+              <input type="text" value="€1,84">
+              <button class="pos-delete">🗑</button>
+            </div>
+            <div class="position-row" style="background: #f8fafc;">
+              <input type="text" placeholder="Material eingeben…" style="border-style:dashed">
+              <input type="number" placeholder="0">
+              <select><option>m³</option><option>kg</option><option>Stk</option></select>
+              <input type="text" placeholder="€0,00">
+              <button class="pos-delete" style="background:#f8fafc">+</button>
+            </div>
+          </div>
+          <button class="add-position-btn">+ Position hinzufügen</button>
+
+          <!-- KI-Vorschlag -->
+          <div class="ai-suggestion">
+            <span>🤖</span>
+            <div class="ai-text">
+              <strong>KI-Vorschlag: Schalung Doka Framax</strong>
+              Basierend auf ähnlichen Projekten wurde Schalung bei dieser Bestellung typischerweise mitbestellt (73% der Fälle). Einzelpreis: ~€2.800/Set.
+              <div class="ai-accept">+ Vorschlag annehmen</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery address -->
+        <div class="form-section">
+          <h3>🏗️ Lieferadresse</h3>
+          <div class="form-group">
+            <label>Baustelle / Abladestelle</label>
+            <select>
+              <option selected>Westpark B3 · Münchner Str. 45, 80333 München</option>
+              <option>Büro Nord A1 · Schwabing, München</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Lieferdatum</label>
+              <input type="date" value="2024-03-18">
+            </div>
+            <div class="form-group">
+              <label>Lieferzeitfenster</label>
+              <select><option>07:00–10:00 Uhr</option><option selected>10:00–14:00 Uhr</option></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Freigabe-Workflow -->
+        <div class="form-section">
+          <h3>✅ Freigabe-Workflow</h3>
+          <div class="approval-flow">
+            <div class="approval-step">
+              <div class="approval-icon done">👤</div>
+              <div class="approval-name">Thomas K.<br>(Erstellt)</div>
+            </div>
+            <div class="approval-arrow">→</div>
+            <div class="approval-step">
+              <div class="approval-icon active">👔</div>
+              <div class="approval-name">Bauleiter<br>Pflicht &gt;€10k</div>
+            </div>
+            <div class="approval-arrow">→</div>
+            <div class="approval-step">
+              <div class="approval-icon todo">🏢</div>
+              <div class="approval-name">GF<br>Optional &gt;€50k</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Notiz an Bauleiter (optional)</label>
+            <textarea placeholder="z.B. Bitte bis Donnerstag freigeben — Betonage Freitag geplant" style="height: 56px;"></textarea>
+          </div>
+        </div>
+
+        <!-- Budget check -->
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 12px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 12px; font-weight: 700; color: #166534;">✅ Budget ausreichend</div>
+              <div style="font-size: 11px; color: #15803d;">Westpark B3: €160k verfügbar · Bestellung: €17.350</div>
+            </div>
+            <div style="font-size: 20px; font-weight: 800; color: #16a34a;">€17.350</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button class="btn btn-ghost">← Zurück</button>
+        <button class="btn btn-secondary">💾 Entwurf</button>
+        <button class="btn btn-primary">Weiter: Freigabe →</button>
+      </div>
+    </div>
+
+    <!-- CENTER: PO Preview -->
+    <div class="preview-panel">
+      <div class="preview-header">
+        <h3>📄 Bestellvorschau (Live-Preview)</h3>
+        <span style="font-size: 12px; color: #64748b;">Aktualisiert sich in Echtzeit</span>
+      </div>
+      <div class="preview-body">
+        <div class="po-preview">
+          <div class="po-preview-header">
+            <div class="po-company">
+              <h2>BauGPT Procurement</h2>
+              <p>Bestellung (Purchase Order)</p>
+            </div>
+            <div>
+              <div class="po-badge">ENTWURF</div>
+              <div style="font-size: 12px; color: #64748b; margin-top: 6px; text-align: right;">PO-2024-1870</div>
+            </div>
+          </div>
+          <div class="po-meta">
+            <div class="po-meta-item">
+              <label>Lieferant</label>
+              <span>Holzner Bau GmbH</span>
+            </div>
+            <div class="po-meta-item">
+              <label>Projekt</label>
+              <span>Westpark B3</span>
+            </div>
+            <div class="po-meta-item">
+              <label>Bestelldatum</label>
+              <span>11.03.2024</span>
+            </div>
+            <div class="po-meta-item">
+              <label>Lieferdatum</label>
+              <span>18.03.2024</span>
+            </div>
+          </div>
+          <table class="po-table">
+            <thead>
+              <tr>
+                <th>Pos.</th>
+                <th>Material</th>
+                <th>Menge</th>
+                <th>Einheit</th>
+                <th>Einzelpreis</th>
+                <th>Gesamt</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Beton C25/30</td>
+                <td>50</td>
+                <td>m³</td>
+                <td>€255,00</td>
+                <td><strong>€12.750,00</strong></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Bewehrungsstahl B500B Ø12</td>
+                <td>2.500</td>
+                <td>kg</td>
+                <td>€1,84</td>
+                <td><strong>€4.600,00</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="po-total">
+            <div class="po-total-box">
+              <div class="po-total-row"><span>Netto</span><span>€17.350,00</span></div>
+              <div class="po-total-row"><span>MwSt. 19%</span><span>€3.296,50</span></div>
+              <div class="po-total-row final"><span>GESAMT</span><span style="color:#f97316">€20.646,50</span></div>
+            </div>
+          </div>
+          <div class="po-sig-area">
+            <div class="po-sig">
+              <div class="po-sig-line">Besteller · Thomas Klein</div>
+            </div>
+            <div class="po-sig">
+              <div class="po-sig-line">Freigabe · Bauleiter</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Supplier comparison -->
+    <div class="supplier-panel">
+      <div class="supplier-header">
+        <h3>🤖 Lieferanten-Vorschläge</h3>
+        <p>KI-Ranking für Beton C25/30 + Stahl</p>
+      </div>
+
+      <div class="ai-note">
+        🤖 Basierend auf deinen letzten 12 Bestellungen: Holzner Bau hat beste Liefertreue (94%) für Westpark.
+      </div>
+
+      <div class="supplier-card selected">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start">
+          <div class="supplier-name">Holzner Bau GmbH</div>
+          <span style="font-size:12px; background:#dcfce7; color:#166534; padding:2px 6px; border-radius:4px; font-weight:700">Ausgewählt</span>
+        </div>
+        <div class="supplier-meta">München · Lieferung in 5 Tagen</div>
+        <div class="supplier-price">€17.350,00 <span>gesamt</span></div>
+        <div class="supplier-tags">
+          <span class="tag tag-green">94% Liefertreue</span>
+          <span class="tag tag-blue">Stammlieferant</span>
+          <span class="tag tag-orange">2% Skonto (10T)</span>
+        </div>
+      </div>
+
+      <div class="supplier-card">
+        <div class="supplier-name">Beton Müller KG</div>
+        <div class="supplier-meta">Landsberg · Lieferung in 7 Tagen</div>
+        <div class="supplier-price">€16.820,00 <span>gesamt (−€530)</span></div>
+        <div class="supplier-tags">
+          <span class="tag tag-green">−3% günstiger</span>
+          <span class="tag tag-gray">87% Liefertreue</span>
+        </div>
+      </div>
+
+      <div class="supplier-card">
+        <div class="supplier-name">Baustoff Direkt GmbH</div>
+        <div class="supplier-meta">Online · Lieferung in 10 Tagen</div>
+        <div class="supplier-price">€15.900,00 <span>gesamt (−8,4%)</span></div>
+        <div class="supplier-tags">
+          <span class="tag tag-orange">−8,4% günstiger</span>
+          <span class="tag tag-gray">Neu · unbekannt</span>
+        </div>
+      </div>
+
+      <div style="padding: 12px 16px; border-top: 1px solid #f1f5f9; margin-top: auto;">
+        <div style="font-size: 11px; color: #94a3b8; text-align: center;">KI-Empfehlung: Holzner Bau für Verlässlichkeit. Bei Priorität Preis: Beton Müller KG.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
