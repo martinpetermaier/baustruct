@@ -411,6 +411,7 @@ Initialdaten aus ÖKOBAUDAT + DEFRA + UBA für: Beton, Bewehrungsstahl, Baustahl
 | `tech-architecture.md` | Bob 👨‍💻 | ✅ Complete |
 | `business-model.md` | Brunhilde 👩‍💼 | ✅ Complete |
 | `analytics-datamodel.md` | Rainman 👨🏻‍🔧 | ✅ Complete |
+| `api-spec.md` | Hugo 🚀 | ✅ Complete (v1.0) |
 | `PRODUCT-SPEC.md` | Hugo 🚀 | ✅ Complete (v1.0) |
 
 ---
