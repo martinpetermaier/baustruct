@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>BauGPT Procurement — Pitch Deck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body { 
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #0f0f0f;
+    color: white;
+  }
+  
+  .slide {
+    width: 1280px;
+    min-height: 720px;
+    padding: 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Print */
+  @media print {
+    body { background: white; }
+    .slide { page-break-after: always; }
+  }
+
+  /* Slide types */
+  .slide-cover { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+  .slide-problem { background: #1a1a1a; }
+  .slide-solution { background: linear-gradient(135deg, #0a2a1a 0%, #0d3321 100%); }
+  .slide-market { background: #111827; }
+  .slide-usp { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); }
+  .slide-features { background: #111; }
+  .slide-business { background: #0f172a; }
+  .slide-roi { background: linear-gradient(135deg, #14532d 0%, #166534 100%); }
+  .slide-roadmap { background: #1a1a2e; }
+  .slide-cta { background: linear-gradient(135deg, #7c2d12 0%, #9a3412 50%, #c2410c 100%); }
+
+  /* Accent */
+  .accent { color: #f97316; }
+  .accent-green { color: #22c55e; }
+  .accent-blue { color: #60a5fa; }
+  .accent-purple { color: #a78bfa; }
+
+  /* Typography */
+  .label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 16px;
+  }
+  h1 { font-size: 72px; font-weight: 900; line-height: 1.05; }
+  h2 { font-size: 48px; font-weight: 800; line-height: 1.1; }
+  h3 { font-size: 28px; font-weight: 700; }
+  .sub { font-size: 22px; font-weight: 400; opacity: 0.7; margin-top: 16px; line-height: 1.5; }
+  .body { font-size: 18px; line-height: 1.6; opacity: 0.8; }
+
+  /* Components */
+  .tag {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .tag-orange { background: rgba(249,115,22,0.2); color: #f97316; border: 1px solid rgba(249,115,22,0.3); }
+  .tag-green { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+  .tag-blue { background: rgba(96,165,250,0.15); color: #60a5fa; border: 1px solid rgba(96,165,250,0.3); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+
+  .card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .card-highlight {
+    background: rgba(249,115,22,0.1);
+    border: 1px solid rgba(249,115,22,0.3);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .stat {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 14px;
+    opacity: 0.6;
+    margin-top: 8px;
+  }
+
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .flow-step {
+    flex: 1;
+    text-align: center;
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 20px 16px;
+  }
+  .flow-arrow {
+    font-size: 24px;
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+
+  .page-num {
+    position: absolute;
+    bottom: 24px;
+    right: 40px;
+    font-size: 12px;
+    opacity: 0.3;
+  }
+
+  .logo-mark {
+    width: 56px;
+    height: 56px;
+    background: #f97316;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 32px;
+  }
+
+  .check-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .check { color: #22c55e; font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  
+  .table-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    align-items: center;
+  }
+  .table-head { opacity: 0.5; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+  .table-body { background: rgba(255,255,255,0.05); margin-bottom: 4px; }
+  .table-us { background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.2); }
+
+  hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 24px 0; }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: COVER -->
+<div class="slide slide-cover">
+  <div class="logo-mark">🏗️</div>
+  <div class="label">Produktidee · Vertraulich · März 2026</div>
+  <h1>BauGPT<br><span class="accent">Procurement</span></h1>
+  <p class="sub" style="max-width:600px">Automatische Rechnungsprüfung und Materialbeschaffung für Bauunternehmen — gebaut auf BauGPT's Infrastruktur und Kundenbasis.</p>
+  <div style="margin-top:48px; display:flex; gap:16px;">
+    <span class="tag tag-orange">Neues Produkt</span>
+    <span class="tag tag-green">1.000+ Bestandskunden</span>
+    <span class="tag tag-blue">€12.5M validierter Markt</span>
+  </div>
+  <div class="page-num">1 / 9</div>
+</div>
+
+<!-- SLIDE 2: PROBLEM -->
+<div class="slide slide-problem">
+  <div class="label">Das Problem</div>
+  <h2>Rechnungsprüfung kostet<br>Bauunternehmen <span class="accent">Stunden täglich</span></h2>
+
+  <div class="grid-3" style="margin-top:48px">
+    <div class="card-highlight">
+      <div class="stat accent">2–3h</div>
+      <div class="stat-label">täglich für manuelle Rechnungsprüfung<br>– reale Zahl eines mittelgroßen Bauunternehmens</div>
+    </div>
+    <div class="card">
+      <div class="stat" style="color:#f87171">12%</div>
+      <div class="stat-label">Mehrkosten durch Fehler bei<br>manueller Mengenerfassung</div>
+    </div>
+    <div class="card">
+      <div class="stat" style="color:#fbbf24">47</div>
+      <div class="stat-label">Lieferscheine pro Baustelle<br>pro Woche — alles Papier</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:32px">
+    <p class="body">Das Resultat: Zahlungsverzögerungen, verpasste Skonti, unkontrollierte Mehrbestellungen — und eine Buchhaltung die im Papier-Chaos versinkt.</p>
+  </div>
+  <div class="page-num">2 / 9</div>
+</div>
+
+<!-- SLIDE 3: SOLUTION -->
+<div class="slide slide-solution">
+  <div class="label">Die Lösung</div>
+  <h2>Ein Flow. Vollautomatisch.</h2>
+
+  <div class="flow" style="margin-top:48px">
+    <div class="flow-step">
+      <div style="font-size:32px;margin-bottom:12px">🛒</div>
+      <div style="font-weight:600;margin-bottom:4px">Bestellung</div>
+      <div style="font-size:13px;opacity:0.6">Einkäufer legt PO an</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3)">
+      <div style="font-size:32px;margin-bottom:12px">📱</div>
+      <div style="font-weight:600;margin-bottom:4px">Lieferschein</div>
+      <div style="font-size:13px;opacity:0.6">Polier bestätigt in App</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div style="font-size:32px;margin-bottom:12px">🤖</div>
+      <div style="font-weight:600;margin-bottom:4px">KI-Prüfung</div>
+      <div style="font-size:13px;opacity:0.6">3-Way-Match automatisch</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3)">
+      <div style="font-size:32px;margin-bottom:12px">✅</div>
+      <div style="font-weight:600;margin-bottom:4px">Buchung</div>
+      <div style="font-size:13px;opacity:0.6">Direkt ins ERP</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:32px">
+    <div>
+      <div class="check-item"><span class="check">✓</span><span class="body"><strong>>95%</strong> der Rechnungen direkt buchungsfertig</span></div>
+      <div class="check-item"><span class="check">✓</span><span class="body">KI erkennt Preisabweichungen auf Positionsebene</span></div>
+      <div class="check-item"><span class="check">✓</span><span class="body">Mobile App für Poliere (iOS & Android, offline-fähig)</span></div>
+    </div>
+    <div>
+      <div class="check-item"><span class="check">✓</span><span class="body">ERP-Integration: RIB, SAP, Abacus, Procore</span></div>
+      <div class="check-item"><span class="check">✓</span><span class="body">ESG / CO₂-Reporting (CSRD-konform)</span></div>
+      <div class="check-item"><span class="check">✓</span><span class="body">Skonto-Management & Zahlungsfristüberwachung</span></div>
+    </div>
+  </div>
+  <div class="page-num">3 / 9</div>
+</div>
+
+<!-- SLIDE 4: MARKT -->
+<div class="slide slide-market">
+  <div class="label">Marktvalidierung</div>
+  <h2>€12.5M Funding beweist<br>die <span class="accent-blue">Marktgröße</span></h2>
+
+  <div class="grid-2" style="margin-top:40px">
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:13px;opacity:0.5;margin-bottom:8px">Comstruct (München, 2022)</div>
+        <div style="font-size:20px;font-weight:700;color:#60a5fa">€12,5M Funding</div>
+        <div style="font-size:13px;opacity:0.6;margin-top:4px">GV + 20VC · Feb 2025</div>
+        <div style="font-size:13px;opacity:0.6">Kunden: HOCHTIEF, Implenia, ERNE AG</div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;opacity:0.5;margin-bottom:8px">TAM DACH (Schätzung)</div>
+        <div style="font-size:20px;font-weight:700;color:#a78bfa">~€480M/Jahr</div>
+        <div style="font-size:13px;opacity:0.6;margin-top:4px">80k Bauunternehmen × Ø50 Docs/Monat × €10</div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="height:100%">
+        <div style="font-size:15px;font-weight:600;margin-bottom:16px;opacity:0.8">Warum jetzt?</div>
+        <div class="check-item"><span class="check">✓</span><span style="font-size:15px">RIB Partnership (März 2026) zeigt ERP-Hunger</span></div>
+        <div class="check-item"><span class="check">✓</span><span style="font-size:15px">CSRD ab 2026 → ESG-Reporting wird Pflicht</span></div>
+        <div class="check-item"><span class="check">✓</span><span style="font-size:15px">Digitalisierungsdruck im Bau steigt stark</span></div>
+        <div class="check-item"><span class="check">✓</span><span style="font-size:15px">Comstruct validiert Zahlungsbereitschaft</span></div>
+        <div class="check-item"><span class="check">✓</span><span style="font-size:15px">BauGPT hat die Distribution — Comstruct nicht</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">4 / 9</div>
+</div>
+
+<!-- SLIDE 5: USP -->
+<div class="slide slide-usp">
+  <div class="label">Wettbewerbsvorteil</div>
+  <h2>Warum <span class="accent">BauGPT gewinnt</span><br>gegen Comstruct</h2>
+
+  <div style="margin-top:40px">
+    <div class="table-row table-head">
+      <div>Feature</div>
+      <div style="text-align:center">BauGPT</div>
+      <div style="text-align:center">Comstruct</div>
+      <div style="text-align:center">Procore</div>
+      <div style="text-align:center">RIB</div>
+    </div>
+    <div class="table-row table-us">
+      <div style="font-weight:600">1.000+ Bestandskunden 🚀</div>
+      <div style="text-align:center;color:#22c55e;font-weight:700">✓</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+    </div>
+    <div class="table-row table-body">
+      <div>KI-native (kein Bolt-on)</div>
+      <div style="text-align:center;color:#22c55e">✓</div>
+      <div style="text-align:center;color:#22c55e">✓</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+    </div>
+    <div class="table-row table-us">
+      <div style="font-weight:600">Recruiting + Procurement Bundle 🚀</div>
+      <div style="text-align:center;color:#22c55e;font-weight:700">✓</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+    </div>
+    <div class="table-row table-body">
+      <div>ESG / CO₂-Reporting</div>
+      <div style="text-align:center;color:#22c55e">✓</div>
+      <div style="text-align:center;color:#22c55e">✓</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+    </div>
+    <div class="table-row table-us">
+      <div style="font-weight:600">Per-Doc Pricing (kein Lock-in) 🚀</div>
+      <div style="text-align:center;color:#22c55e;font-weight:700">✓</div>
+      <div style="text-align:center;color:#22c55e">✓</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+    </div>
+    <div class="table-row table-body">
+      <div>Mobile Field App (offline)</div>
+      <div style="text-align:center;color:#22c55e">✓</div>
+      <div style="text-align:center;color:#22c55e">✓</div>
+      <div style="text-align:center;color:#22c55e">✓</div>
+      <div style="text-align:center;opacity:0.4">✗</div>
+    </div>
+  </div>
+
+  <div class="card-highlight" style="margin-top:24px">
+    <p style="font-size:16px"><strong class="accent">Entscheidender Vorteil:</strong> BauGPT hat 1.000+ Bauunternehmen als Kunden. Comstruct musste 2 Jahre lang Sales aufbauen — wir haben die Distribution am Tag 1.</p>
+  </div>
+  <div class="page-num">5 / 9</div>
+</div>
+
+<!-- SLIDE 6: FEATURES -->
+<div class="slide slide-features">
+  <div class="label">Produkt</div>
+  <h2>Drei Personas. <span class="accent">Ein System.</span></h2>
+
+  <div class="grid-3" style="margin-top:40px">
+    <div class="card">
+      <div style="font-size:36px;margin-bottom:16px">🏗️</div>
+      <h3 style="margin-bottom:8px">Baustelle</h3>
+      <div style="font-size:13px;opacity:0.5;margin-bottom:16px">Polier & Bauleiter</div>
+      <div class="check-item"><span class="check">✓</span><span style="font-size:14px">Lieferkalender (was kommt heute?)</span></div>
+      <div class="check-item"><span class="check">✓</span><span style="font-size:14px">Lieferschein per App bestätigen</span></div>
+      <div class="check-item"><span class="check">✓</span><span style="font-size:14px">Schäden fotografieren & dokumentieren</span></div>
+      <div class="check-item"><span class="check">✓</span><span style="font-size:14px">Offline-fähig (kein LTE nötig)</span></div>
+    </div>
+    <div class="card" style="border-color:rgba(249,115,22,0.4)">
+      <div style="font-size:36px;margin-bottom:16px">🛒</div>
+      <h3 style="margin-bottom:8px">Einkauf</h3>
+      <div style="font-size:13px;opacity:0.5;margin-bottom:16px">Procurement Manager</div>
+      <div class="check-item"><span class="check">✓</span><span style="font-size:14px">Produktkatalog mit Vertragspreisen</span></div>
+      <div class="check-item"><span class="check">✓</span><span style="font-size:14px">Bestellfreigabe (Approval Workflow)</span></div>
+      <div class="check-item"><span class="check">✓</span><span style="font-size:14px">Automatischer Rechnungsabgleich</span></div>
+      <div class="check-item"><span class="check">✓</span><span style="font-size:14px">Lieferantenperformance-Auswertung</span></div>
+    </div>
+    <div class="card">
+      <div style="font-size:36px;margin-bottom:16px">💼</div>
+      <h3 style="margin-bottom:8px">Finanzen</h3>
+      <div style="font-size:13px;opacity:0.5;margin-bottom:16px">Buchhalter & CFO</div>
+      <div class="check-item"><span class="check">✓</span><span style="font-size:14px">>95% buchungsfertig via KI</span></div>
+      <div class="check-item"><span class="check">✓</span><span style="font-size:14px">KI-Kontierungsvorschläge</span></div>
+      <div class="check-item"><span class="check">✓</span><span style="font-size:14px">ERP-Direktbuchung (RIB, SAP)</span></div>
+      <div class="check-item"><span class="check">✓</span><span style="font-size:14px">Skonto-Fristmanagement</span></div>
+    </div>
+  </div>
+  <div class="page-num">6 / 9</div>
+</div>
+
+<!-- SLIDE 7: BUSINESS MODEL -->
+<div class="slide slide-business">
+  <div class="label">Business Model</div>
+  <h2>Per-Document Pricing —<br><span class="accent-blue">skaliert mit dem Kunden</span></h2>
+
+  <div class="grid-3" style="margin-top:40px">
+    <div class="card">
+      <div style="font-size:13px;opacity:0.5;margin-bottom:12px;text-transform:uppercase;letter-spacing:2px">Starter</div>
+      <div style="font-size:36px;font-weight:800;margin-bottom:4px">€0,50<span style="font-size:16px;opacity:0.6">/Doc</span></div>
+      <div style="font-size:13px;opacity:0.6;margin-bottom:20px">bis 500 Docs/Monat</div>
+      <hr/>
+      <div style="font-size:13px;margin-top:16px;opacity:0.7;line-height:2">
+        ✓ Bis 10 Nutzer<br>
+        ✓ Mobile App<br>
+        ✓ Basis-Dashboard<br>
+        ✗ ERP-Integration<br>
+        ✗ ESG Reporting
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(249,115,22,0.5);background:rgba(249,115,22,0.08)">
+      <div style="font-size:11px;color:#f97316;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">⭐ Empfohlen</div>
+      <div style="font-size:13px;opacity:0.5;margin-bottom:12px;text-transform:uppercase;letter-spacing:2px">Business</div>
+      <div style="font-size:36px;font-weight:800;margin-bottom:4px">€0,35<span style="font-size:16px;opacity:0.6">/Doc</span></div>
+      <div style="font-size:13px;opacity:0.6;margin-bottom:20px">500–5.000 Docs/Monat</div>
+      <hr style="border-color:rgba(249,115,22,0.3)"/>
+      <div style="font-size:13px;margin-top:16px;opacity:0.7;line-height:2">
+        ✓ Bis 50 Nutzer<br>
+        ✓ ERP-Integration<br>
+        ✓ ESG Reporting<br>
+        ✓ KI-Kontierung<br>
+        ✓ Skonto-Management
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;opacity:0.5;margin-bottom:12px;text-transform:uppercase;letter-spacing:2px">Enterprise</div>
+      <div style="font-size:36px;font-weight:800;margin-bottom:4px">Auf<span style="font-size:20px"> Anfrage</span></div>
+      <div style="font-size:13px;opacity:0.6;margin-bottom:20px">>5.000 Docs/Monat</div>
+      <hr/>
+      <div style="font-size:13px;margin-top:16px;opacity:0.7;line-height:2">
+        ✓ Unbegrenzt Nutzer<br>
+        ✓ Dedicated Support<br>
+        ✓ Custom Integrationen<br>
+        ✓ SLA Garantie<br>
+        ✓ On-Premise Option
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <div class="grid-3" style="gap:0">
+      <div style="text-align:center;padding:12px;border-right:1px solid rgba(255,255,255,0.1)">
+        <div style="font-size:22px;font-weight:800;color:#22c55e">€1.750</div>
+        <div style="font-size:12px;opacity:0.6">MRR bei 100 Business Kunden (Ø 500 Docs)</div>
+      </div>
+      <div style="text-align:center;padding:12px;border-right:1px solid rgba(255,255,255,0.1)">
+        <div style="font-size:22px;font-weight:800;color:#60a5fa">422:1</div>
+        <div style="font-size:12px;opacity:0.6">LTV:CAC Ratio (Bestandskunde = kein CAC)</div>
+      </div>
+      <div style="text-align:center;padding:12px">
+        <div style="font-size:22px;font-weight:800;color:#f97316">20%</div>
+        <div style="font-size:12px;opacity:0.6">Rabatt für BauGPT Pro Bestandskunden</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">7 / 9</div>
+</div>
+
+<!-- SLIDE 8: ROI -->
+<div class="slide slide-roi">
+  <div class="label">Return on Investment</div>
+  <h2>Konkrete Zahlen.<br><span style="color:#86efac">Messbarer ROI.</span></h2>
+
+  <div class="grid-2" style="margin-top:40px">
+    <div>
+      <div class="card" style="background:rgba(0,0,0,0.3);border-color:rgba(255,255,255,0.15);margin-bottom:20px">
+        <div style="font-size:13px;opacity:0.6;margin-bottom:8px">⏱️ Zeitersparnis Buchhaltung</div>
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="text-align:center">
+            <div style="font-size:36px;font-weight:900;color:#f87171">2–3h</div>
+            <div style="font-size:12px;opacity:0.6">täglich bisher</div>
+          </div>
+          <div style="font-size:32px;opacity:0.4">→</div>
+          <div style="text-align:center">
+            <div style="font-size:36px;font-weight:900;color:#86efac">Min.</div>
+            <div style="font-size:12px;opacity:0.6">mit BauGPT</div>
+          </div>
+        </div>
+        <div style="font-size:12px;opacity:0.5;margin-top:8px">Quelle: ERNE AG mit Comstruct — gleicher Effekt für uns</div>
+      </div>
+
+      <div class="card" style="background:rgba(0,0,0,0.3);border-color:rgba(255,255,255,0.15)">
+        <div style="font-size:13px;opacity:0.6;margin-bottom:8px">💰 Kosteneinsparung (Beispiel Mittelstand)</div>
+        <div style="font-size:13px;opacity:0.7;line-height:2">
+          2h/Tag × €35 Buchhalter-Stundensatz × 250 Arbeitstage<br>
+          = <strong style="color:#86efac;font-size:18px">€17.500 Ersparnis/Jahr</strong><br>
+          + Skonto-Optimierung: Ø <strong style="color:#86efac">€3.200/Jahr</strong><br>
+          + Fehlerreduktion: Ø <strong style="color:#86efac">€4.800/Jahr</strong>
+        </div>
+        <hr style="border-color:rgba(255,255,255,0.2);margin:12px 0"/>
+        <div style="font-size:18px;font-weight:700;color:#86efac">= €25.500 ROI/Jahr</div>
+        <div style="font-size:12px;opacity:0.5">vs. Business Tier Kosten: Ø ~€2.100/Jahr</div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="background:rgba(0,0,0,0.3);border-color:rgba(255,255,255,0.15);height:100%">
+        <div style="font-size:15px;font-weight:600;margin-bottom:20px;opacity:0.9">ROI Kalkulation für Gründer-Pitch</div>
+        <div style="font-size:13px;opacity:0.7;line-height:2.2">
+          📊 <strong>Break-even für Kunden:</strong> ~10 Tage<br>
+          📊 <strong>Payback Period:</strong> &lt;1 Monat<br>
+          📊 <strong>NRR Potenzial:</strong> >130% (Volumen wächst mit Projekten)<br>
+          📊 <strong>Churn-Risiko:</strong> Sehr gering (tief in Workflows integriert)
+        </div>
+        <hr style="border-color:rgba(255,255,255,0.15);margin:16px 0"/>
+        <div style="font-size:13px;opacity:0.7;line-height:2">
+          🎯 <strong>Für BauGPT:</strong><br>
+          Ziel: 200 Business Kunden in 12 Monaten<br>
+          = €3.500 MRR = €42.000 ARR<br>
+          + Upsell zu Enterprise bei 20 Kunden<br>
+          = geschätzt €80–120k ARR in Jahr 1
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">8 / 9</div>
+</div>
+
+<!-- SLIDE 9: ROADMAP + CTA -->
+<div class="slide slide-roadmap">
+  <div class="label">Roadmap & Next Steps</div>
+  <h2>Von 0 zu Launch<br>in <span class="accent">5 Monaten</span></h2>
+
+  <div class="grid-3" style="margin-top:40px">
+    <div class="card">
+      <div class="tag tag-orange" style="margin-bottom:16px">Phase 1 — Monat 1-2</div>
+      <h3 style="font-size:18px;margin-bottom:12px">MVP Build</h3>
+      <div style="font-size:13px;opacity:0.7;line-height:2">
+        ✓ Lieferkalender (Mobile)<br>
+        ✓ Digitaler Lieferschein<br>
+        ✓ KI-Rechnungsprüfung<br>
+        ✓ Erste ERP-Integration<br>
+        ✓ 20 Beta-Kunden onboarden
+      </div>
+    </div>
+    <div class="card">
+      <div class="tag tag-blue" style="margin-bottom:16px">Phase 2 — Monat 3-4</div>
+      <h3 style="font-size:18px;margin-bottom:12px">Beta → Launch</h3>
+      <div style="font-size:13px;opacity:0.7;line-height:2">
+        ✓ Einkauf-Modul komplett<br>
+        ✓ Supplier Portal<br>
+        ✓ ESG Reporting<br>
+        ✓ Alle ERP-Integrationen<br>
+        ✓ Public Launch + Pricing
+      </div>
+    </div>
+    <div class="card">
+      <div class="tag tag-green" style="margin-bottom:16px">Phase 3 — Monat 5-6</div>
+      <h3 style="font-size:18px;margin-bottom:12px">Skalierung</h3>
+      <div style="font-size:13px;opacity:0.7;line-height:2">
+        ✓ 200+ Kunden<br>
+        ✓ Procore Marketplace<br>
+        ✓ Lieferanten-Netzwerk<br>
+        ✓ Enterprise Sales<br>
+        ✓ Funding Round vorbereiten
+      </div>
+    </div>
+  </div>
+
+  <div class="card-highlight" style="margin-top:32px;display:flex;align-items:center;justify-content:space-between">
+    <div>
+      <div style="font-weight:700;font-size:18px">Sofortige nächste Schritte</div>
+      <div style="font-size:14px;opacity:0.7;margin-top:4px">Entscheidung heute → Kickoff nächste Woche</div>
+    </div>
+    <div style="font-size:13px;opacity:0.8;text-align:right;line-height:2">
+      1. Go/No-Go Entscheidung<br>
+      2. Bob startet Phase 1 Build<br>
+      3. 5 Beta-Kunden aus Bestandsnetz kontaktieren
+    </div>
+  </div>
+  <div class="page-num">9 / 9</div>
+</div>
+
+</body>
+</html>
