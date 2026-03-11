@@ -1311,3 +1311,703 @@
 <!-- PAGE 21: TECH ARCHITEKTUR -->
 <div class="page">
   <div class="section-label">14. Technische Architektur</div>
+  <h2 style="margin-bottom:6px">Gebaut auf bewährter BauGPT-Infrastruktur</h2>
+  <p class="lead">Kein Greenfield-Projekt — BauGPT Procurement ist ein neues Modul auf bestehender, bewährter Infrastruktur.</p>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h3 style="margin-bottom:10px">Tech Stack</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>Layer</th><th>Technologie</th><th>Begründung</th></tr></thead>
+        <tbody>
+          <tr><td>Frontend</td><td>Next.js 14 (App Router)</td><td>BauGPT-Standard</td></tr>
+          <tr><td>UI</td><td>shadcn/ui + Tailwind CSS</td><td>Design System</td></tr>
+          <tr><td>Backend</td><td>Next.js API Routes</td><td>Same-Repo, einfach</td></tr>
+          <tr><td>Datenbank</td><td>PostgreSQL (Supabase)</td><td>BauGPT-Standard</td></tr>
+          <tr><td>ORM</td><td>Prisma</td><td>Type-safe, Migrations</td></tr>
+          <tr><td>Auth</td><td>Supabase Auth</td><td>Multi-Tenant, RLS</td></tr>
+          <tr><td>File Storage</td><td>Supabase Storage</td><td>PDFs, Fotos</td></tr>
+          <tr><td>KI / OCR</td><td>OpenAI GPT-4o</td><td>Bereits vorhanden</td></tr>
+          <tr><td>Background Jobs</td><td>Supabase Edge Functions</td><td>PDF async processing</td></tr>
+          <tr><td>Hosting</td><td>Vercel</td><td>BauGPT-Standard</td></tr>
+          <tr><td>Mobile App</td><td>Progressive Web App</td><td>iOS + Android, offline</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Warum diese Entscheidungen?</h3>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:4px">Supabase als Kern</h4>
+        <p style="font-size:12px;margin:0">Row Level Security (RLS) ermöglicht Multi-Tenant ohne komplexe Middleware. Jedes Unternehmen sieht nur seine eigenen Daten — out of the box.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:4px">PWA statt Native App</h4>
+        <p style="font-size:12px;margin:0">Eine Codebase für iOS und Android. Offline-Fähigkeit durch Service Worker. Update ohne App-Store-Review. Deutlich schnellere Entwicklung.</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-bottom:4px">OpenAI GPT-4o für KI</h4>
+        <p style="font-size:12px;margin:0">API bereits in BauGPT Pro integriert. Beste OCR + Structured-Output Performance am Markt. Kosten: ~€0,04 pro Dokument — negligible vs. Revenue.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="background:#f8fafc">
+    <h4 style="margin-bottom:10px">Kernarchitektur: Datenbankschema (vereinfacht)</h4>
+    <div class="grid-3" style="font-size:11px">
+      <div><strong>companies</strong><br/><span style="color:#6b7280">id, name, plan, erp_type</span></div>
+      <div><strong>projects</strong><br/><span style="color:#6b7280">id, company_id, name, budget</span></div>
+      <div><strong>users</strong><br/><span style="color:#6b7280">id, company_id, role, email</span></div>
+      <div><strong>purchase_orders</strong><br/><span style="color:#6b7280">id, project_id, supplier_id, status</span></div>
+      <div><strong>delivery_notes</strong><br/><span style="color:#6b7280">id, po_id, confirmed_by, photos[]</span></div>
+      <div><strong>invoices</strong><br/><span style="color:#6b7280">id, po_id, match_status, ai_confidence</span></div>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 21</span></div>
+</div>
+
+<!-- PAGE 22: TECH SICHERHEIT & COMPLIANCE -->
+<div class="page">
+  <div class="section-label">14. Technische Architektur (Fortsetzung)</div>
+  <h2 style="margin-bottom:16px">Sicherheit, Compliance & Skalierbarkeit</h2>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h3 style="margin-bottom:10px">Sicherheitsarchitektur</h3>
+      <div class="card-green" style="margin-bottom:10px">
+        <h4 style="margin-bottom:8px;color:#14532d">DSGVO-Compliance by Design</h4>
+        <ul class="checklist" style="font-size:12px">
+          <li>Alle Daten auf deutschen Servern (Frankfurt)</li>
+          <li>Verschlüsselung at rest und in transit (AES-256)</li>
+          <li>Row Level Security — Mandanten-Isolation</li>
+          <li>Audit Log für alle kritischen Aktionen</li>
+          <li>Daten-Export & Löschung auf Anfrage</li>
+          <li>ISO 27001 Zertifizierung geplant (Q3 2026)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 style="margin-bottom:8px">Zugriffssteuerung</h4>
+        <table style="font-size:12px;margin:0">
+          <tr><th>Rolle</th><th>Zugriff</th></tr>
+          <tr><td>site_manager</td><td>Nur eigene Baustelle + Lieferungen</td></tr>
+          <tr><td>procurement</td><td>Alle Projekte des Unternehmens</td></tr>
+          <tr><td>finance</td><td>Alle Rechnungen + Berichte</td></tr>
+          <tr><td>admin</td><td>Vollzugriff + User-Management</td></tr>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Skalierbarkeit</h3>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:6px">Verarbeitungskapazität</h4>
+        <table style="font-size:12px;margin:0">
+          <tr><td style="border:none;padding:3px 0">Dokumente/Tag (Start)</td><td style="border:none;text-align:right">500</td></tr>
+          <tr><td style="border:none;padding:3px 0">Dokumente/Tag (Ziel M12)</td><td style="border:none;text-align:right">50.000</td></tr>
+          <tr><td style="border:none;padding:3px 0">Verarbeitungszeit/Doc</td><td style="border:none;text-align:right">&lt;30 Sek.</td></tr>
+          <tr><td style="border:none;padding:3px 0">Concurrent Users</td><td style="border:none;text-align:right">unbegrenzt (Serverless)</td></tr>
+        </table>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:6px">Uptime & Verfügbarkeit</h4>
+        <ul class="checklist" style="font-size:12px">
+          <li>Vercel Serverless: 99,99% SLA</li>
+          <li>Supabase: 99,9% SLA</li>
+          <li>Automatische Skalierung — kein Manual-Eingriff</li>
+          <li>Zero-Downtime Deployments</li>
+        </ul>
+      </div>
+      <div class="card-blue">
+        <h4 style="margin-bottom:6px;color:#1e40af">ERP-Integrations-Architektur</h4>
+        <p style="font-size:12px;margin-bottom:0">Webhook-basiert: ERP schickt Bestelldaten rein, BauGPT schickt buchungsfertige Belege zurück. Unterstützte Protokolle: REST API, EDI (EDIFACT), CSV-Import. Keine proprietären Connectoren nötig.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="background:#f0fdf4;border-color:#bbf7d0">
+    <h4 style="margin-bottom:8px;color:#14532d">Entwicklungsgeschwindigkeit — warum 8 Wochen zum MVP reichen</h4>
+    <div class="grid-4" style="text-align:center;font-size:12px">
+      <div><div style="font-weight:700;color:#16a34a">Woche 1–2</div><div style="color:#374151">DB Schema + Auth + Basis-API</div></div>
+      <div><div style="font-weight:700;color:#16a34a">Woche 3–4</div><div style="color:#374151">Field App + Lieferschein-Flow</div></div>
+      <div><div style="font-weight:700;color:#16a34a">Woche 5–6</div><div style="color:#374151">KI-Pipeline + Rechnungsprüfung</div></div>
+      <div><div style="font-weight:700;color:#16a34a">Woche 7–8</div><div style="color:#374151">Finance Dashboard + Beta-Launch</div></div>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 22</span></div>
+</div>
+
+<!-- PAGE 23: ROADMAP -->
+<div class="page">
+  <div class="section-label">15. Produktroadmap</div>
+  <h2 style="margin-bottom:6px">18-Monats-Roadmap: Von MVP zu Marktführer</h2>
+  <p class="lead">Klare Phasen, messbare Meilensteine, konservative Zeitplanung.</p>
+
+  <div class="grid-3" style="margin-bottom:16px">
+    <div class="card-orange">
+      <span class="badge badge-orange" style="margin-bottom:10px">Phase 1 — Monat 1–2</span>
+      <h4 style="margin-bottom:8px">Foundation & MVP</h4>
+      <ul class="checklist" style="font-size:12px">
+        <li>Next.js App Setup + DB Schema</li>
+        <li>Supabase Auth (3 Rollen)</li>
+        <li>Lieferkalender (Mobile)</li>
+        <li>Digitaler Lieferschein + Bestätigung</li>
+        <li>KI-Rechnungsprüfung (OCR + Parsing)</li>
+        <li>3-Way-Match Algorithmus</li>
+        <li>Basis Finance-Dashboard</li>
+        <li>20 Beta-Kunden onboarden</li>
+      </ul>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #fed7aa;font-size:11px;color:#9a3412"><strong>Exit Criteria:</strong> NPS >50 bei Beta-Kunden</div>
+    </div>
+    <div class="card">
+      <span class="badge badge-blue" style="margin-bottom:10px">Phase 2 — Monat 3–6</span>
+      <h4 style="margin-bottom:8px">Full Product & Launch</h4>
+      <ul class="checklist" style="font-size:12px">
+        <li>Einkauf-Modul vollständig</li>
+        <li>Skonto-Management</li>
+        <li>ERP-Integration (RIB, Abacus)</li>
+        <li>Supplier Portal (Beta)</li>
+        <li>ESG / CO₂-Reporting</li>
+        <li>KI-Kontierungsvorschläge verbessert</li>
+        <li>Public Launch + Landing Page</li>
+        <li>Pricing-Modell live</li>
+        <li>100 zahlende Kunden</li>
+      </ul>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0;font-size:11px;color:#6b7280"><strong>Exit Criteria:</strong> €5k MRR</div>
+    </div>
+    <div class="card">
+      <span class="badge badge-green" style="margin-bottom:10px">Phase 3 — Monat 7–18</span>
+      <h4 style="margin-bottom:8px">Scale & Enterprise</h4>
+      <ul class="checklist" style="font-size:12px">
+        <li>SAP-Integration</li>
+        <li>Procore Marketplace</li>
+        <li>Enterprise Features (SLA, On-Prem)</li>
+        <li>Lieferanten-Netzwerk aufbauen</li>
+        <li>Multi-Language (EN, FR)</li>
+        <li>KI-Modell fine-tunen (Bau-spezifisch)</li>
+        <li>Partnership-Programm</li>
+        <li>200+ Kunden</li>
+        <li>Erste Enterprise-Deals (>500 MA)</li>
+      </ul>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #bbf7d0;font-size:11px;color:#14532d"><strong>Exit Criteria:</strong> €50k MRR</div>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:10px">Monatliche Meilensteine (M1–M12)</h3>
+  <table style="font-size:11px">
+    <thead><tr><th>Monat</th><th>Tech-Meilensteine</th><th>Business-Meilensteine</th><th>KPI</th></tr></thead>
+    <tbody>
+      <tr><td><strong>M1</strong></td><td>DB + Auth + API Basis</td><td>Beta-Kunden identifiziert</td><td>Setup ✓</td></tr>
+      <tr><td><strong>M2</strong></td><td>MVP komplett (alle 7 Screens)</td><td>20 Beta-Kunden onboarded</td><td>NPS >50</td></tr>
+      <tr><td><strong>M3</strong></td><td>Einkauf-Modul + Skonto</td><td>Erste Zahlung eingegangen</td><td>€1k MRR</td></tr>
+      <tr><td><strong>M4</strong></td><td>ERP-Integration RIB live</td><td>Public Launch</td><td>€3k MRR</td></tr>
+      <tr class="row-highlight"><td><strong>M6</strong></td><td>ESG Reporting + Supplier Portal</td><td>100 zahlende Kunden</td><td>€8k MRR</td></tr>
+      <tr><td><strong>M9</strong></td><td>SAP + Procore Integration</td><td>Erste Enterprise-Demo</td><td>€20k MRR</td></tr>
+      <tr class="row-highlight"><td><strong>M12</strong></td><td>KI Fine-Tuning abgeschlossen</td><td>200 Kunden, 2 Enterprise</td><td>€50k MRR</td></tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 23</span></div>
+</div>
+
+<!-- PAGE 24: ROADMAP DETAIL -->
+<div class="page">
+  <div class="section-label">15. Roadmap (Fortsetzung)</div>
+  <h2 style="margin-bottom:16px">Feature-Prioritäten & Entscheidungsrahmen</h2>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h3 style="margin-bottom:10px">MoSCoW-Priorisierung MVP</h3>
+      <div class="card" style="margin-bottom:8px;border-left:4px solid #16a34a">
+        <h4 style="margin-bottom:6px;color:#14532d">Must Have (MVP Day 1)</h4>
+        <ul style="list-style:none;font-size:12px">
+          <li style="margin-bottom:3px">• Lieferkalender + digitaler Lieferschein</li>
+          <li style="margin-bottom:3px">• Rechnungs-Upload + OCR + 3-Way-Match</li>
+          <li style="margin-bottom:3px">• Rechnungsprüfung (Approve / Reject)</li>
+          <li style="margin-bottom:3px">• Basis-Auth (3 Rollen)</li>
+          <li>• Mobile-responsive UI</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom:8px;border-left:4px solid #ea580c">
+        <h4 style="margin-bottom:6px">Should Have (M2–M3)</h4>
+        <ul style="list-style:none;font-size:12px">
+          <li style="margin-bottom:3px">• KI-Kontierungsvorschläge</li>
+          <li style="margin-bottom:3px">• Produktkatalog (Einkauf)</li>
+          <li style="margin-bottom:3px">• Bestellfreigabe-Workflow</li>
+          <li>• Email-Notifications</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left:4px solid #6b7280">
+        <h4 style="margin-bottom:6px;color:#374151">Could Have (M4–M6)</h4>
+        <ul style="list-style:none;font-size:12px">
+          <li style="margin-bottom:3px">• ERP-Integration</li>
+          <li style="margin-bottom:3px">• Skonto-Management</li>
+          <li>• ESG Reporting</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Risiko-adjustierte Zeitplanung</h3>
+      <div class="card-orange" style="margin-bottom:10px">
+        <h4 style="margin-bottom:6px">Zeitpuffer-Strategie</h4>
+        <p style="font-size:12px">Jede Phase hat 20% Zeitpuffer eingebaut. Phase 1 nominell 6 Wochen, geplant 8 Wochen — 2 Wochen Reserve für unerwartete Komplexität bei KI-Integration.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:6px">Tech-Schulden Strategie</h4>
+        <p style="font-size:12px">MVP priorisiert Speed over Perfection. Bekannte Tech-Schulden werden in Phase 2 abgebaut (Refactoring Sprint in Woche 9–10). Keine perfekte Architektur von Tag 1.</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-bottom:6px">Abhängigkeiten & kritischer Pfad</h4>
+        <table style="font-size:11px;margin:0">
+          <tr><td style="border:none;padding:3px 0">DB Schema → alle anderen Features</td></tr>
+          <tr><td style="border:none;padding:3px 0">OCR-Pipeline → Rechnungsprüfung</td></tr>
+          <tr><td style="border:none;padding:3px 0">Beta-Feedback → Feature-Priorisierung M3+</td></tr>
+          <tr><td style="border:none;padding:3px 0">ERP-API-Zugang → Integration (extern)</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <h4 style="color:white;margin-bottom:8px">Lean Startup Prinzip: Fail Fast, Learn Fast</h4>
+    <p style="font-size:13px;margin:0">Nach 20 Beta-Kunden (M2) entscheiden wir datenbasiert welche Features in M3–M6 priorisiert werden. Kein Feature wird entwickelt ohne Kundenbeweis. Jede Iteration wird gemessen (NPS, Aktivierungsrate, Churn).</p>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 24</span></div>
+</div>
+
+<!-- PAGE 25: ESG REPORTING -->
+<div class="page">
+  <div class="section-label">16. ESG & Nachhaltigkeits-Reporting</div>
+  <h2 style="margin-bottom:6px">ESG als Alleinstellungsmerkmal und regulatorischer Treiber</h2>
+  <p class="lead">CSRD macht ESG-Reporting zur Pflicht. BauGPT Procurement liefert es automatisch als Nebenprodukt des Procurement-Prozesses.</p>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h3 style="margin-bottom:10px">Was ist CSRD und warum ist es relevant?</h3>
+      <div class="card-orange" style="margin-bottom:10px">
+        <h4 style="margin-bottom:6px">EU Corporate Sustainability Reporting Directive</h4>
+        <ul class="checklist" style="font-size:12px">
+          <li>Ab 2026: Pflicht für Unternehmen >250 MA</li>
+          <li>Ab 2027: Pflicht für börsennotierte KMU</li>
+          <li>Anforderung: CO₂-Footprint der Supply Chain</li>
+          <li>Strafe bei Nicht-Compliance: Bis zu 10% Jahresumsatz</li>
+          <li>Baubranche: Besonders betroffene Branche (Beton = CO₂-intensiv)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 style="margin-bottom:6px">Was BauGPT automatisch trackt</h4>
+        <ul class="checklist" style="font-size:12px">
+          <li>Materialverbrauch (kg/m³ pro Material)</li>
+          <li>CO₂-Faktor pro Material (ÖKOBAUDAT)</li>
+          <li>Transport-Emissionen (Lieferantenentfernung)</li>
+          <li>Gesamter CO₂-Footprint pro Projekt</li>
+          <li>Vergleich zu Vorjahr / Benchmark</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">CO₂-Berechnung: Methodik</h3>
+      <div class="card" style="margin-bottom:10px;font-family:monospace;font-size:12px;background:#f8fafc">
+        <strong>Formel:</strong><br/>
+        CO₂_kg = Σ (Menge_kg × CO₂_Faktor_kg/kg)<br/><br/>
+        <strong>Beispiel Beton C25/30:</strong><br/>
+        50.000 kg × 0,197 kg CO₂/kg<br/>
+        = <strong style="color:#ea580c">9.850 kg CO₂</strong>
+      </div>
+      <table style="font-size:12px">
+        <thead><tr><th>Material</th><th>CO₂-Faktor (kg/kg)</th><th>Quelle</th></tr></thead>
+        <tbody>
+          <tr><td>Beton C25/30</td><td>0,197</td><td>ÖKOBAUDAT 2023</td></tr>
+          <tr><td>Bewehrungsstahl</td><td>0,720</td><td>ÖKOBAUDAT 2023</td></tr>
+          <tr><td>Ziegelstein</td><td>0,219</td><td>ÖKOBAUDAT 2023</td></tr>
+          <tr><td>Konstruktionsholz</td><td>-1,500</td><td>ÖKOBAUDAT 2023 (neg. = CO₂-Speicher)</td></tr>
+          <tr><td>Mineralwolle</td><td>1,860</td><td>ÖKOBAUDAT 2023</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <p style="font-size:14px;margin:0"><strong>Business Case für ESG:</strong> Für alle Bauunternehmen >250 MA ist CSRD-Reporting ab 2026 Pflicht. BauGPT Procurement liefert den kompletten CO₂-Report als automatisches Nebenprodukt — kein separates Tool, kein Mehraufwand. Das ist ein €5.000+ Wert pro Jahr für Enterprise-Kunden.</p>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 25</span></div>
+</div>
+
+<!-- PAGE 26: RISIKEN -->
+<div class="page">
+  <div class="section-label">17. Risiken & Mitigierungsstrategien</div>
+  <h2 style="margin-bottom:6px">Ehrliche Risikoanalyse</h2>
+  <p class="lead">Keine Idee ist risikolos. Hier sind die wesentlichen Risiken und wie wir sie mitigieren.</p>
+
+  <h3 style="margin-bottom:10px">Risiko-Matrix</h3>
+  <table style="font-size:12px;margin-bottom:16px">
+    <thead>
+      <tr>
+        <th style="width:25%">Risiko</th>
+        <th>Wahrscheinlichkeit</th>
+        <th>Impact</th>
+        <th>Mitigierungsstrategie</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Produkt-Market-Fit nicht gefunden</strong></td>
+        <td class="risk-low">Gering</td>
+        <td class="risk-high">Hoch</td>
+        <td>Beta mit 20 Kunden vor Public Launch. Kill-Entscheidung nach M2 wenn NPS &lt;30.</td>
+      </tr>
+      <tr>
+        <td><strong>Comstruct greift Bestandskunden an</strong></td>
+        <td class="risk-med">Mittel</td>
+        <td class="risk-med">Mittel</td>
+        <td>Speed to Market. Bundle-Vorteil (Recruiting + Pro). Günstigeres Pricing durch Cross-Sell.</td>
+      </tr>
+      <tr>
+        <td><strong>KI-Accuracy zu niedrig (&lt;90%)</strong></td>
+        <td class="risk-med">Mittel</td>
+        <td class="risk-high">Hoch</td>
+        <td>Manuelle Fallback-Prüfung bei Low-Confidence. Iteratives Training mit Beta-Daten.</td>
+      </tr>
+      <tr>
+        <td><strong>ERP-Integration zu komplex / teuer</strong></td>
+        <td class="risk-med">Mittel</td>
+        <td class="risk-low">Gering</td>
+        <td>CSV-Export als Fallback immer möglich. Integration in Phase 2 (nicht MVP-kritisch).</td>
+      </tr>
+      <tr>
+        <td><strong>Poliere nutzen App nicht (Change-Resistance)</strong></td>
+        <td class="risk-med">Mittel</td>
+        <td class="risk-high">Hoch</td>
+        <td>App extrem einfach halten (1 Tap Bestätigung). Onboarding-Video. Polier-freundliches Design.</td>
+      </tr>
+      <tr>
+        <td><strong>Churn nach Beta-Phase</strong></td>
+        <td class="risk-low">Gering</td>
+        <td class="risk-med">Mittel</td>
+        <td>Tief in Workflows integriert = hohe Switching-Kosten. CSM-betreuung in ersten 3 Monaten.</td>
+      </tr>
+      <tr>
+        <td><strong>DSGVO-Verletzung (Rechnung-Daten)</strong></td>
+        <td class="risk-low">Sehr gering</td>
+        <td class="risk-high">Hoch</td>
+        <td>Supabase (DE-Server), Verschlüsselung, DSGVO-Audit vor Launch, keine Drittland-Transfers.</td>
+      </tr>
+      <tr>
+        <td><strong>Supabase / Vercel Ausfall</strong></td>
+        <td class="risk-low">Gering</td>
+        <td class="risk-med">Mittel</td>
+        <td>SLA >99,9%. Backups täglich. Fallback: lokaler Export immer möglich.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="grid-2">
+    <div class="card-green">
+      <h4 style="color:#14532d;margin-bottom:8px">Kill-Kriterien (Wann stoppen wir?)</h4>
+      <ul style="list-style:none;font-size:12px">
+        <li style="margin-bottom:6px">🔴 NPS &lt;20 nach 20 Beta-Kunden</li>
+        <li style="margin-bottom:6px">🔴 Aktivierungsrate &lt;30% (Kunden nutzen es nicht)</li>
+        <li style="margin-bottom:6px">🔴 KI-Accuracy dauerhaft &lt;70% nach 3 Monaten Training</li>
+        <li>🔴 &lt;5 zahlende Kunden nach 4 Monaten</li>
+      </ul>
+    </div>
+    <div class="card-orange">
+      <h4 style="margin-bottom:8px">Pivot-Optionen</h4>
+      <ul style="list-style:none;font-size:12px">
+        <li style="margin-bottom:6px">→ Nur Lieferschein-Tool (ohne Rechnungsprüfung)</li>
+        <li style="margin-bottom:6px">→ Nur ESG-Reporting (CSRD-Compliance Tool)</li>
+        <li style="margin-bottom:6px">→ Nur Supplier Portal (für Lieferanten)</li>
+        <li>→ White-Label für RIB / Procore</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 26</span></div>
+</div>
+
+<!-- PAGE 27: TEAM -->
+<div class="page">
+  <div class="section-label">18. Team & Ressourcenbedarf</div>
+  <h2 style="margin-bottom:16px">Wer baut das? Was brauchen wir?</h2>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h3 style="margin-bottom:12px">Kern-Team (intern)</h3>
+      <div class="card" style="margin-bottom:10px">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="width:40px;height:40px;background:#0f172a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;flex-shrink:0">PL</div>
+          <div>
+            <h4 style="margin-bottom:2px">Product Lead (Andi)</h4>
+            <p style="font-size:12px;margin:0;color:#6b7280">Vision, Kunden-Interviews, Pricing, GTM, Gründer-Kommunikation. 30% Kapazität in Phase 1.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="width:40px;height:40px;background:#ea580c;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;flex-shrink:0">B</div>
+          <div>
+            <h4 style="margin-bottom:2px">Bob (Engineering Lead)</h4>
+            <p style="font-size:12px;margin:0;color:#6b7280">Vollständige Umsetzung MVP. Next.js + Supabase + KI-Pipeline. 80% Kapazität über 8 Wochen.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="width:40px;height:40px;background:#f97316;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;flex-shrink:0">H</div>
+          <div>
+            <h4 style="margin-bottom:2px">Hugo (Marketing & Design)</h4>
+            <p style="font-size:12px;margin:0;color:#6b7280">UX/Wireframes, Landing Page, Beta-Kunden-Kommunikation, Content, GTM-Ausführung.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="width:40px;height:40px;background:#7c3aed;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;flex-shrink:0">R</div>
+          <div>
+            <h4 style="margin-bottom:2px">Rainman (Analytics & Data)</h4>
+            <p style="font-size:12px;margin:0;color:#6b7280">Analytics-Layer, KPI-Tracking, ESG-Datenmodell, Snowflake-Integration.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:12px">Externe Ressourcen (Phase 2+)</h3>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:6px">Customer Success Manager (Phase 2)</h4>
+        <p style="font-size:12px;margin-bottom:0">Ab 50+ Kunden. Onboarding, NPS-Erhebung, Churn-Prevention. Kann intern oder Freelancer sein.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:6px">Enterprise Sales (Phase 3)</h4>
+        <p style="font-size:12px;margin-bottom:0">Für Deals >500 MA Unternehmen. Erst wenn Produkt bewährt und erste Enterprise-Inbounds kommen.</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-bottom:6px">ERP-Integration Spezialist (Phase 2)</h4>
+        <p style="font-size:12px;margin-bottom:0">RIB und SAP haben komplexe API-Strukturen. Eventuell externer Berater für 4–6 Wochen.</p>
+      </div>
+
+      <div class="card-green" style="margin-top:14px">
+        <h4 style="color:#14532d;margin-bottom:8px">Personalkostenplanung (Phase 1–2)</h4>
+        <table style="font-size:12px;margin:0">
+          <tr><td style="border:none;padding:3px 0">Bob (intern, 8 Wochen × 80%)</td><td style="border:none;text-align:right;color:#16a34a">intern</td></tr>
+          <tr><td style="border:none;padding:3px 0">Hugo (intern, ongoing)</td><td style="border:none;text-align:right;color:#16a34a">intern</td></tr>
+          <tr><td style="border:none;padding:3px 0">Andi (intern, 30% Zeit)</td><td style="border:none;text-align:right;color:#16a34a">intern</td></tr>
+          <tr style="border-top:1px solid #bbf7d0"><td style="padding-top:6px;font-weight:700">Cash-Investition Phase 1</td><td style="text-align:right;font-weight:700;color:#16a34a">~€500 total</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <p style="font-size:14px;margin:0"><strong>Kern-Erkenntnis:</strong> Das Team ist bereits vorhanden. Die technischen Fähigkeiten (Bob), das Marketing (Hugo), die Daten (Rainman) und die Kundenbeziehungen (Andi) sind im Haus. Phase 1 braucht kein externes Kapital.</p>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 27</span></div>
+</div>
+
+<!-- PAGE 28: MILESTONES & KPIs -->
+<div class="page">
+  <div class="section-label">19. Milestones & Erfolgskennzahlen</div>
+  <h2 style="margin-bottom:16px">Wie wir Erfolg messen</h2>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h3 style="margin-bottom:10px">North Star Metric</h3>
+      <div class="highlight" style="margin-bottom:14px">
+        <h4 style="color:white;font-size:16px;margin-bottom:4px">Verarbeitete Dokumente pro Monat</h4>
+        <p style="font-size:13px;margin:0">Diese Zahl wächst wenn: mehr Kunden, mehr Projekte, mehr Aktivierung. Sie fällt wenn Kunden churnen oder nicht aktiviert sind. Alles andere ist Vanity.</p>
+      </div>
+      <h3 style="margin-bottom:10px">Aktivierungs-Funnel</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>Stage</th><th>Ziel-Rate</th><th>Definition</th></tr></thead>
+        <tbody>
+          <tr><td>Signup → Onboarding</td><td class="td-orange">80%</td><td>Lädt erste Rechnung hoch</td></tr>
+          <tr><td>Onboarding → Aktivierung</td><td class="td-orange">60%</td><td>5+ Docs in ersten 7 Tagen</td></tr>
+          <tr><td>Aktivierung → Retention</td><td class="td-orange">70%</td><td>Nutzt Produkt nach 30 Tagen noch</td></tr>
+          <tr class="row-highlight"><td><strong>Gesamt Conv.</strong></td><td class="td-green"><strong>34%</strong></td><td>Signup → aktiv nach M1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">KPI-Dashboard (monatlich)</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>KPI</th><th>M3 Ziel</th><th>M6 Ziel</th><th>M12 Ziel</th></tr></thead>
+        <tbody>
+          <tr><td>Aktive Kunden</td><td>30</td><td>100</td><td>200</td></tr>
+          <tr><td>Docs/Monat gesamt</td><td>6.000</td><td>25.000</td><td>80.000</td></tr>
+          <tr><td>MRR</td><td>€2.280</td><td>€9.000</td><td>€30.000</td></tr>
+          <tr><td>NPS</td><td>>50</td><td>>60</td><td>>65</td></tr>
+          <tr><td>Churn Rate</td><td>&lt;5%</td><td>&lt;3%</td><td>&lt;2%</td></tr>
+          <tr><td>KI-Accuracy</td><td>>90%</td><td>>93%</td><td>>95%</td></tr>
+          <tr><td>Aktivierungsrate</td><td>>50%</td><td>>60%</td><td>>70%</td></tr>
+          <tr><td>Support Tickets/Kunde</td><td>&lt;2/Mo</td><td>&lt;1/Mo</td><td>&lt;0,5/Mo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:10px">Entscheidungs-Trigger</h3>
+  <table style="font-size:12px">
+    <thead><tr><th>Wenn...</th><th>Dann...</th></tr></thead>
+    <tbody>
+      <tr><td>NPS nach M2 &lt;30</td><td class="td-red">Produkt überarbeiten, kein Scale-up</td></tr>
+      <tr><td>MRR nach M4 &lt;€2k</td><td class="td-red">Pricing oder Channel überdenken</td></tr>
+      <tr><td>KI-Accuracy &lt;85% nach M3</td><td class="td-orange">Manuellen Review-Prozess verstärken, OpenAI-Prompts optimieren</td></tr>
+      <tr class="row-highlight"><td>NPS >60 und MRR >€5k nach M4</td><td class="td-green">Sales-Ressourcen erhöhen, Enterprise-Outreach starten</td></tr>
+      <tr class="row-highlight"><td>Erster Enterprise-Deal (&gt;€1k MRR)</td><td class="td-green">Dedicated Enterprise-Track aufbauen</td></tr>
+      <tr><td>Churn >10% in einem Monat</td><td class="td-red">Notfall-Analyse: Warum? Sofortige CSM-Intervention</td></tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 28</span></div>
+</div>
+
+<!-- PAGE 29: NEXT STEPS -->
+<div class="page">
+  <div class="section-label">20. Entscheidungsmatrix & Next Steps</div>
+  <h2 style="margin-bottom:6px">Was heute entschieden werden muss</h2>
+  <p class="lead">Klare Entscheidungen jetzt ermöglichen Start in dieser Woche.</p>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div>
+      <h3 style="margin-bottom:10px">Offene Entscheidungen für Gründer</h3>
+      <div class="card-orange" style="margin-bottom:10px">
+        <h4 style="margin-bottom:6px">1. Go / No-Go</h4>
+        <p style="font-size:12px;margin-bottom:0">Bauen wir BauGPT Procurement? Bei Go: Bob startet Phase 1 in dieser Woche.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:6px">2. Produktname final</h4>
+        <p style="font-size:12px;margin-bottom:0">Optionen: "BauGPT Procurement", "BauGPT Supply", "Baustruct". Empfehlung: <strong>BauGPT Procurement</strong> (klar, verständlich).</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:6px">3. Beta-Kunden: wer zuerst?</h4>
+        <p style="font-size:12px;margin-bottom:0">Hugo identifiziert Top-20 BauGPT Pro Kunden nach Rechnungsvolumen. Andi contacted persönlich. Freigabe nötig: Welche Kunden dürfen angesprochen werden?</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <h4 style="margin-bottom:6px">4. Free Tier für Beta-Phase?</h4>
+        <p style="font-size:12px;margin-bottom:0">Empfehlung: 3 Monate kostenlos für Beta-Kunden (erste 20). Danach reguläres Pricing. Niedrigschwelliger Einstieg beschleunigt Adoption.</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-bottom:6px">5. Bob's Kapazität freigeben</h4>
+        <p style="font-size:12px;margin-bottom:0">Bob braucht 80% seiner Kapazität für 8 Wochen. Welche aktuellen Tasks werden deprioritisiert?</p>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Sofortige Next Steps (diese Woche)</h3>
+      <div style="space-y:8px">
+        <div class="timeline-item">
+          <div style="width:28px;height:28px;background:#ea580c;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:11px;flex-shrink:0">1</div>
+          <div><h4 style="margin-bottom:2px">Go/No-Go Entscheidung</h4><p style="font-size:12px;margin:0">Gründer bestätigen: wir bauen das. Bob-Kapazität freigeben.</p></div>
+        </div>
+        <div class="timeline-item">
+          <div style="width:28px;height:28px;background:#ea580c;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:11px;flex-shrink:0">2</div>
+          <div><h4 style="margin-bottom:2px">Bob startet Phase 1</h4><p style="font-size:12px;margin:0">Next.js Setup, DB Schema, erste API Routes. Kickoff-Call Mo/Di.</p></div>
+        </div>
+        <div class="timeline-item">
+          <div style="width:28px;height:28px;background:#ea580c;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:11px;flex-shrink:0">3</div>
+          <div><h4 style="margin-bottom:2px">Beta-Kunden identifizieren</h4><p style="font-size:12px;margin:0">Hugo + Andi: Top-20 Liste aus BauGPT Pro Kundennetz. Bis Ende Woche.</p></div>
+        </div>
+        <div class="timeline-item">
+          <div style="width:28px;height:28px;background:#ea580c;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:11px;flex-shrink:0">4</div>
+          <div><h4 style="margin-bottom:2px">Landing Page Waitlist</h4><p style="font-size:12px;margin:0">baugpt.com/procurement — einfache Waitlist-Seite innerhalb 3 Tagen live.</p></div>
+        </div>
+        <div class="timeline-item">
+          <div style="width:28px;height:28px;background:#16a34a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:11px;flex-shrink:0">5</div>
+          <div><h4 style="margin-bottom:2px">Woche 2: Erste Beta-Emails raus</h4><p style="font-size:12px;margin:0">Persönliche Email von Andi an Top-20. Copy von Hugo bereits fertig.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h3 style="color:white;margin-bottom:4px">Das Fenster ist jetzt offen.</h3>
+        <p style="font-size:13px;margin:0">Comstruct hat €12,5M Funding und expandiert gerade. In 12 Monaten werden sie aktiv in BauGPT's Kundenbasis gehen. Wir müssen schneller sein.</p>
+      </div>
+      <div style="text-align:center;padding-left:24px;border-left:1px solid rgba(255,255,255,0.3)">
+        <div style="font-size:28px;font-weight:900">Jetzt</div>
+        <div style="font-size:12px;opacity:0.8">ist der richtige Zeitpunkt</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 29</span></div>
+</div>
+
+<!-- PAGE 30: ANHANG / FINANZKALKULATION -->
+<div class="page">
+  <div class="section-label">Anhang: Detaillierte Finanzkalkulation</div>
+  <h2 style="margin-bottom:16px">5-Jahres-Projektion & Szenario-Analyse</h2>
+
+  <h3 style="margin-bottom:10px">Basis-Szenario: Vollständige P&L Projektion</h3>
+  <table style="font-size:11px;margin-bottom:16px">
+    <thead>
+      <tr>
+        <th>Position</th><th>2026 (H2)</th><th>2027 (voll)</th><th>2028</th><th>2029</th><th>2030</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Kunden (EoY)</strong></td><td>200</td><td>600</td><td>1.500</td><td>3.000</td><td>6.000</td></tr>
+      <tr><td>Ø Docs/Kunde/Mo</td><td>250</td><td>350</td><td>450</td><td>500</td><td>550</td></tr>
+      <tr class="row-highlight"><td><strong>Gross Revenue</strong></td><td class="td-orange"><strong>€116k</strong></td><td class="td-green"><strong>€958k</strong></td><td class="td-green"><strong>€3,24M</strong></td><td class="td-green"><strong>€9M</strong></td><td class="td-green"><strong>€19,8M</strong></td></tr>
+      <tr><td>COGS (API, Hosting: 20%)</td><td>€23k</td><td>€192k</td><td>€648k</td><td>€1,6M</td><td>€3,2M</td></tr>
+      <tr class="row-highlight"><td><strong>Gross Profit (80%)</strong></td><td class="td-green"><strong>€93k</strong></td><td class="td-green"><strong>€766k</strong></td><td class="td-green"><strong>€2,59M</strong></td><td class="td-green"><strong>€7,2M</strong></td><td class="td-green"><strong>€15,8M</strong></td></tr>
+      <tr><td>Engineering (Bob + 1)</td><td>intern</td><td>€80k</td><td>€200k</td><td>€400k</td><td>€700k</td></tr>
+      <tr><td>Marketing & Sales</td><td>€10k</td><td>€50k</td><td>€150k</td><td>€350k</td><td>€800k</td></tr>
+      <tr><td>Customer Success</td><td>€0</td><td>€40k</td><td>€100k</td><td>€200k</td><td>€400k</td></tr>
+      <tr><td>G&A (Overhead)</td><td>€5k</td><td>€30k</td><td>€80k</td><td>€150k</td><td>€300k</td></tr>
+      <tr class="row-highlight"><td><strong>EBITDA</strong></td><td class="td-green"><strong>€78k</strong></td><td class="td-green"><strong>€566k</strong></td><td class="td-green"><strong>€2,06M</strong></td><td class="td-green"><strong>€6,1M</strong></td><td class="td-green"><strong>€13,6M</strong></td></tr>
+      <tr><td>EBITDA-Marge</td><td>67%</td><td>59%</td><td>64%</td><td>68%</td><td>69%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="grid-3" style="margin-bottom:16px">
+    <div class="card-red">
+      <h4 style="margin-bottom:8px;color:#7f1d1d">Pessimistisch (50% der Basis)</h4>
+      <table style="font-size:11px;margin:0">
+        <tr><td style="border:none;padding:2px 0">Kunden 2026</td><td style="border:none;text-align:right">100</td></tr>
+        <tr><td style="border:none;padding:2px 0">ARR 2026</td><td style="border:none;text-align:right">€58k</td></tr>
+        <tr><td style="border:none;padding:2px 0">Kunden 2027</td><td style="border:none;text-align:right">300</td></tr>
+        <tr><td style="border:none;padding:2px 0">ARR 2027</td><td style="border:none;text-align:right">€479k</td></tr>
+      </table>
+    </div>
+    <div class="card-orange" style="border-width:2px">
+      <h4 style="margin-bottom:8px">Basis (wahrscheinlich)</h4>
+      <table style="font-size:11px;margin:0">
+        <tr><td style="border:none;padding:2px 0">Kunden 2026</td><td style="border:none;text-align:right">200</td></tr>
+        <tr><td style="border:none;padding:2px 0">ARR 2026</td><td style="border:none;text-align:right">€116k</td></tr>
+        <tr><td style="border:none;padding:2px 0">Kunden 2027</td><td style="border:none;text-align:right">600</td></tr>
+        <tr><td style="border:none;padding:2px 0">ARR 2027</td><td style="border:none;text-align:right">€958k</td></tr>
+      </table>
+    </div>
+    <div class="card-green">
+      <h4 style="margin-bottom:8px;color:#14532d">Optimistisch (200%)</h4>
+      <table style="font-size:11px;margin:0">
+        <tr><td style="border:none;padding:2px 0">Kunden 2026</td><td style="border:none;text-align:right">400</td></tr>
+        <tr><td style="border:none;padding:2px 0">ARR 2026</td><td style="border:none;text-align:right">€232k</td></tr>
+        <tr><td style="border:none;padding:2px 0">Kunden 2027</td><td style="border:none;text-align:right">1.200</td></tr>
+        <tr><td style="border:none;padding:2px 0">ARR 2027</td><td style="border:none;text-align:right">€1,92M</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;text-align:center">
+      <div><div style="font-size:22px;font-weight:900">€0</div><div style="font-size:11px;opacity:0.8">Externes Kapital für Phase 1 nötig</div></div>
+      <div style="border-left:1px solid rgba(255,255,255,0.3)"><div style="font-size:22px;font-weight:900">8 Wo</div><div style="font-size:11px;opacity:0.8">bis erster zahlender Kunde</div></div>
+      <div style="border-left:1px solid rgba(255,255,255,0.3)"><div style="font-size:22px;font-weight:900">€19,8M</div><div style="font-size:11px;opacity:0.8">ARR Potenzial 2030</div></div>
+      <div style="border-left:1px solid rgba(255,255,255,0.3)"><div style="font-size:22px;font-weight:900">69%</div><div style="font-size:11px;opacity:0.8">EBITDA-Marge (steady state)</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;text-align:center">
+    <p style="font-size:11px;color:#9ca3af">Erstellt: März 2026 | BauGPT Marketing — Hugo 🚀 | Vertraulich — nur für interne Verwendung</p>
+    <p style="font-size:11px;color:#9ca3af">Repo: github.com/BobTheBuilderBGPT/baustruct | Alle Projektdaten & Specs verfügbar</p>
+  </div>
+
+  <div class="page-footer"><span>BauGPT Procurement — Vertraulich</span><span>Seite 30</span></div>
+</div>
+
+</body>
+</html>
