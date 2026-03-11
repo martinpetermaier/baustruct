@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BauGPT Procurement — Onboarding Wizard</title>
+<style>
+  :root {
+    --primary: #1a56db;
+    --primary-light: #e8edfb;
+    --primary-dark: #1444b0;
+    --success: #059669;
+    --success-light: #ecfdf5;
+    --warning: #d97706;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,.1);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #f0f4ff 0%, var(--gray-50) 50%, #f0fdf4 100%);
+    color: var(--gray-900);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .header .logo {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .header .logo span { color: var(--primary); }
+  .header .subtitle {
+    color: var(--gray-500);
+    font-size: 14px;
+  }
+
+  /* Progress */
+  .progress-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 32px;
+    max-width: 560px;
+    width: 100%;
+  }
+  .step-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 auto;
+    z-index: 1;
+  }
+  .step-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600;
+    background: var(--gray-200);
+    color: var(--gray-500);
+    transition: all .3s;
+  }
+  .step-circle.active {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 0 0 4px var(--primary-light);
+  }
+  .step-circle.done {
+    background: var(--success);
+    color: #fff;
+  }
+  .step-label {
+    font-size: 11px;
+    color: var(--gray-400);
+    margin-top: 6px;
+    white-space: nowrap;
+  }
+  .step-label.active { color: var(--primary); font-weight: 600; }
+  .step-label.done { color: var(--success); }
+  .step-line {
+    flex: 1;
+    height: 3px;
+    background: var(--gray-200);
+    margin: 0 -2px;
+    margin-bottom: 20px;
+  }
+  .step-line.done { background: var(--success); }
+
+  /* Card */
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    max-width: 560px;
+    width: 100%;
+    overflow: hidden;
+  }
+  .card-body { padding: 32px; }
+  .card-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .card-subtitle {
+    color: var(--gray-500);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  /* Form */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 6px;
+  }
+  .form-group label .required { color: #dc2626; }
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--gray-900);
+    background: #fff;
+    transition: border-color .15s;
+    outline: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+  }
+  .form-group input::placeholder { color: var(--gray-400); }
+  .form-group .hint {
+    font-size: 12px;
+    color: var(--gray-400);
+    margin-top: 4px;
+  }
+
+  /* Radio group */
+  .radio-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .radio-option {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all .15s;
+  }
+  .radio-option:hover { border-color: var(--primary); }
+  .radio-option.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary);
+  }
+
+  /* Team invite row */
+  .invite-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    margin-bottom: 12px;
+  }
+  .invite-row .form-group { flex: 1; margin-bottom: 0; }
+  .invite-row select { width: 140px; }
+  .btn-add {
+    padding: 10px 14px;
+    background: var(--gray-100);
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--gray-500);
+  }
+  .btn-add:hover { background: var(--gray-200); }
+
+  /* Invited list */
+  .invited-list {
+    list-style: none;
+    margin-top: 8px;
+  }
+  .invited-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--gray-50);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  .invited-list .role-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  /* Test workflow */
+  .workflow-demo {
+    border: 1.5px dashed var(--gray-200);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .workflow-demo .emoji { font-size: 40px; margin-bottom: 8px; }
+  .workflow-demo p { font-size: 13px; color: var(--gray-500); }
+  .workflow-steps {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .workflow-step {
+    padding: 8px 14px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .workflow-arrow { color: var(--gray-300); font-size: 16px; }
+
+  /* Completion */
+  .completion-box {
+    text-align: center;
+    padding: 20px 0;
+  }
+  .completion-box .checkmark {
+    width: 64px; height: 64px;
+    background: var(--success-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 32px;
+  }
+  .completion-box h2 { font-size: 22px; margin-bottom: 8px; }
+  .completion-box p { color: var(--gray-500); font-size: 14px; max-width: 400px; margin: 0 auto 24px; }
+  .quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .quick-action {
+    padding: 16px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .quick-action:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+  .quick-action .icon { font-size: 24px; margin-bottom: 6px; }
+  .quick-action .label { font-size: 13px; font-weight: 600; }
+
+  /* Timer badge */
+  .timer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--success-light);
+    color: var(--success);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+
+  /* Buttons */
+  .btn-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--gray-100);
+  }
+  .btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all .15s;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-ghost {
+    background: none;
+    color: var(--gray-500);
+  }
+  .btn-ghost:hover { color: var(--gray-700); }
+  .btn-success {
+    background: var(--success);
+    color: #fff;
+    padding: 12px 32px;
+    font-size: 15px;
+  }
+
+  /* Skip link */
+  .skip-link {
+    display: block;
+    text-align: center;
+    color: var(--gray-400);
+    font-size: 12px;
+    margin-top: 16px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  /* Screens */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Upload zone */
+  .upload-zone {
+    border: 2px dashed var(--gray-200);
+    border-radius: 12px;
+    padding: 32px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .15s;
+    margin-bottom: 16px;
+  }
+  .upload-zone:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+  .upload-zone .icon { font-size: 32px; margin-bottom: 8px; }
+  .upload-zone p { font-size: 14px; color: var(--gray-500); }
+  .upload-zone .formats { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
+
+  /* File preview */
+  .file-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--gray-50);
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+  .file-preview .file-icon { font-size: 24px; }
+  .file-preview .file-info { flex: 1; }
+  .file-preview .file-name { font-size: 13px; font-weight: 600; }
+  .file-preview .file-meta { font-size: 11px; color: var(--gray-400); }
+  .file-preview .file-status {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--success);
+    background: var(--success-light);
+    padding: 2px 10px;
+    border-radius: 10px;
+  }
+
+  /* AI result */
+  .ai-result {
+    background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+    border: 1.5px solid #bfdbfe;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 16px;
+  }
+  .ai-result h4 {
+    font-size: 14px;
+    color: var(--primary);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ai-result table {
+    width: 100%;
+    font-size: 13px;
+    border-collapse: collapse;
+  }
+  .ai-result td {
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+  }
+  .ai-result td:first-child {
+    color: var(--gray-500);
+    width: 40%;
+  }
+  .ai-result td:last-child { font-weight: 600; }
+  .ai-result .match-badge {
+    display: inline-block;
+    background: var(--success);
+    color: #fff;
+    font-size: 11px;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">🏗️ BauGPT <span>Procurement</span></div>
+  <div class="subtitle">Starte in unter 10 Minuten</div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar" id="progressBar">
+  <div class="step-indicator">
+    <div class="step-circle active" id="sc1">1</div>
+    <div class="step-label active" id="sl1">Firma</div>
+  </div>
+  <div class="step-line" id="line1"></div>
+  <div class="step-indicator">
+    <div class="step-circle" id="sc2">2</div>
+    <div class="step-label" id="sl2">Team</div>
+  </div>
+  <div class="step-line" id="line2"></div>
+  <div class="step-indicator">
+    <div class="step-circle" id="sc3">3</div>
+    <div class="step-label" id="sl3">Test-Workflow</div>
+  </div>
+  <div class="step-line" id="line3"></div>
+  <div class="step-indicator">
+    <div class="step-circle" id="sc4">4</div>
+    <div class="step-label" id="sl4">Fertig!</div>
+  </div>
+</div>
+
+<!-- CARD -->
+<div class="card">
+
+  <!-- STEP 1: Company Setup -->
+  <div class="card-body screen active" id="step1">
+    <div class="timer-badge">⏱ ca. 2 Minuten</div>
+    <div class="card-title">Unternehmen einrichten</div>
+    <div class="card-subtitle">Grundlegende Firmendaten — den Rest kannst Du später ergänzen.</div>
+
+    <div class="form-group">
+      <label>Firmenname <span class="required">*</span></label>
+      <input type="text" placeholder="Mustermann Bau GmbH" value="Stein & Partner GmbH">
+    </div>
+
+    <div class="form-group">
+      <label>Rechtsform <span class="required">*</span></label>
+      <select>
+        <option selected>GmbH</option>
+        <option>GmbH & Co. KG</option>
+        <option>AG</option>
+        <option>UG</option>
+        <option>Einzelunternehmen</option>
+        <option>OHG</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>USt-ID <span class="hint" style="display:inline; margin:0">(für DATEV-Export)</span></label>
+      <input type="text" placeholder="DE123456789" value="DE291837465">
+    </div>
+
+    <div class="form-group">
+      <label>Unternehmensgröße</label>
+      <div class="radio-group">
+        <div class="radio-option">1–20 MA</div>
+        <div class="radio-option selected">20–100 MA</div>
+        <div class="radio-option">100+ MA</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Branche</label>
+      <div class="radio-group">
+        <div class="radio-option selected">Hochbau</div>
+        <div class="radio-option">Tiefbau</div>
+        <div class="radio-option">Ausbau</div>
+        <div class="radio-option">GaLa</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <div></div>
+      <button class="btn btn-primary" onclick="goStep(2)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Team Invite -->
+  <div class="card-body screen" id="step2">
+    <div class="timer-badge">⏱ ca. 3 Minuten</div>
+    <div class="card-title">Team einladen</div>
+    <div class="card-subtitle">Lade Kollegen ein — Poliere per Link, Büro per E-Mail.</div>
+
+    <div class="invite-row">
+      <div class="form-group">
+        <label>E-Mail-Adresse</label>
+        <input type="email" placeholder="kollege@firma.de">
+      </div>
+      <div class="form-group" style="flex:0 0 140px">
+        <label>Rolle</label>
+        <select>
+          <option>Polier</option>
+          <option selected>Einkauf</option>
+          <option>Buchhaltung</option>
+          <option>Geschäftsführung</option>
+        </select>
+      </div>
+      <button class="btn-add">＋</button>
+    </div>
+
+    <ul class="invited-list">
+      <li>
+        <span>thomas.meier@steinpartner.de</span>
+        <span class="role-tag">Polier</span>
+      </li>
+      <li>
+        <span>sabine.koch@steinpartner.de</span>
+        <span class="role-tag">Buchhaltung</span>
+      </li>
+    </ul>
+
+    <div style="margin-top: 20px; padding: 16px; background: var(--gray-50); border-radius: 10px;">
+      <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">📱 Polier-Einladungslink</div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <input type="text" value="https://app.baugpt.com/join/stein-partner-a8x2" style="flex:1; padding:8px 12px; border:1.5px solid var(--gray-200); border-radius:8px; font-size:13px; color:var(--gray-500);" readonly>
+        <button class="btn btn-primary" style="padding:8px 16px; font-size:13px;">Kopieren</button>
+      </div>
+      <div class="hint" style="margin-top: 6px;">Per WhatsApp an Poliere schicken — kein Login nötig, funktioniert sofort am Handy.</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goStep(1)">← Zurück</button>
+      <button class="btn btn-primary" onclick="goStep(3)">Weiter →</button>
+    </div>
+    <div class="skip-link" onclick="goStep(3)">Überspringen — später einladen</div>
+  </div>
+
+  <!-- STEP 3: Test Workflow -->
+  <div class="card-body screen" id="step3">
+    <div class="timer-badge">⏱ ca. 5 Minuten</div>
+    <div class="card-title">Erster Test-Workflow</div>
+    <div class="card-subtitle">Lade einen echten Lieferschein hoch und sieh die KI in Aktion.</div>
+
+    <div class="workflow-steps" style="margin-bottom: 24px;">
+      <div class="workflow-step">📄 Dokument hochladen</div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">🤖 KI prüft</div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">✅ Ergebnis</div>
+    </div>
+
+    <div class="upload-zone">
+      <div class="icon">📤</div>
+      <p><strong>Lieferschein hochladen</strong></p>
+      <p>Ziehe ein PDF hierher oder klicke zum Auswählen</p>
+      <div class="formats">PDF, JPG, PNG — max. 20 MB</div>
+    </div>
+
+    <!-- Simulated uploaded file -->
+    <div class="file-preview">
+      <div class="file-icon">📄</div>
+      <div class="file-info">
+        <div class="file-name">Lieferschein_Baustahl_2026-03-10.pdf</div>
+        <div class="file-meta">2.4 MB • Hochgeladen vor 3s</div>
+      </div>
+      <div class="file-status">✓ Erkannt</div>
+    </div>
+
+    <!-- AI result -->
+    <div class="ai-result">
+      <h4>🤖 KI-Ergebnis — automatisch extrahiert</h4>
+      <table>
+        <tr><td>Lieferant</td><td>Kiesel Stahlhandel GmbH</td></tr>
+        <tr><td>Lieferschein-Nr.</td><td>LS-2026-48291</td></tr>
+        <tr><td>Baustelle</td><td>Projekt Ringstraße 14</td></tr>
+        <tr><td>Positionen</td><td>3 Artikel erkannt</td></tr>
+        <tr><td>Gesamtgewicht</td><td>12.450 kg</td></tr>
+        <tr><td>Abgleich mit Bestellung</td><td><span class="match-badge">98% Match</span> BS-2026-0412</td></tr>
+      </table>
+    </div>
+
+    <div style="margin-top: 16px; font-size: 13px; color: var(--gray-500); text-align: center;">
+      ⚡ In <strong>4,2 Sekunden</strong> extrahiert — manuell wären das ca. <strong>12 Minuten</strong>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goStep(2)">← Zurück</button>
+      <button class="btn btn-primary" onclick="goStep(4)">Onboarding abschließen →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Done! -->
+  <div class="card-body screen" id="step4">
+    <div class="completion-box">
+      <div class="checkmark">✅</div>
+      <h2>Du bist startklar!</h2>
+      <p>Dein Account ist eingerichtet. Dein Team wurde eingeladen. Dein erster Workflow läuft. Willkommen bei BauGPT Procurement.</p>
+      
+      <div style="display: inline-flex; align-items: center; gap: 6px; background: var(--success-light); color: var(--success); font-size: 14px; font-weight: 600; padding: 8px 20px; border-radius: 20px; margin-bottom: 24px;">
+        ⏱ Onboarding in 6:42 Min abgeschlossen
+      </div>
+
+      <div class="quick-actions">
+        <div class="quick-action">
+          <div class="icon">📦</div>
+          <div class="label">Erste Bestellung anlegen</div>
+        </div>
+        <div class="quick-action">
+          <div class="icon">📄</div>
+          <div class="label">Weiteren Lieferschein scannen</div>
+        </div>
+        <div class="quick-action">
+          <div class="icon">📊</div>
+          <div class="label">Dashboard öffnen</div>
+        </div>
+        <div class="quick-action">
+          <div class="icon">⚙️</div>
+          <div class="label">ERP-Anbindung einrichten</div>
+        </div>
+      </div>
+
+      <button class="btn btn-success" style="margin-top: 24px;" onclick="alert('→ Procurement Dashboard')">Zum Dashboard →</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function goStep(n) {
+  // Hide all screens
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+
+  // Update progress
+  for (let i = 1; i <= 4; i++) {
+    const circle = document.getElementById('sc' + i);
+    const label = document.getElementById('sl' + i);
+    circle.classList.remove('active', 'done');
+    label.classList.remove('active', 'done');
+
+    if (i < n) {
+      circle.classList.add('done');
+      circle.textContent = '✓';
+      label.classList.add('done');
+    } else if (i === n) {
+      circle.classList.add('active');
+      circle.textContent = i;
+      label.classList.add('active');
+    } else {
+      circle.textContent = i;
+    }
+  }
+
+  // Update lines
+  for (let i = 1; i <= 3; i++) {
+    const line = document.getElementById('line' + i);
+    line.classList.toggle('done', i < n);
+  }
+}
+</script>
+
+</body>
+</html>
