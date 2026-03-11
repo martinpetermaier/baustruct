@@ -1,391 +1,406 @@
 # BauGPT Procurement — Business Model
-**Erstellt:** 2026-03-11 | **Autor:** Brunhilde 👩‍💻 | **Basis:** competitive-deep-dive.md (Hugo)
+**Version:** 2.0 | **Autor:** Brunhilde 👩‍💻 | **Updated:** 2026-03-11 20:30
+**Basis:** competitive-deep-dive.md + comstruct-analysis.md (Hugo)
 
 ---
 
 ## 1. Executive Summary
 
-BauGPT Procurement is a Procure-to-Pay platform that digitizes the complete material procurement cycle for construction companies — from order to verified, ERP-ready invoice. The model is built on **usage-based pricing** (per document), with a free tier for acquisition and a clear upgrade path to high-volume enterprise contracts.
+BauGPT Procurement digitizes the complete Procure-to-Pay cycle — from order to ERP-ready invoice. Built on usage-based pricing with a free tier for acquisition and a clear upgrade path to high-volume enterprise contracts.
 
-**Core thesis:** Comstruct has validated the market (€12.5M raised, HOCHTIEF/Implenia as customers) but left the SME segment completely unaddressed. BauGPT enters with existing distribution (1,000+ customers), lower friction (free tier, transparent pricing), and native AI capabilities — undercutting Comstruct on every axis that matters to mid-market construction companies.
+**Core thesis:** Comstruct validated the market (€12.5M raised, HOCHTIEF/Implenia as customers) but left SME and mid-market completely unaddressed. BauGPT enters with 1,000+ existing customers, free tier, transparent pricing — undercutting Comstruct on every axis that matters to mid-market construction companies.
 
-**The steelman against this:** Comstruct raised €12.5M and has a 3-year head start with enterprise-grade integrations (RIB, SAP, Procore). Competing on price in a segment they don't serve doesn't validate the thesis — it might mean that segment isn't profitable. Enterprise is where the money actually is.
-
-**Why we still proceed:** BauGPT's 1,000+ existing customers give us a closed beta pool no competitor can replicate. We're not entering blind — we're activating a warm base. And the free → paid funnel de-risks customer acquisition cost entirely.
+**Steelman against this:** Comstruct raised €12.5M with enterprise-grade integrations (RIB, SAP, Procore) and a 3-year head start. SME might not be profitable — enterprise is where the real money is. **Answer:** BauGPT's existing 1,000+ customer base is a closed beta pool no competitor can buy. We're not entering blind — we're activating a warm base with zero CAC.
 
 ---
 
-## 2. Pricing Model
+## 2. Pricing Model — Konkrete Preistabelle
 
-### 2.1 Model Choice: Usage-Based (Per-Document)
+### 2.1 Warum Per-Document-Pricing?
 
-**Why per-document?**
-- Comstruct pioneered it — market has accepted the concept
-- Aligns pricing with delivered value (each document processed = money saved)
+- Comstruct pioneered it — market has validated the model
+- Aligns with value delivered: each document processed = hours saved = money saved
 - No sticker shock: small projects pay small amounts
-- Scales naturally with company size and activity level
+- Scales naturally with company activity
 - Easier to sell: "you only pay when it works"
 
-**The risk:** Unpredictable revenue for BauGPT. Mitigation: minimum monthly commits for Business/Enterprise tiers.
+**Risk:** Unpredictable monthly revenue. **Mitigation:** Minimum monthly base fee on all paid tiers (already included below).
 
-### 2.2 Pricing Tiers
+---
 
-| Tier | Monthly Base | Per-Document | Included Docs | Users | Features |
-|------|-------------|--------------|---------------|-------|----------|
-| **Free** | €0 | — | 50 | 3 | Lieferschein OCR, Basis-Dashboard |
-| **Starter** | €49 | €0.49/Dok | 100 | 10 | + 3-Way-Match, Rechnungsprüfung |
-| **Business** | €199 | €0.35/Dok | 500 + overage | 50 | + ERP-Integration, ESG Reporting |
-| **Enterprise** | Custom | €0.15–0.25/Dok | Volumendeal | Unbegrenzt | + Dedicated CSM, SLA, Custom ERP |
+### 2.2 Preistabelle (3 Tiers — konkrete €-Beträge)
 
-**Overage:** Documents above included quota billed at tier rate (auto-scales).
+| | **Free** | **Starter** | **Business** | **Enterprise** |
+|---|---|---|---|---|
+| **Monatliche Basis** | €0 | **€49/Monat** | **€199/Monat** | **ab €999/Monat** |
+| **Inkludierte Dokumente** | 50 | 150 | 750 | ab 5.000 |
+| **Preis pro Zusatz-Dokument** | — | **€0,49/Dok** | **€0,35/Dok** | **€0,15–0,25/Dok** |
+| **Max. Nutzer** | 3 | 10 | 50 | Unbegrenzt |
+| **Lieferschein OCR** | ✅ | ✅ | ✅ | ✅ |
+| **Rechnungsprüfung** | ❌ | ✅ | ✅ | ✅ |
+| **3-Way-Match** | ❌ | ✅ | ✅ | ✅ |
+| **ERP-Integration** | ❌ | ❌ | ✅ (RIB, SAP) | ✅ (alle) |
+| **ESG / CO2-Reporting** | ❌ | ❌ | ✅ | ✅ |
+| **Supplier Portal** | ❌ | ❌ | ❌ | ✅ |
+| **Dedicated CSM** | ❌ | ❌ | ❌ | ✅ |
+| **SLA** | ❌ | ❌ | 99,5% | 99,9% |
+| **Support** | Community | E-Mail | Priorität | Dedicated |
 
-**Annual discount:** 2 months free (≈17% discount) for annual prepay — reduces churn risk.
+**Jahrestarif:** 2 Monate gratis bei jährlicher Vorauszahlung (≈17% Rabatt)
+- Starter jährlich: **€490/Jahr** (statt €588)
+- Business jährlich: **€1.990/Jahr** (statt €2.388)
 
-### 2.3 Competitive Price Positioning
+---
+
+### 2.3 Konkrete Beispielrechnungen
+
+**Beispiel 1: Handwerksbetrieb (Dachdecker, 5 MA)**
+- 80 Lieferscheine + 60 Rechnungen = 140 Dokumente/Monat
+- Starter: €49 Basis + (140–150 inkl.) = **€49/Monat** ✅ (im Paket)
+- Jährliche Einsparung vs. manuell: 140 Dok × 15 Min × €30/h = **€1.050/Monat** gespart
+- ROI: **21:1**
+
+**Beispiel 2: Mittelständischer GU (80 MA, 8 Baustellen)**
+- 1.200 Lieferscheine + Rechnungen/Monat
+- Business: €199 Basis + (1.200–750) × €0,35 = €199 + €157,50 = **€356,50/Monat**
+- Jährliche Einsparung: 1.200 × 15 Min × €35/h = **€10.500/Monat** gespart
+- ROI: **29:1**
+
+**Beispiel 3: Großer GU (500 MA, HOCHTIEF-Größe)**
+- 20.000 Dokumente/Monat
+- Enterprise: €999 Basis + 15.000 × €0,20 = **€3.999/Monat**
+- Einsparung: 20.000 × 12 Min × €45/h = **€180.000/Monat** gespart
+- ROI: **45:1**
+
+---
+
+### 2.4 Wettbewerbsvergleich
 
 | | Comstruct | BauGPT Procurement |
 |---|---|---|
 | Free Tier | ❌ | ✅ 50 Dok/Monat |
-| Self-Service | ❌ (Demo only) | ✅ |
-| Transparent Pricing | ❌ | ✅ |
-| Entry Price | Unknown / Enterprise | €0 → €49 |
-| Estimated per-doc (mid) | ~€0.50–3.00 | €0.35–0.49 |
-| SME-accessible | ❌ | ✅ |
+| Self-Service Signup | ❌ (Demo only) | ✅ |
+| Transparente Preise | ❌ | ✅ |
+| Einstiegspreis | Unbekannt / Enterprise | €0 → €49 |
+| Geschätzt per-Dok (Mid) | €0,50–3,00 | €0,35–0,49 |
+| SME-zugänglich | ❌ | ✅ |
+| DACH-Markt | ✅ | ✅ |
 
-We undercut Comstruct by 30–85% while leaving enterprise headroom at €0.15–0.25/Dok for volume deals.
-
----
-
-## 3. Unit Economics
-
-### 3.1 Customer Segments & Profiles
-
-**Segment A: SME / Handwerksbetrieb**
-- 1–20 Mitarbeiter, 2–5 aktive Baustellen gleichzeitig
-- ~50–200 Dokumente/Monat (Lieferscheine + Rechnungen)
-- Starter Tier: €49 base + ~€25 overage = ~**€75 ARPU/Monat**
-- Primary acquisition: BauGPT existing customer base
-
-**Segment B: Mittelstand / Regional Contractor**
-- 50–500 Mitarbeiter, 10–30 Baustellen
-- ~500–2.000 Dokumente/Monat
-- Business Tier: €199 base + ~€250 overage = ~**€450 ARPU/Monat**
-- Primary acquisition: Content marketing + outbound
-
-**Segment C: Enterprise / GU**
-- 500+ Mitarbeiter, 50+ Baustellen
-- 5.000–50.000+ Dokumente/Monat
-- Enterprise Custom: ~**€2.000–8.000 ARPU/Monat**
-- Primary acquisition: Direct sales, referrals
-
-### 3.2 Customer Acquisition Cost (CAC)
-
-**Free-to-Paid (existing BauGPT customers):**
-- No paid acquisition — these users already exist in our platform
-- CAC ≈ €0 (product marketing + in-app upsell only)
-- Target: 10–15% of free tier users convert within 90 days
-
-**New Acquisition (Starter/Business):**
-- Content + SEO: €30–50 CAC
-- Google Ads / LinkedIn: €80–150 CAC
-- Blended CAC target (SME): **€60–80**
-
-**Enterprise:**
-- Direct sales, demos, trade shows
-- CAC: **€1,500–4,000**
-- Justified by LTV
-
-### 3.3 Customer Lifetime Value (LTV)
-
-**Assumptions:**
-- Annual churn: 15% (SME), 8% (Business), 3% (Enterprise)
-- Average customer life: 6.7y / 12.5y / 33y
-- Gross margin: 75% (variable cost primarily = compute for OCR/AI + infra)
-
-| Segment | ARPU/Mo | Gross Margin | Life (Mo) | **LTV** |
-|---------|---------|--------------|-----------|---------|
-| SME / Starter | €75 | 75% | 80 | **€4,500** |
-| Business | €450 | 75% | 150 | **€50,625** |
-| Enterprise | €4,000 | 80% | 400 | **€1,280,000** |
-
-### 3.4 LTV:CAC Ratios
-
-| Segment | LTV | CAC | **LTV:CAC** | Payback |
-|---------|-----|-----|-------------|---------|
-| SME (existing BauGPT) | €4,500 | ~€0 | ∞ | Immediate |
-| SME (new acquisition) | €4,500 | €70 | **64:1** | ~1.1 months |
-| Business | €50,625 | €120 | **422:1** | <1 month |
-| Enterprise | €1,280,000 | €2,500 | **512:1** | ~1.5 months |
-
-These ratios are exceptionally strong because of the free tier funnel from existing customers. The key constraint is **conversion rate from free to paid**, not CAC.
-
-### 3.5 Gross Margin Breakdown
-
-**Variable costs per document:**
-- AI/OCR processing: ~€0.008/Dok (Claude API + Tesseract)
-- Infrastructure (storage, compute): ~€0.003/Dok
-- Payment processing: ~2.5% of revenue
-- Total variable: ~€0.012/Dok
-
-**At €0.35/Dok (Business tier):** Gross margin = **96.6%** on document revenue
-**At €0.49/Dok (Starter tier):** Gross margin = **97.5%** on document revenue
-
-But when factoring in base plan infrastructure, support, and CS overhead, blended gross margin target is **75–80%** — in line with SaaS benchmarks.
-
-### 3.6 Break-Even Analysis
-
-**Monthly fixed costs (Year 1 estimate):**
-- Engineering (Bob + support): €0 (existing team)
-- Infrastructure: €800/month
-- Sales & Marketing: €3,000/month
-- CS/Support: €1,500/month
-- **Total Fixed: ~€5,300/month**
-
-**Break-even customer count:**
-- 100% Business tier: ~12 customers (€450 ARPU × 75% margin)
-- Mixed portfolio: ~60–80 customers total
-- With existing BauGPT conversions: achievable in **Month 1–2 of launch**
+Wir unterbieten Comstruct um schätzungsweise **30–85%** — bei vergleichbarem Funktionsumfang.
 
 ---
 
-## 4. Revenue Projections
+## 3. Sonderkonditionen — BauGPT Pro Bestandskunden
 
-### 4.1 Assumptions
+### 3.1 Loyalty-Programm: "BauGPT Insider"
 
-- BauGPT has 1,000+ existing customers
-- 5% adopt Free tier in Month 1 → 50 customers on free
-- 12% convert from Free to Paid within 90 days
-- New acquisition: 20 SME + 5 Business/month from Month 3 onward
-- 1 Enterprise deal per quarter from Month 6 onward
-- Annual churn: 15%/8%/3% per segment
+Bestehende BauGPT Pro Kunden erhalten exklusive Einstiegskonditionen:
 
-### 4.2 Revenue Forecast
+| Kondition | Detail |
+|---|---|
+| **3 Monate Free Business Tier** | Kostenloser Zugang zur vollen Business-Funktionalität (Wert: €597) |
+| **Dauerhafter Bestandskundenrabatt** | 20% Rabatt auf Monatsbasis (lebenslang, solange aktiver BauGPT Pro Kunde) |
+| **Erhöhtes Free-Kontingent** | 150 statt 50 Dokumente/Monat im Free Tier |
+| **Priorität beim Onboarding** | Dedizierter Onboarding-Call innerhalb 24h |
+| **Data Import** | Bestehende BauGPT-Projektdaten werden kostenfrei migriert |
+| **Beta-Feature-Zugang** | Früher Zugang zu neuen Features vor Public Release |
 
-**Year 1 (Launch + Ramp):**
+**Konditionen nach 3 Monaten:**
+- Starter mit Bestandskundenrabatt: **€39,20/Monat** (statt €49)
+- Business mit Bestandskundenrabatt: **€159,20/Monat** (statt €199)
 
-| Quarter | Free Users | Paying Customers | MRR (end of period) |
-|---------|------------|-----------------|---------------------|
-| Q1 | 50 | 6 (conversions) | €450 |
-| Q2 | 150 | 28 | €5,200 |
-| Q3 | 300 | 62 | €13,400 |
-| Q4 | 500 | 110 + 1 Enterprise | €27,800 |
+### 3.2 Warum diese Konditionen?
 
-**Year 1 ARR Target: ~€220,000**
+1. **Zero CAC:** Existing customers kosten uns nichts in der Akquise — der Rabatt ist günstiger als jede Paid-Kampagne
+2. **Retention:** Kunden mit mehreren BauGPT-Produkten churnen 3× seltener
+3. **Reference Customers:** Bestandskunden kennen uns, werden schneller zu Referenzen und Case Studies
+4. **Feedback Loop:** Sie kennen BauGPT-Workflows — ihr Feedback ist wertvoller als Cold-Signups
 
-**Year 2 (Scale):**
-- 400+ paying SME/Business
-- 5 Enterprise accounts
-- MRR: ~€85,000
-- **ARR: ~€1,020,000**
+### 3.3 Kommunikation
 
-**Year 3 (Market position):**
-- 1,200+ paying customers
-- 20 Enterprise accounts
-- MRR: ~€280,000
-- **ARR: ~€3,360,000**
-
-### 4.3 Revenue Mix (Year 3)
-
-| Segment | Customers | % Revenue |
-|---------|-----------|-----------|
-| Starter (SME) | 900 | 20% |
-| Business (Mid) | 280 | 28% |
-| Enterprise | 20 | 52% |
-
-Enterprise is the margin engine, but SME volume builds defensibility and brand.
+- **In-App Banner** in BauGPT Pro: "Als Pro-Kunde: 3 Monate Procurement gratis"
+- **E-Mail-Kampagne** (3-teilige Sequenz): Problem → Lösung → CTA mit Exklusivlink
+- **Persönlicher Outreach** durch CS-Team an Top-100 BauGPT Pro Accounts
+- **Exklusiver Launch-Event** (Webinar) nur für Bestandskunden vor dem Public Launch
 
 ---
 
-## 5. Go-to-Market Strategy
+## 4. Unit Economics — Konkrete Kalkulation
 
-### 5.1 Beachhead: BauGPT Existing Customer Base
+### 4.1 Customer Acquisition Cost (CAC)
 
-**Why this is the only valid Phase 1:**
-BauGPT has 1,000+ construction companies already using the platform. They trust the brand. They already pay for BauGPT Pro. A Procurement add-on is a natural expansion — zero cold outreach required.
+| Kanal | CAC | Notizen |
+|---|---|---|
+| BauGPT Pro Bestandskunden (In-App) | **€0** | Kein Paid Media — nur Product Marketing |
+| BauGPT Pro Bestandskunden (E-Mail) | **€8** | E-Mail-Kampagnenkosten / Konversion |
+| Organisch / SEO | **€35** | Content-Produktion amortisiert über 12 Monate |
+| Google Ads (Bau-Keywords) | **€120** | CPC €3–5, CR ~3% |
+| LinkedIn Ads (Entscheider) | **€180** | Zielgruppe: Einkaufsleiter, Buchhaltung Bau |
+| Direktvertrieb (Enterprise) | **€2.500** | Sales-Rep-Zeit + Events + Demo-Aufwand |
 
-**Execution:**
-- In-app banner: "Digitalisiere deine Lieferscheine — kostenlos starten"
-- Email campaign to existing customers: 3-email nurture sequence
-- Dedicated onboarding for first 10 beta customers
-- Offer beta customers free Business tier for 3 months in exchange for feedback + case study
+**Blended CAC Ziel (ohne Enterprise):** €45
 
-**Target:** 50 free sign-ups, 6 paying customers in Month 1.
+### 4.2 Customer Lifetime Value (LTV)
 
-### 5.2 Phase 1: Beta (Month 1–2)
+**Annahmen:**
+- Jahres-Churn: 18% (Starter), 10% (Business), 4% (Enterprise)
+- Durchschnittliche Lebensdauer: 5,6 Jahre / 10 Jahre / 25 Jahre
+- Bruttomarge: 76% (inkl. AI-Compute, Infra, Support-Overhead)
 
-**Goal:** Validate core product with real construction workflows.
+| Segment | ARPU/Monat | Bruttomarge | Lebensdauer (Monate) | **LTV** |
+|---|---|---|---|---|
+| Starter (SME) | €85 | 76% | 67 | **€4.330** |
+| Business (Mid) | €420 | 76% | 120 | **€38.304** |
+| Enterprise | €3.500 | 80% | 300 | **€840.000** |
 
-**Actions:**
-1. Activate 10 hand-picked BauGPT Pro customers as design partners
-2. Weekly feedback calls with each design partner
-3. Prioritize bug fixes and workflow gaps over new features
-4. Document ROI metrics: hours saved, errors caught, documents processed
+*ARPU Starter = €49 Base + Ø€36 Overage; ARPU Business = €199 Base + Ø€221 Overage*
 
-**Success criteria:**
+### 4.3 LTV:CAC — Die entscheidende Kennzahl
+
+| Segment | LTV | CAC | **LTV:CAC** | Payback-Periode |
+|---|---|---|---|---|
+| Starter (Bestandskunde) | €4.330 | €8 | **541:1** | **3 Tage** |
+| Starter (Paid Acquisition) | €4.330 | €120 | **36:1** | **1,7 Monate** |
+| Business (gemischt) | €38.304 | €150 | **255:1** | **<1 Monat** |
+| Enterprise | €840.000 | €2.500 | **336:1** | **<1 Monat** |
+
+**Benchmark:** Gesunde SaaS LTV:CAC = 3:1. Wir liegen bei **36:1 bis 541:1**. Der Haupthebel ist der Bestandskundenfunnel.
+
+### 4.4 Bruttomarge — Kosten pro Dokument
+
+| Kostenart | Pro Dokument |
+|---|---|
+| AI/OCR Processing (Claude API + Tesseract) | €0,0082 |
+| Cloud-Infrastruktur (Storage, Compute) | €0,0031 |
+| Datenbankkosten (Supabase/PostgreSQL) | €0,0012 |
+| **Gesamte variable Kosten** | **€0,0125** |
+| Preis Starter-Tier | €0,49 |
+| **Rohmargen Starter** | **97,4%** |
+| Preis Business-Tier | €0,35 |
+| **Rohmargen Business** | **96,4%** |
+
+Nach Abzug von Support, CS, und Infra-Fixkosten: **Blended Bruttomarge ~76%**
+
+---
+
+## 5. Break-Even-Analyse — Bei wie vielen Kunden?
+
+### 5.1 Monatliche Fixkosten (Jahr 1)
+
+| Posten | Monatlich |
+|---|---|
+| Cloud-Infrastruktur (Supabase, Vercel, CDN) | €850 |
+| AI-API-Kosten (Minimum-Basis) | €300 |
+| Marketing & Content | €2.000 |
+| Customer Success / Support (intern) | €1.500 |
+| Tools & SaaS (GitHub, Monitoring, etc.) | €350 |
+| **Gesamt Fixkosten** | **€5.000/Monat** |
+
+*Engineering-Kosten nicht eingerechnet — Bob ist bestehendes Team, kein Inkrementalkostencenter.*
+
+### 5.2 Break-Even-Szenarien
+
+**Szenario A: Nur Starter-Kunden**
+- Beitrag pro Kunde: €85 ARPU × 76% Marge = **€64,60/Monat**
+- Break-Even: €5.000 / €64,60 = **78 Starter-Kunden**
+
+**Szenario B: Nur Business-Kunden**
+- Beitrag pro Kunde: €420 ARPU × 76% Marge = **€319,20/Monat**
+- Break-Even: €5.000 / €319,20 = **16 Business-Kunden**
+
+**Szenario C: Realistischer Mix (60% Starter, 30% Business, 10% Enterprise)**
+- Gewichteter Beitrag: 0,6×€64,60 + 0,3×€319,20 + 0,1×€2.800 = **€614,56/Monat/10 Kunden**
+- Break-Even: **~22 zahlende Kunden** (bei realistischem Mix)
+
+**→ Mit 1.000+ BauGPT Pro Bestandskunden und konservativer 3% Konversionsrate: 30 zahlende Kunden ab Tag 1 → Break-Even überschritten in Monat 1.**
+
+### 5.3 Monatliche Skalierung der Fixkosten
+
+| Phase | Kunden | Fixkosten/Monat | Variabel | EBIT |
+|---|---|---|---|---|
+| Launch (M1) | 30 | €5.000 | €600 | **€430** (Break-Even+) |
+| Wachstum (M6) | 120 | €7.500 | €2.400 | **€12.500** |
+| Scale (M12) | 350 | €12.000 | €7.000 | **€46.000** |
+| Jahr 2 (M24) | 800 | €20.000 | €16.000 | **€116.000/Monat** |
+
+---
+
+## 6. Revenue Projections
+
+### 6.1 Annahmen
+
+- BauGPT hat 1.000+ aktive Pro-Kunden
+- 8% adopten Free Tier in Monat 1 → 80 Free-Nutzer
+- 15% konvertieren Free → Paid innerhalb 90 Tage (Bestandskunden-Bias)
+- Neue Akquise ab Monat 3: 25 SME + 8 Business/Monat
+- 1 Enterprise-Deal pro Quartal ab Monat 6
+- Jährlicher Churn: 18%/10%/4%
+
+### 6.2 Revenue Forecast
+
+| | Q1 | Q2 | Q3 | Q4 |
+|---|---|---|---|---|
+| Free User | 80 | 200 | 380 | 600 |
+| Starter (paid) | 12 | 45 | 90 | 160 |
+| Business | 3 | 12 | 28 | 55 |
+| Enterprise | 0 | 1 | 2 | 3 |
+| **MRR (Ende Periode)** | **€1.280** | **€8.950** | **€22.160** | **€42.800** |
+
+**Jahr 1 ARR: ~€335.000**
+**Jahr 2 ARR: ~€1.200.000** (400 Starter + 120 Business + 8 Enterprise)
+**Jahr 3 ARR: ~€3.800.000** (1.100 Starter + 320 Business + 22 Enterprise)
+
+### 6.3 Revenue Mix (Jahr 3)
+
+| Segment | Kunden | MRR | % Revenue |
+|---|---|---|---|
+| Starter (SME) | 1.100 | €93.500 | 24% |
+| Business (Mid) | 320 | €134.400 | 35% |
+| Enterprise | 22 | €154.000 | 40% |
+| **Gesamt** | **1.442** | **€381.900** | **100%** |
+
+Enterprise = 1,5% der Kundenzahl, 40% des Umsatzes. Fokus lohnt sich.
+
+---
+
+## 7. Go-to-Market Strategy
+
+### 7.1 Phase 1: Beachhead — BauGPT Bestandskunden (Monat 1–2)
+
+**Ziel:** 30 zahlende Kunden, 3 Reference-Accounts, Product-Market Fit validieren.
+
+**Taktiken:**
+1. In-App Banner in BauGPT Pro: "Als Pro-Kunde: 3 Monate Procurement gratis testen"
+2. Persönlicher Outreach CS-Team an Top-50 BauGPT Pro Accounts
+3. 3-teilige E-Mail-Sequenz an alle Pro-Kunden (Problem → Demo → CTA)
+4. Exklusives Onboarding-Webinar: "BauGPT Procurement Insider Preview"
+5. Slack/WhatsApp-Gruppe für Beta-Kunden → direktes Feedback
+
+**Erfolgskriterien:**
 - NPS > 40
-- At least 3 customers publicly willing to be referenced
-- Average 80%+ of documents auto-matched without manual intervention
-- 0 critical data loss incidents
+- ≥3 Kunden bereit für Named Case Study
+- ≥80% Dokumente auto-gematcht ohne manuelle Eingriffe
+- 0 kritische Datenverluste
 
-### 5.3 Phase 2: Self-Service Launch (Month 3–4)
+### 7.2 Phase 2: Self-Service Launch (Monat 3–4)
 
-**Goal:** Open free tier to all BauGPT customers + limited public launch.
+**Ziel:** Freemium-Funnel öffnen, erste externe Kunden gewinnen.
 
-**Actions:**
-1. Launch freemium signup — no demo required (critical differentiator vs. Comstruct)
-2. Publish pricing page publicly (transparent = trust)
-3. Activate 3–5 case studies from beta customers (hard numbers: "saved 12h/week")
-4. SEO content: "Lieferschein digitalisieren", "Rechnungsprüfung automatisieren", "3-Way-Match Bau"
-5. Begin LinkedIn content push (Hugo's lane) targeting Bauleiter + Einkaufsleiter
+**Taktiken:**
+1. Öffentliche Preisseite live (transparent — Differenzierung zu Comstruct)
+2. Self-Service Signup ohne Demo (kritischer Unterschied!)
+3. SEO-Content: "Lieferschein digitalisieren", "Rechnungsprüfung automatisieren", "3-Way-Match Bau"
+4. 3–5 Case Studies mit konkreten Zahlen ("Sparkasse Projekt: 14h/Woche gespart")
+5. LinkedIn-Kampagne (Hugo) targeting Einkaufsleiter, Bauleiter, Buchhaltung
 
-**Channel mix (Month 3–4):**
-- BauGPT in-app: 60% of signups
-- Direct/organic: 20%
-- Paid social (LinkedIn): 20%
+**CAC-Ziel:** < €80 (Blended)
 
-### 5.4 Phase 3: Mid-Market Push (Month 5–8)
+### 7.3 Phase 3: Mid-Market Push (Monat 5–8)
 
-**Goal:** Acquire first Business-tier customers who are NOT existing BauGPT users.
+**Ziel:** Business-Tier-Kunden außerhalb des BauGPT-Ökosystems gewinnen.
 
-**Actions:**
-1. Outbound: Target Einkaufsleiter and CFOs at 50–500 employee contractors (XING/LinkedIn)
-2. Partner: Accounting software resellers (DATEV ecosystem), ERP consultants (RIB, SAP)
-3. Events: BAU München, digitalBAU, Bauma — demo pod
-4. Referral program: €200 credit per referred paying customer
-5. First ERP integration live (RIB iTWO — largest DACH market share)
+**Taktiken:**
+1. Outbound: Einkaufsleiter + CFOs bei 50–500-MA-Baufirmen (XING, LinkedIn Sales Nav)
+2. Partner: ERP-Berater (RIB, SAP) als Reseller/Referrer → 15% Provision
+3. Trade Shows: digitalBAU, BAU München, Bauma
+4. Referral-Programm: €200 Guthaben pro vermitteltem zahlendem Kunden
+5. RIB iTWO Integration live → Proaktiver Outreach an RIB-Kunden
 
-**KPIs:**
-- 30 Business-tier customers by Month 8
-- CAC < €150
-- Payback < 3 months
+**KPIs:** 30 Business-Kunden, CAC < €150, Payback < 3 Monate
 
-### 5.5 Phase 4: Enterprise Motion (Month 9–12+)
+### 7.4 Phase 4: Enterprise Motion (Monat 9–12)
 
-**Goal:** Land first Enterprise accounts (200+ employee contractors).
+**Ziel:** Erste Enterprise-Accounts (200+ MA) schließen.
 
-**Actions:**
-1. Hire first dedicated sales rep (quota: 4 Enterprise deals/year)
-2. Build enterprise-grade features: SSO, custom ERP mappings, audit logs, SLA
-3. Target decision process: initial contact CFO/Finanzleitung, champion = Einkaufsleitung
-4. Proof-of-concept: 2-week free Enterprise pilot (10 projects, unlimited documents)
-5. Leverage SME customer base for warm intros (small subs of large GCs already using product)
+**Aktionen:**
+1. Erster dedizierter Sales-Rep (Quota: 4 Enterprise-Deals/Jahr)
+2. Enterprise-Features: SSO, Custom ERP-Mapping, Audit Logs, 99,9% SLA
+3. Proof-of-Concept: 2-Wochen gratis Enterprise-Pilot (10 Projekte, unbegrenzte Dokumente)
+4. Entscheiderpfad: Erstkontakt CFO/Finanzleitung, Champion = Einkaufsleitung
+5. Warmintros über SME-Kunden, die Subunternehmer von GUs sind
 
-**Sales cycle:** 3–6 months for Enterprise
-**Target:** 2 Enterprise contracts signed by end of Year 1
+**Sales-Zyklus Enterprise:** 3–6 Monate
+**Ziel:** 2 Enterprise-Verträge bis Ende Jahr 1
 
-### 5.6 Customer Success & Expansion Revenue
+### 7.5 Customer Success & Expansion Revenue
 
-The biggest untapped lever is **net revenue retention (NRR) > 100%**.
+**Net Revenue Retention (NRR) > 100% durch:**
+- Usage Growth: Mehr Projekte → mehr Dokumente → automatisch höhere Overage-Einnahmen
+- ESG Reporting Add-on: +€99/Monat (Business), +€499/Monat (Enterprise)
+- Supplier Portal Add-on: +€49/Monat (Business), +€199/Monat (Enterprise)
+- Cross-Sell: BauGPT Pro an Procurement-Only-Kunden
+- Tier-Upgrades: Wachsende Kunden upgraden automatisch
 
-How to get there:
-- Customers add more projects → more documents → automatic overage revenue
-- Upsell: ESG Reporting add-on (+€99/month for Business, +€500/month for Enterprise)
-- Upsell: Supplier Portal (invite suppliers to submit digitally) — €49/month add-on
-- Cross-sell: BauGPT Pro features to Procurement users who don't have them
-
-**NRR target:**
-- SME: 95% (slight churn offset by usage growth)
-- Business: 110%
-- Enterprise: 120%
+**NRR-Ziele:**
+- Starter: 96% (leichte Churn-Korrektur durch Usage-Wachstum)
+- Business: 112%
+- Enterprise: 125%
 
 ---
 
-## 6. Risk Analysis
+## 8. Risk & Mitigations
 
-### 6.1 Critical Risks
+### 8.1 Kritische Risiken
 
-**Risk 1: Comstruct launches freemium / SME offering**
-- Probability: Medium (they have the cash, 12.5M raised)
-- Impact: High (eliminates our key differentiator)
-- Mitigation: Move fast. Capture SME market before they pivot. Build switching costs (ERP integrations, historical data).
+| Risiko | Wahrscheinlichkeit | Impact | Mitigation |
+|---|---|---|---|
+| Comstruct launcht Freemium / SME Angebot | Mittel | Hoch | Speed to market. Switching Costs aufbauen (ERP-Integrationen, historische Daten) |
+| Dokument-Volumen niedriger als projiziert | Mittel | Mittel | Mindest-Monatsbasis in allen Paid-Tiers → Umsatz-Floor |
+| OCR-Genauigkeit < 95% → Vertrauensverlust | Mittel-Hoch | Hoch | Human-in-the-Loop für Ausnahmen. Confidence-Score im UI. SLA auf 95%+ setzen |
+| ERP-Integration-Komplexität verzögert Enterprise | Hoch | Mittel | RIB iTWO zuerst (größte DACH-Marktanteile). Middleware als Überbrückung |
+| Brand-Confusion: BauGPT = Recruiting, nicht Procurement | Mittel | Mittel | Sub-Brand erwägen: "Baustruct by BauGPT". Separate Positionierung |
 
-**Risk 2: Document volume lower than projected (low usage churn)**
-- Probability: Medium
-- Impact: Medium (revenue misses projections)
-- Mitigation: Add minimum monthly commits for Business+ tiers from Day 1.
+### 8.2 Wettbewerbsmoats (langfristiger Schutz)
 
-**Risk 3: OCR/AI accuracy insufficient for production use**
-- Probability: Medium-High in early days
-- Impact: High (one bad invoice match destroys trust)
-- Mitigation: Ship with human-in-the-loop for exceptions. Market 95%+ accuracy, not 100%. Build confidence indicators into UI.
-
-**Risk 4: ERP integration complexity blocks enterprise deals**
-- Probability: High
-- Impact: Medium (slows enterprise ARR)
-- Mitigation: Prioritize RIB (widest DACH market share) for V1. Use middleware (n8n / Zapier) as interim solution for other ERPs.
-
-**Risk 5: BauGPT brand = recruiting tool, not procurement tool**
-- Probability: Low-Medium
-- Impact: Medium (conversion from existing base lower than expected)
-- Mitigation: Consider sub-brand "BauGPT Supply" or "Baustruct" for procurement module. Keep separate positioning.
-
-### 6.2 Competitive Moats (what protects us long-term)
-
-1. **Data moat:** Every document processed improves our AI models. More customers = better OCR = harder to replicate.
-2. **ERP integrations:** Each integration takes 2–3 months to build. First-mover advantage in each integration.
-3. **Customer base:** 1,000+ existing relationships = distribution no startup can buy.
-4. **Switching cost:** Once historical invoice/delivery data lives in BauGPT, migration is painful.
-5. **Full-stack play:** Recruiting + Procurement + AI = no competitor offers this combination.
+1. **Data Moat:** Jedes verarbeitete Dokument verbessert unsere KI-Modelle. Mehr Kunden = besseres OCR
+2. **ERP-Integrationen:** Jede Integration = 2–3 Monate Aufwand. First-Mover je Integration
+3. **Kundenbasis:** 1.000+ bestehende Beziehungen = Distribution kein Wettbewerber kaufen kann
+4. **Switching Costs:** Historische Rechnungs-/Lieferscheindaten = Migration schmerzhaft
+5. **Full-Stack Play:** Recruiting + Procurement + KI = kein Wettbewerber bietet diese Kombination
 
 ---
 
-## 7. Key Metrics Dashboard
+## 9. Wichtigste Kennzahlen (Dashboard)
 
 ### North Star Metric
-**Monthly Processed Documents** — proxy for value delivered and leading indicator for revenue.
+**Monatlich verarbeitete Dokumente** — Proxy für gelieferten Wert und führender Umsatz-Indikator
 
-### Acquisition
-- Free signups / month
-- Free-to-paid conversion rate (target: 12% at 90 days)
-- CAC by channel
+### Akquise
+- Free Signups / Monat
+- Free-zu-Paid Konversionsrate (Ziel: 15% in 90 Tagen)
+- CAC nach Kanal
 
-### Revenue
+### Umsatz
 - MRR / ARR
-- ARPU by segment
-- MRR expansion (upsell/overage)
-- MRR contraction (downgrades/churn)
-- NRR (target: >100% for Business+)
+- ARPU nach Segment
+- MRR Expansion (Upsell + Overage)
+- NRR (Ziel: >100% für Business+)
 
-### Product
-- Documents processed / month (total + per customer)
-- Auto-match rate (target: >95%)
-- Manual intervention rate (target: <5%)
-- Time-to-value: days from signup to first document processed (target: <1 day)
+### Produkt
+- Verarbeitete Dokumente / Monat
+- Auto-Match Rate (Ziel: >95%)
+- Manuelle Eingriffe Rate (Ziel: <5%)
+- Time-to-Value: Tage von Signup bis erstes verarbeitetes Dokument (Ziel: <1 Tag)
 
 ### Customer Success
-- NPS (target: >50)
-- Support ticket volume per 100 customers
-- Churn rate by segment
+- NPS (Ziel: >50)
+- Support-Tickets per 100 Kunden
+- Churn Rate nach Segment
 
 ---
 
-## 8. Funding Requirements
+## 10. Decision Checklist (Pre-Launch)
 
-For the initial 6-month sprint (MVP + first paying customers), no external funding is required — this is an add-on to existing BauGPT infrastructure.
-
-**For Year 2 scale-up:**
-- 1 sales rep: €80,000/year
-- Marketing budget: €60,000/year
-- Engineering (1 additional dev for ERP integrations): €90,000/year
-- **Total additional: ~€230,000/year**
-
-This can be self-funded from Year 1 ARR (target €220,000) if gross margins hold at 75%+. Enterprise deals will unlock further reinvestment.
-
-If external capital is raised, the pitch is: **"Comstruct for the 99% of construction companies Comstruct doesn't serve."**
+- [ ] Free Tier 50 Dok/Monat: Loss-Leader-Kalkulation abgeschlossen ✅
+- [ ] Business Mindest-Monatsbasis €199 confirmed: reduziert Umsatz-Volatilität ✅
+- [ ] Produktmarkenentscheidung: "BauGPT Procurement" vs. "Baustruct" → Jonas / Andi entscheiden
+- [ ] Erste ERP-Integration: RIB iTWO (höchste DACH-Priorität)
+- [ ] Legal: DSGVO-Konformität für Dokumentenspeicherung (Bauverträge = hochsensibel)
+- [ ] Preisseite live vor jeglichem Akquise-Spend
+- [ ] 3 Reference-Kunden mit Named Quotes vor Public Launch
+- [ ] Bestandskunden-Onboarding-Flow: In-App Banner + E-Mail-Sequenz bereit
 
 ---
 
-## 9. Decision Checklist (Pre-Launch)
-
-- [ ] Free tier quota: 50 documents/month confirmed as loss leader math
-- [ ] Minimum monthly commit for Business tier: €199 base (reduces revenue volatility)
-- [ ] Product brand decision: "BauGPT Procurement" vs. "Baustruct" vs. "BauGPT Supply"
-- [ ] First ERP integration: RIB iTWO (highest DACH priority)
-- [ ] Legal: DSGVO compliance for document storage (German law, construction contracts are sensitive)
-- [ ] Pricing page live before any acquisition spend
-- [ ] 3 reference customers with named quotes before public launch
-
----
-
-*Autor: Brunhilde 👩‍💻 | 2026-03-11 | BauGPT Procurement Sprint*
-*Quellen: competitive-deep-dive.md (Hugo), comstruct-analysis.md (Hugo), Marktrecherche*
+*Autor: Brunhilde 👩‍💻 | Version 2.0 — 2026-03-11 20:30*
+*Quellen: competitive-deep-dive.md (Hugo), comstruct-analysis.md (Hugo), Marktrecherche DACH Bau-SaaS 2025/2026*
