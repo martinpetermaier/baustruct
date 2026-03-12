@@ -1,76 +1,28 @@
-import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+// Public paths that never require auth
+const PUBLIC_PATHS = ["/login", "/api/inngest", "/api/auth"];
+
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  const { pathname } = request.nextUrl;
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet: Array<{ name: string; value: string; options?: Record<string, unknown> }>) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
+  const isPublic = PUBLIC_PATHS.some((p) => pathname.startsWith(p));
+  if (isPublic) return NextResponse.next();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Public routes that don't require auth
-  const publicPaths = ["/login", "/api/inngest"];
-  const isPublicPath = publicPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
-
-  if (!user && !isPublicPath) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
-
-  // If logged in and hitting /login, redirect to dashboard
-  if (user && request.nextUrl.pathname === "/login") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
-  }
-
-  // Role-based route protection
-  if (user) {
-    const role = user.user_metadata?.role as string | undefined;
-    const path = request.nextUrl.pathname;
-
-    const roleRouteMap: Record<string, string[]> = {
-      polier: ["/field", "/dashboard"],
-      einkauf: ["/procurement", "/dashboard", "/field"],
-      buchhaltung: ["/finance", "/dashboard"],
-      admin: ["/field", "/procurement", "/finance", "/dashboard", "/settings"],
-    };
-
-    const allowedPrefixes = roleRouteMap[role ?? ""] ?? ["/dashboard"];
-    const isApiRoute = path.startsWith("/api");
-    const isAllowed =
-      isApiRoute || allowedPrefixes.some((prefix) => path.startsWith(prefix));
-
-    if (!isAllowed) {
+  // Check demo session cookie
+  const demoSession = request.cookies.get("baustruct_demo_session");
+  if (demoSession) {
+    // Redirect /login to dashboard if already logged in
+    if (pathname === "/login") {
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard";
       return NextResponse.redirect(url);
     }
+    return NextResponse.next();
   }
 
-  return supabaseResponse;
+  // No session → redirect to login
+  const url = request.nextUrl.clone();
+  url.pathname = "/login";
+  return NextResponse.redirect(url);
 }
