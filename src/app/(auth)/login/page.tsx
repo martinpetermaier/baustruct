@@ -16,14 +16,30 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
 
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    // Try demo auth first (works without Supabase config)
+    const demoRes = await fetch("/api/auth/demo-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
     });
 
-    if (error) {
-      setError(error.message);
+    if (demoRes.ok) {
+      router.push("/dashboard");
+      router.refresh();
+      return;
+    }
+
+    // Fallback to Supabase
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setError("Ungültige Zugangsdaten");
+        setLoading(false);
+        return;
+      }
+    } catch {
+      setError("Ungültige Zugangsdaten");
       setLoading(false);
       return;
     }
