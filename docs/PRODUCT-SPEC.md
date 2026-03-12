@@ -391,7 +391,7 @@ Initialdaten aus ÖKOBAUDAT + DEFRA + UBA für: Beton, Bewehrungsstahl, Baustahl
 - [ ] **Free Tier Quota:** 50 Dok/Monat bestätigen (Loss-Leader-Rechnung)
 - [ ] **Minimum Monthly Commit:** €199 für Business (Revenue-Stabilität)
 - [ ] **Erste ERP-Integration:** RIB iTWO (höchste DACH-Marktabdeckung)
-- [ ] **DSGVO-Compliance:** Dokumentenspeicherung, Aufbewahrungsfristen
+- [x] **DSGVO-Compliance:** Dokumentenspeicherung, Aufbewahrungsfristen → `dsgvo-compliance.md` ✅
 - [ ] **3 Referenzkunden** mit namentlichen Quotes vor Public Launch
 - [ ] **Pricing Page** live vor jeder Acquisition-Kampagne
 - [ ] **Analytics-Setup** (PostHog Events, Snowflake-Pipeline) → Rainman
@@ -412,6 +412,7 @@ Initialdaten aus ÖKOBAUDAT + DEFRA + UBA für: Beton, Bewehrungsstahl, Baustahl
 | `business-model.md` | Brunhilde 👩‍💼 | ✅ Complete |
 | `analytics-datamodel.md` | Rainman 👨🏻‍🔧 | ✅ Complete |
 | `api-spec.md` | Hugo 🚀 | ✅ Complete (v1.0) |
+| `dsgvo-compliance.md` | Hugo 🚀 | ✅ Complete (v1.0) |
 | `PRODUCT-SPEC.md` | Hugo 🚀 | ✅ Complete (v1.0) |
 
 ---
