@@ -24,8 +24,7 @@ export default function LoginPage() {
     });
 
     if (demoRes.ok) {
-      router.push("/dashboard");
-      router.refresh();
+      window.location.href = "/dashboard";
       return;
     }
 
