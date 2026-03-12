@@ -45,9 +45,9 @@ export async function POST(request: NextRequest) {
       contentType: file.type,
     });
 
-  if (storageError) {
+  if (storageError && typeof storageError === 'object' && 'message' in storageError) {
     return NextResponse.json(
-      { error: { code: "UPLOAD_ERROR", message: storageError.message } },
+      { error: { code: "UPLOAD_ERROR", message: (storageError as { message: string }).message } },
       { status: 500 }
     );
   }

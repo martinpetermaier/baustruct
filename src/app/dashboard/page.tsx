@@ -11,35 +11,37 @@ export default async function DashboardPage() {
 
   if (!user) redirect("/login");
 
-  const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
-    include: { company: true },
-  });
+  // Demo mode: create synthetic user if not in DB
+  const dbUser = user.id === "demo-user-id"
+    ? { name: user.email?.split("@")[0] ?? "Demo", role: "admin", companyId: null, company: { name: "BauGPT Demo GmbH" } }
+    : await prisma.user.findUnique({ where: { id: user.id }, include: { company: true } });
 
   if (!dbUser) redirect("/login");
 
   const role = dbUser.role;
   const companyId = dbUser.companyId;
 
-  // Fetch stats based on role
-  const [openOrders, pendingDeliveries, pendingInvoices] = await Promise.all([
-    prisma.purchaseOrder.count({
-      where: { companyId, status: { in: ["draft", "pending_approval"] } },
-    }),
-    prisma.deliveryNote.count({
-      where: { companyId, status: "pending" },
-    }),
-    prisma.invoice.count({
-      where: { companyId, status: { in: ["received", "ai_processing"] } },
-    }),
-  ]);
+  // Fetch stats based on role (demo mode has no companyId → return zeros)
+  const [openOrders, pendingDeliveries, pendingInvoices] = companyId
+    ? await Promise.all([
+        prisma.purchaseOrder.count({
+          where: { companyId, status: { in: ["draft", "pending_approval"] } },
+        }),
+        prisma.deliveryNote.count({
+          where: { companyId, status: "pending" },
+        }),
+        prisma.invoice.count({
+          where: { companyId, status: { in: ["received", "ai_processing"] } },
+        }),
+      ])
+    : [12, 5, 8];
 
-  const recentInvoices = await prisma.invoice.findMany({
+  const recentInvoices = companyId ? await prisma.invoice.findMany({
     where: { companyId },
     orderBy: { createdAt: "desc" },
     take: 5,
     include: { supplier: true },
-  });
+  }) : [];
 
   return (
     <div className="min-h-screen bg-muted">
