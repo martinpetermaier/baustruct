@@ -1,6 +1,7 @@
 // BauGPT Procurement — Landing Page (Marketing)
 // Route: / (public, no auth required)
 // Hugo 🚀 | 2026-03-11
+export const dynamic = 'force-dynamic'
 
 export default function LandingPage() {
   return (
