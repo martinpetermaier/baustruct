@@ -24,7 +24,9 @@ export default function LoginPage() {
     });
 
     if (demoRes.ok) {
-      window.location.href = "/dashboard";
+      const data = await demoRes.json();
+      // Force full page reload so cookie is flushed before navigation
+      setTimeout(() => { window.location.href = data.redirect ?? "/dashboard"; }, 50);
       return;
     }
 
