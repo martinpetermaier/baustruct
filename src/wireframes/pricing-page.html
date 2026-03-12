@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BauGPT Procurement — Pricing Page Wireframe</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; color: #0f172a; }
+
+  /* Header */
+  .header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; color: #0f172a; }
+  .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a { text-decoration: none; color: #475569; font-size: 14px; font-weight: 500; }
+  .nav-links a.active { color: #f59e0b; font-weight: 700; }
+  .btn-cta { background: #f59e0b; color: white; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; }
+
+  /* Hero */
+  .hero { text-align: center; padding: 64px 32px 40px; }
+  .hero h1 { font-size: 42px; font-weight: 900; line-height: 1.15; margin-bottom: 16px; }
+  .hero h1 span { color: #f59e0b; }
+  .hero p { font-size: 18px; color: #64748b; max-width: 640px; margin: 0 auto; line-height: 1.6; }
+
+  /* Toggle */
+  .toggle-wrap { display: flex; justify-content: center; margin: 32px 0; gap: 12px; align-items: center; }
+  .toggle-label { font-size: 14px; font-weight: 600; color: #64748b; }
+  .toggle-label.active { color: #0f172a; }
+  .toggle { width: 52px; height: 28px; background: #f59e0b; border-radius: 14px; position: relative; cursor: pointer; }
+  .toggle::after { content: ''; position: absolute; width: 22px; height: 22px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: 0.2s; }
+  .toggle.yearly::after { left: 27px; }
+  .save-badge { background: #ecfdf5; color: #059669; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px; }
+
+  /* Pricing Cards */
+  .pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto 64px; padding: 0 32px; }
+  .card { background: white; border-radius: 16px; border: 2px solid #e2e8f0; padding: 32px 24px; position: relative; transition: 0.2s; }
+  .card:hover { border-color: #f59e0b; box-shadow: 0 8px 32px rgba(245,158,11,0.12); }
+  .card.popular { border-color: #f59e0b; box-shadow: 0 8px 32px rgba(245,158,11,0.15); }
+  .popular-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #f59e0b; color: white; font-size: 12px; font-weight: 800; padding: 4px 16px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .card-tier { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .tier-free { color: #64748b; }
+  .tier-starter { color: #3b82f6; }
+  .tier-business { color: #f59e0b; }
+  .tier-enterprise { color: #7c3aed; }
+
+  .card-price { display: flex; align-items: baseline; gap: 4px; margin-bottom: 4px; }
+  .price-amount { font-size: 48px; font-weight: 900; }
+  .price-currency { font-size: 20px; font-weight: 700; color: #64748b; }
+  .price-period { font-size: 14px; color: #94a3b8; }
+  .card-desc { font-size: 14px; color: #64748b; margin-bottom: 24px; line-height: 1.5; }
+
+  .card-btn { width: 100%; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; border: 2px solid; margin-bottom: 24px; transition: 0.2s; }
+  .btn-outline { background: white; color: #0f172a; border-color: #e2e8f0; }
+  .btn-outline:hover { border-color: #f59e0b; color: #f59e0b; }
+  .btn-filled { background: #f59e0b; color: white; border-color: #f59e0b; }
+  .btn-filled:hover { background: #d97706; border-color: #d97706; }
+  .btn-dark { background: #0f172a; color: white; border-color: #0f172a; }
+  .btn-dark:hover { background: #1e293b; }
+
+  .feature-list { list-style: none; }
+  .feature-list li { font-size: 13px; color: #334155; padding: 8px 0; border-top: 1px solid #f1f5f9; display: flex; align-items: center; gap: 8px; }
+  .feature-list li:first-child { border-top: none; }
+  .check { color: #10b981; font-weight: 700; }
+  .x-mark { color: #cbd5e1; }
+  .feature-highlight { font-weight: 700; color: #f59e0b; }
+
+  /* Comparison */
+  .comparison { max-width: 1000px; margin: 0 auto 64px; padding: 0 32px; }
+  .comparison h2 { text-align: center; font-size: 28px; margin-bottom: 8px; }
+  .comparison p { text-align: center; color: #64748b; margin-bottom: 32px; }
+  .comp-table { width: 100%; border-collapse: collapse; }
+  .comp-table th { text-align: left; padding: 12px 16px; font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; }
+  .comp-table th:not(:first-child) { text-align: center; }
+  .comp-table td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #f1f5f9; }
+  .comp-table td:not(:first-child) { text-align: center; }
+  .comp-table tr:hover { background: #f8fafc; }
+  .comp-check { color: #10b981; font-size: 16px; }
+  .comp-x { color: #e2e8f0; font-size: 16px; }
+
+  /* ROI Calculator */
+  .roi { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; padding: 64px 32px; margin-bottom: 64px; }
+  .roi-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .roi h2 { font-size: 28px; margin-bottom: 12px; }
+  .roi p { color: #94a3b8; line-height: 1.6; margin-bottom: 24px; }
+  .roi-input { display: flex; flex-direction: column; gap: 16px; }
+  .roi-field label { font-size: 13px; color: #94a3b8; font-weight: 600; display: block; margin-bottom: 4px; }
+  .roi-field input, .roi-field select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 16px; }
+  .roi-result { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: 12px; padding: 24px; text-align: center; }
+  .roi-result .amount { font-size: 48px; font-weight: 900; color: #f59e0b; }
+  .roi-result .label { font-size: 14px; color: #94a3b8; margin-top: 4px; }
+  .roi-result .sub { font-size: 12px; color: #64748b; margin-top: 8px; }
+
+  /* Social Proof */
+  .proof { max-width: 1000px; margin: 0 auto 64px; padding: 0 32px; text-align: center; }
+  .proof h2 { font-size: 28px; margin-bottom: 32px; }
+  .proof-logos { display: flex; justify-content: center; gap: 48px; align-items: center; margin-bottom: 40px; }
+  .proof-logo { width: 120px; height: 48px; background: #f1f5f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #94a3b8; }
+  .testimonial { background: white; border-radius: 16px; padding: 32px; max-width: 640px; margin: 0 auto; border: 1px solid #e2e8f0; text-align: left; }
+  .testimonial q { font-size: 16px; line-height: 1.6; color: #334155; font-style: italic; }
+  .testimonial .author { margin-top: 16px; display: flex; align-items: center; gap: 12px; }
+  .testimonial .avatar { width: 40px; height: 40px; border-radius: 50%; background: #f59e0b; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; }
+  .testimonial .name { font-weight: 700; font-size: 14px; }
+  .testimonial .role { font-size: 13px; color: #64748b; }
+
+  /* FAQ */
+  .faq { max-width: 720px; margin: 0 auto 64px; padding: 0 32px; }
+  .faq h2 { text-align: center; font-size: 28px; margin-bottom: 32px; }
+  .faq-item { border-bottom: 1px solid #e2e8f0; padding: 20px 0; }
+  .faq-q { font-weight: 700; font-size: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .faq-a { font-size: 14px; color: #64748b; line-height: 1.6; margin-top: 12px; }
+
+  /* CTA Footer */
+  .cta-footer { background: #f59e0b; padding: 64px 32px; text-align: center; }
+  .cta-footer h2 { font-size: 32px; font-weight: 900; color: white; margin-bottom: 12px; }
+  .cta-footer p { color: rgba(255,255,255,0.85); font-size: 16px; margin-bottom: 24px; }
+  .cta-footer .btn-white { background: white; color: #0f172a; border: none; padding: 14px 32px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; }
+  .cta-footer .btn-white:hover { background: #f8fafc; }
+
+  /* Annotations */
+  .annotation { position: absolute; background: #fef3c7; border: 1px dashed #f59e0b; border-radius: 6px; padding: 6px 10px; font-size: 11px; color: #92400e; font-weight: 600; z-index: 10; }
+
+  @media (max-width: 900px) {
+    .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
+    .roi-inner { grid-template-columns: 1fr; }
+    .comp-table { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    BauGPT Procurement
+  </div>
+  <nav class="nav-links">
+    <a href="#">Produkt</a>
+    <a href="#">Features</a>
+    <a href="#" class="active">Preise</a>
+    <a href="#">Integrationen</a>
+    <button class="btn-cta">Kostenlos starten</button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Einfache, <span>transparente</span> Preise.<br>Keine versteckten Kosten.</h1>
+  <p>Du zahlst nur für das, was Du nutzt. Starte kostenlos mit 50 Dokumenten pro Monat — skaliere, wenn Dein Unternehmen wächst.</p>
+</section>
+
+<!-- BILLING TOGGLE -->
+<div class="toggle-wrap">
+  <span class="toggle-label">Monatlich</span>
+  <div class="toggle yearly"></div>
+  <span class="toggle-label active">Jährlich</span>
+  <span class="save-badge">2 Monate gratis 🎉</span>
+</div>
+
+<!-- PRICING CARDS -->
+<div class="pricing-grid">
+
+  <!-- FREE -->
+  <div class="card">
+    <div class="card-tier tier-free">Free</div>
+    <div class="card-price">
+      <span class="price-amount">€0</span>
+    </div>
+    <div class="price-period">Für immer kostenlos</div>
+    <p class="card-desc">Perfekt zum Testen. Digitalisiere Deine ersten Lieferscheine und Rechnungen.</p>
+    <button class="card-btn btn-outline">Kostenlos starten</button>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> 50 Dokumente/Monat</li>
+      <li><span class="check">✓</span> KI-Rechnungserkennung (OCR)</li>
+      <li><span class="check">✓</span> Digitale Lieferscheine</li>
+      <li><span class="check">✓</span> 1 Projekt</li>
+      <li><span class="check">✓</span> 2 Benutzer</li>
+      <li><span class="x-mark">✗</span> 3-Way-Match</li>
+      <li><span class="x-mark">✗</span> ERP-Integration</li>
+      <li><span class="x-mark">✗</span> CO₂-Tracking</li>
+    </ul>
+  </div>
+
+  <!-- STARTER -->
+  <div class="card">
+    <div class="card-tier tier-starter">Starter</div>
+    <div class="card-price">
+      <span class="price-currency">€</span>
+      <span class="price-amount">49</span>
+      <span class="price-period">/Monat</span>
+    </div>
+    <div class="price-period" style="color:#3b82f6; font-weight:600; margin-bottom: 4px;">€490/Jahr (statt €588)</div>
+    <p class="card-desc">Für kleine Baufirmen. Rechnungsprüfung automatisieren, sofort Zeit sparen.</p>
+    <button class="card-btn btn-outline">14 Tage testen</button>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> <strong>150 Dokumente/Monat</strong></li>
+      <li><span class="check">✓</span> +€0,49 pro Extra-Dokument</li>
+      <li><span class="check">✓</span> KI-Rechnungserkennung (OCR)</li>
+      <li><span class="check">✓</span> Digitale Lieferscheine</li>
+      <li><span class="check">✓</span> 3 Projekte</li>
+      <li><span class="check">✓</span> 10 Benutzer</li>
+      <li><span class="check">✓</span> 3-Way-Match (Basis)</li>
+      <li><span class="x-mark">✗</span> ERP-Integration</li>
+      <li><span class="x-mark">✗</span> CO₂-Tracking</li>
+    </ul>
+  </div>
+
+  <!-- BUSINESS (Popular) -->
+  <div class="card popular">
+    <div class="popular-badge">Beliebteste Wahl</div>
+    <div class="card-tier tier-business">Business</div>
+    <div class="card-price">
+      <span class="price-currency">€</span>
+      <span class="price-amount">199</span>
+      <span class="price-period">/Monat</span>
+    </div>
+    <div class="price-period" style="color:#f59e0b; font-weight:600; margin-bottom: 4px;">€1.990/Jahr (statt €2.388)</div>
+    <p class="card-desc">Für mittelständische Bauunternehmen. Volle Automatisierung von Einkauf bis Buchhaltung.</p>
+    <button class="card-btn btn-filled">14 Tage testen</button>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> <strong>750 Dokumente/Monat</strong></li>
+      <li><span class="check">✓</span> +€0,35 pro Extra-Dokument</li>
+      <li><span class="check">✓</span> Alles aus Starter</li>
+      <li><span class="check">✓</span> <span class="feature-highlight">3-Way-Match (Vollautomatisch)</span></li>
+      <li><span class="check">✓</span> <span class="feature-highlight">KI-Kontierungsvorschläge</span></li>
+      <li><span class="check">✓</span> Unbegrenzt Projekte</li>
+      <li><span class="check">✓</span> 50 Benutzer</li>
+      <li><span class="check">✓</span> DATEV-Export</li>
+      <li><span class="check">✓</span> CO₂-Tracking (Basis)</li>
+      <li><span class="check">✓</span> Prioritäts-Support</li>
+    </ul>
+  </div>
+
+  <!-- ENTERPRISE -->
+  <div class="card">
+    <div class="card-tier tier-enterprise">Enterprise</div>
+    <div class="card-price">
+      <span class="price-currency">ab €</span>
+      <span class="price-amount">999</span>
+      <span class="price-period">/Monat</span>
+    </div>
+    <div class="price-period" style="color:#7c3aed; font-weight:600; margin-bottom: 4px;">Individuelles Paket</div>
+    <p class="card-desc">Für Generalunternehmer & Konzerne. Volle Integration, dedizierter Support, SLA.</p>
+    <button class="card-btn btn-dark">Vertrieb kontaktieren</button>
+    <ul class="feature-list">
+      <li><span class="check">✓</span> <strong>5.000+ Dokumente/Monat</strong></li>
+      <li><span class="check">✓</span> €0,15–0,25 pro Dokument</li>
+      <li><span class="check">✓</span> Alles aus Business</li>
+      <li><span class="check">✓</span> <span class="feature-highlight">ERP-Integration (RIB, SAP, Procore)</span></li>
+      <li><span class="check">✓</span> <span class="feature-highlight">Vollständiges ESG/CO₂-Reporting</span></li>
+      <li><span class="check">✓</span> Unbegrenzt Benutzer</li>
+      <li><span class="check">✓</span> Custom Workflows</li>
+      <li><span class="check">✓</span> SSO / SAML</li>
+      <li><span class="check">✓</span> Dedicated Account Manager</li>
+      <li><span class="check">✓</span> 99.9% SLA</li>
+    </ul>
+  </div>
+</div>
+
+<!-- VS COMSTRUCT -->
+<section class="comparison">
+  <h2>Warum BauGPT statt Comstruct?</h2>
+  <p>Comstruct bedient nur Enterprise. Wir machen KI-gestützte Beschaffung für alle.</p>
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>BauGPT Procurement</th>
+        <th>Comstruct</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Kostenloser Einstieg</td>
+        <td><span class="comp-check">✓</span> 50 Dok/Mo</td>
+        <td><span class="comp-x">✗</span></td>
+      </tr>
+      <tr>
+        <td>Transparente Preise</td>
+        <td><span class="comp-check">✓</span> Ab €49/Mo</td>
+        <td><span class="comp-x">✗</span> Nur auf Anfrage</td>
+      </tr>
+      <tr>
+        <td>KI-Rechnungsprüfung</td>
+        <td><span class="comp-check">✓</span> Inklusive</td>
+        <td><span class="comp-check">✓</span> Inklusive</td>
+      </tr>
+      <tr>
+        <td>3-Way-Match</td>
+        <td><span class="comp-check">✓</span> Ab Starter</td>
+        <td><span class="comp-check">✓</span> Enterprise only</td>
+      </tr>
+      <tr>
+        <td>Mobile App (Offline)</td>
+        <td><span class="comp-check">✓</span></td>
+        <td><span class="comp-check">✓</span></td>
+      </tr>
+      <tr>
+        <td>KMU-tauglich (1-50 MA)</td>
+        <td><span class="comp-check">✓</span></td>
+        <td><span class="comp-x">✗</span></td>
+      </tr>
+      <tr>
+        <td>CO₂/ESG-Reporting</td>
+        <td><span class="comp-check">✓</span> Ab Business</td>
+        <td><span class="comp-check">✓</span> Enterprise only</td>
+      </tr>
+      <tr>
+        <td>Setup-Zeit</td>
+        <td><strong>5 Minuten</strong></td>
+        <td>2-4 Wochen</td>
+      </tr>
+      <tr>
+        <td>Vertragsbindung</td>
+        <td>Keine — monatlich kündbar</td>
+        <td>12 Monate Minimum</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ROI CALCULATOR -->
+<section class="roi">
+  <div class="roi-inner">
+    <div>
+      <h2>💰 ROI-Rechner: Was sparst Du?</h2>
+      <p>Jedes manuell geprüfte Dokument kostet Dich ~15 Minuten. Rechne selbst, wie viel Du mit BauGPT Procurement sparst.</p>
+      <div class="roi-input">
+        <div class="roi-field">
+          <label>Dokumente pro Monat (Rechnungen + Lieferscheine)</label>
+          <input type="number" value="200" min="1">
+        </div>
+        <div class="roi-field">
+          <label>Ø Stundensatz Sachbearbeiter (€)</label>
+          <input type="number" value="35" min="10">
+        </div>
+        <div class="roi-field">
+          <label>Minuten pro Dokument (manuell)</label>
+          <input type="number" value="15" min="1">
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="roi-result">
+        <div class="label">Jährliche Einsparung</div>
+        <div class="amount">€21.000</div>
+        <div class="sub">200 Dok × 15 Min × €35/h × 12 Monate</div>
+        <div class="sub" style="color:#f59e0b; font-weight: 700; margin-top: 12px;">= 1.200h/Jahr zurück für Dein Team</div>
+      </div>
+      <div class="roi-result" style="margin-top: 16px;">
+        <div class="label">Empfohlener Plan</div>
+        <div class="amount" style="font-size: 32px;">Business — €199/Mo</div>
+        <div class="sub">ROI: 8,8× in 12 Monaten</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="proof">
+  <h2>Vertraut von 1.000+ Bauunternehmen</h2>
+  <div class="proof-logos">
+    <div class="proof-logo">[Kunde 1]</div>
+    <div class="proof-logo">[Kunde 2]</div>
+    <div class="proof-logo">[Kunde 3]</div>
+    <div class="proof-logo">[Kunde 4]</div>
+    <div class="proof-logo">[Kunde 5]</div>
+  </div>
+  <div class="testimonial">
+    <q>Wir haben unsere Rechnungsprüfung von 3 Stunden auf 15 Minuten pro Tag reduziert. Die KI erkennt Abweichungen, die uns vorher durchgerutscht sind — das spart uns tausende Euro im Monat.</q>
+    <div class="author">
+      <div class="avatar">MK</div>
+      <div>
+        <div class="name">Michael K.</div>
+        <div class="role">Einkaufsleiter, Baufirma (50 MA) — Beta-Tester</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <h2>Häufige Fragen</h2>
+
+  <div class="faq-item">
+    <div class="faq-q">Was zählt als "Dokument"? <span>+</span></div>
+    <div class="faq-a">Ein Dokument = eine Rechnung oder ein Lieferschein, der durch unsere KI verarbeitet wird. Manuelle Eingaben (z.B. Bestellungen erstellen) zählen NICHT gegen Dein Kontingent.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Kann ich zwischen Plänen wechseln? <span>+</span></div>
+    <div class="faq-a">Ja, jederzeit. Upgrade sofort, Downgrade zum nächsten Abrechnungszeitraum. Keine Kündigungsfrist bei monatlicher Abrechnung.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Wo werden meine Daten gespeichert? <span>+</span></div>
+    <div class="faq-a">Alle Daten liegen in deutschen Rechenzentren (Frankfurt). Vollständig DSGVO-konform. Deine Dokumente werden verschlüsselt gespeichert (AES-256).</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Welche ERP-Systeme werden unterstützt? <span>+</span></div>
+    <div class="faq-a">DATEV-Export ab Business-Plan. RIB iTWO, SAP und Procore Integration im Enterprise-Plan. Weitere Integrationen auf Anfrage. CSV/Excel-Export in allen Plänen.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Was passiert, wenn ich mein Dokumenten-Limit überschreite? <span>+</span></div>
+    <div class="faq-a">Im Free-Plan: Verarbeitung pausiert bis nächster Monat. In Bezahl-Plänen: Zusätzliche Dokumente werden automatisch zum jeweiligen Stückpreis abgerechnet. Keine Überraschungen.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Wie unterscheidet sich das von BauGPT Pro? <span>+</span></div>
+    <div class="faq-a">BauGPT Pro ist unser KI-Assistent für Dokumente und Templates. BauGPT Procurement ist eine spezialisierte Plattform für Einkauf, Lieferscheine und Rechnungen. Beide Produkte sind unabhängig nutzbar, funktionieren aber hervorragend zusammen.</div>
+  </div>
+</section>
+
+<!-- CTA FOOTER -->
+<section class="cta-footer">
+  <h2>Starte in 5 Minuten. Kostenlos.</h2>
+  <p>50 Dokumente pro Monat. Keine Kreditkarte nötig. Keine Vertragsbindung.</p>
+  <button class="btn-white">🚀 Jetzt kostenlos testen</button>
+</section>
+
+<!-- WIREFRAME ANNOTATION -->
+<div style="background: #fffbeb; border: 2px dashed #f59e0b; border-radius: 12px; padding: 24px; max-width: 800px; margin: 32px auto; font-size: 13px; color: #92400e;">
+  <strong>📐 WIREFRAME NOTES (Hugo → Bob):</strong>
+  <ul style="margin-top: 8px; padding-left: 20px;">
+    <li><strong>Toggle-Logik:</strong> Monatlich/Jährlich Switch muss Preise dynamisch umrechnen</li>
+    <li><strong>ROI-Rechner:</strong> JavaScript nötig — Echtzeit-Berechnung bei Input-Change</li>
+    <li><strong>FAQ Accordion:</strong> Click-to-expand mit smooth transition</li>
+    <li><strong>Responsive:</strong> Cards → 1-column unter 900px, ROI → stacked</li>
+    <li><strong>Social Proof:</strong> Logos + Testimonial = Platzhalter bis Beta-Kunden confirmed</li>
+    <li><strong>CTA-Tracking:</strong> Jeder Button braucht PostHog event (plan_selected, cta_clicked)</li>
+    <li><strong>A/B Test Idee:</strong> "Kostenlos starten" vs. "Demo buchen" für Enterprise</li>
+  </ul>
+</div>
+
+</body>
+</html>
