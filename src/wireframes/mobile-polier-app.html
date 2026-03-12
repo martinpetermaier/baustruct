@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baustruct — Mobile Polier App (Wireframe)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a2e; display: flex; flex-wrap: wrap; gap: 32px; padding: 40px; justify-content: center; }
+  
+  h1.page-title { width: 100%; text-align: center; color: #e0e0e0; font-size: 28px; margin-bottom: 8px; }
+  p.page-sub { width: 100%; text-align: center; color: #888; font-size: 14px; margin-bottom: 24px; }
+  
+  .phone-frame {
+    width: 375px; height: 812px; background: #fff; border-radius: 40px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4); overflow: hidden; position: relative;
+    border: 8px solid #333;
+  }
+  .phone-frame::before {
+    content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 150px; height: 28px; background: #333; border-radius: 0 0 16px 16px; z-index: 10;
+  }
+  
+  .screen-label {
+    text-align: center; color: #ccc; font-size: 13px; margin-top: 12px; font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .screen-notes {
+    text-align: center; color: #777; font-size: 11px; margin-top: 4px; max-width: 375px;
+  }
+  
+  /* Status Bar */
+  .status-bar {
+    height: 44px; padding: 14px 24px 0; display: flex; justify-content: space-between;
+    font-size: 12px; font-weight: 600; color: #333;
+  }
+  .status-bar .time { font-size: 14px; }
+  .status-bar .icons { display: flex; gap: 4px; align-items: center; }
+  
+  /* App Header */
+  .app-header {
+    padding: 8px 20px 12px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .app-header h2 { font-size: 22px; font-weight: 700; color: #111; }
+  .app-header .project-badge {
+    background: #f0f7ff; color: #2563eb; font-size: 12px; padding: 4px 10px;
+    border-radius: 12px; font-weight: 600;
+  }
+  
+  /* Date Navigation */
+  .date-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px 12px; gap: 8px;
+  }
+  .date-nav .arrow { width: 32px; height: 32px; border-radius: 50%; background: #f3f4f6;
+    display: flex; align-items: center; justify-content: center; font-size: 16px; color: #666; cursor: pointer; }
+  .date-nav .date-label { font-size: 15px; font-weight: 600; color: #333; }
+  .date-nav .today-btn { font-size: 12px; color: #2563eb; font-weight: 600; cursor: pointer; }
+  
+  /* Delivery Cards */
+  .delivery-list { padding: 0 16px; overflow-y: auto; flex: 1; }
+  .delivery-card {
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 14px 16px;
+    margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .delivery-card.urgent { border-left: 4px solid #ef4444; }
+  .delivery-card.arriving { border-left: 4px solid #f59e0b; }
+  .delivery-card.confirmed { border-left: 4px solid #22c55e; opacity: 0.7; }
+  
+  .dc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .dc-supplier { font-weight: 700; font-size: 15px; color: #111; }
+  .dc-time { font-size: 13px; color: #666; font-weight: 500; }
+  .dc-items { font-size: 13px; color: #555; margin-bottom: 8px; line-height: 1.4; }
+  .dc-footer { display: flex; justify-content: space-between; align-items: center; }
+  .dc-status {
+    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 8px;
+    text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .dc-status.pending { background: #fef3c7; color: #92400e; }
+  .dc-status.arriving { background: #fed7aa; color: #9a3412; }
+  .dc-status.confirmed { background: #d1fae5; color: #065f46; }
+  .dc-status.rejected { background: #fecaca; color: #991b1b; }
+  .dc-positions { font-size: 12px; color: #999; }
+  
+  /* Bottom Tab Bar */
+  .tab-bar {
+    height: 80px; background: #fff; border-top: 1px solid #e5e7eb;
+    display: flex; justify-content: space-around; align-items: flex-start; padding-top: 8px;
+    position: absolute; bottom: 0; left: 0; right: 0;
+  }
+  .tab-item { text-align: center; flex: 1; }
+  .tab-item .tab-icon { font-size: 22px; }
+  .tab-item .tab-label { font-size: 10px; color: #999; margin-top: 2px; }
+  .tab-item.active .tab-icon { color: #2563eb; }
+  .tab-item.active .tab-label { color: #2563eb; font-weight: 600; }
+  .tab-badge {
+    position: relative; display: inline-block;
+  }
+  .tab-badge::after {
+    content: '3'; position: absolute; top: -4px; right: -8px;
+    background: #ef4444; color: #fff; font-size: 9px; font-weight: 700;
+    width: 16px; height: 16px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center;
+  }
+  
+  /* FAB */
+  .fab {
+    position: absolute; bottom: 96px; right: 20px;
+    width: 56px; height: 56px; border-radius: 50%; background: #2563eb;
+    color: #fff; font-size: 28px; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.4);
+  }
+  
+  /* Summary Stats */
+  .summary-strip {
+    display: flex; gap: 8px; padding: 0 16px 12px;
+  }
+  .stat-pill {
+    flex: 1; background: #f8fafc; border-radius: 10px; padding: 8px; text-align: center;
+    border: 1px solid #e5e7eb;
+  }
+  .stat-pill .num { font-size: 20px; font-weight: 700; color: #111; }
+  .stat-pill .label { font-size: 10px; color: #888; margin-top: 2px; }
+  .stat-pill.alert .num { color: #ef4444; }
+  
+  /* ========== SCREEN 2: Delivery Confirm ========== */
+  .confirm-header {
+    padding: 8px 20px; display: flex; align-items: center; gap: 12px;
+  }
+  .confirm-header .back { font-size: 24px; color: #2563eb; cursor: pointer; }
+  .confirm-header h2 { font-size: 18px; font-weight: 700; }
+  
+  .confirm-info {
+    padding: 0 20px 12px; display: flex; gap: 12px;
+  }
+  .info-chip {
+    background: #f3f4f6; padding: 6px 12px; border-radius: 8px;
+    font-size: 12px; color: #555;
+  }
+  .info-chip strong { color: #111; }
+  
+  .line-items { padding: 0 16px; }
+  .line-item {
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+    padding: 14px; margin-bottom: 8px;
+  }
+  .li-top { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .li-name { font-weight: 600; font-size: 14px; color: #111; }
+  .li-qty { font-size: 13px; color: #666; }
+  .li-actions { display: flex; gap: 8px; margin-top: 8px; }
+  .li-btn {
+    flex: 1; padding: 8px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    text-align: center; cursor: pointer; border: none;
+  }
+  .li-btn.ok { background: #d1fae5; color: #065f46; }
+  .li-btn.ok.active { background: #22c55e; color: #fff; }
+  .li-btn.issue { background: #fef3c7; color: #92400e; }
+  .li-btn.issue.active { background: #f59e0b; color: #fff; }
+  
+  .photo-upload {
+    margin: 12px 16px; padding: 16px; border: 2px dashed #d1d5db; border-radius: 12px;
+    text-align: center; color: #888;
+  }
+  .photo-upload .camera-icon { font-size: 32px; margin-bottom: 4px; }
+  .photo-upload .label { font-size: 13px; }
+  
+  .confirm-bar {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px 36px;
+    background: #fff; border-top: 1px solid #e5e7eb; display: flex; gap: 12px;
+  }
+  .btn-reject {
+    flex: 1; padding: 14px; border-radius: 12px; background: #fef2f2;
+    color: #dc2626; font-weight: 700; font-size: 15px; text-align: center; border: none;
+  }
+  .btn-confirm {
+    flex: 2; padding: 14px; border-radius: 12px; background: #22c55e;
+    color: #fff; font-weight: 700; font-size: 15px; text-align: center; border: none;
+  }
+  
+  /* ========== SCREEN 3: Quick Order ========== */
+  .quick-order-content { padding: 0 20px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { font-size: 13px; font-weight: 600; color: #555; display: block; margin-bottom: 6px; }
+  .form-input {
+    width: 100%; padding: 12px 14px; border: 1px solid #d1d5db; border-radius: 10px;
+    font-size: 15px; color: #111; background: #f9fafb;
+  }
+  .form-input:focus { border-color: #2563eb; outline: none; background: #fff; }
+  .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23666'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+  
+  .product-search-results {
+    border: 1px solid #e5e7eb; border-radius: 10px; margin-top: 4px; overflow: hidden;
+  }
+  .product-result {
+    padding: 10px 14px; border-bottom: 1px solid #f3f4f6; display: flex;
+    justify-content: space-between; align-items: center;
+  }
+  .product-result:last-child { border-bottom: none; }
+  .pr-name { font-size: 14px; font-weight: 500; color: #111; }
+  .pr-price { font-size: 13px; color: #2563eb; font-weight: 600; }
+  .pr-unit { font-size: 11px; color: #888; }
+  
+  .order-summary {
+    background: #f0f7ff; border-radius: 12px; padding: 14px; margin-top: 16px;
+  }
+  .os-row { display: flex; justify-content: space-between; font-size: 13px; color: #555; margin-bottom: 4px; }
+  .os-total { display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; color: #111; margin-top: 8px; padding-top: 8px; border-top: 1px solid #bfdbfe; }
+  
+  .btn-submit-order {
+    width: 100%; padding: 16px; border-radius: 12px; background: #2563eb;
+    color: #fff; font-weight: 700; font-size: 16px; text-align: center;
+    border: none; margin-top: 16px;
+  }
+  
+  /* ========== SCREEN 4: Offline Indicator ========== */
+  .offline-banner {
+    background: #fef3c7; padding: 8px 20px; display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: #92400e; font-weight: 600;
+  }
+  .offline-dot { width: 8px; height: 8px; background: #f59e0b; border-radius: 50%; }
+  .sync-info { font-weight: 400; color: #b45309; }
+  
+  .queued-badge {
+    background: #fef3c7; color: #92400e; font-size: 10px; padding: 2px 6px;
+    border-radius: 6px; font-weight: 600;
+  }
+  
+  /* ========== SCREEN 5: Notifications ========== */
+  .notif-list { padding: 0 16px; }
+  .notif-card {
+    display: flex; gap: 12px; padding: 14px; border-bottom: 1px solid #f3f4f6;
+    align-items: flex-start;
+  }
+  .notif-card.unread { background: #f0f7ff; border-radius: 10px; margin-bottom: 4px; }
+  .notif-icon {
+    width: 36px; height: 36px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+  }
+  .notif-icon.delivery { background: #dbeafe; }
+  .notif-icon.alert { background: #fecaca; }
+  .notif-icon.order { background: #d1fae5; }
+  .notif-body { flex: 1; }
+  .notif-title { font-size: 14px; font-weight: 600; color: #111; margin-bottom: 2px; }
+  .notif-desc { font-size: 12px; color: #666; line-height: 1.4; }
+  .notif-time { font-size: 11px; color: #999; margin-top: 4px; }
+  
+  /* Wrapper */
+  .screen-wrapper { display: flex; flex-direction: column; align-items: center; }
+  .phone-inner { display: flex; flex-direction: column; height: 100%; position: relative; }
+  .scrollable { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">📱 Baustruct — Mobile Polier App</h1>
+<p class="page-sub">Wireframe für Expo (React Native) | 5 Screens | Mobile-First für Baustelle</p>
+
+<!-- ========== SCREEN 1: Lieferkalender (Home) ========== -->
+<div class="screen-wrapper">
+<div class="phone-frame">
+  <div class="phone-inner">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">📶 🔋</span>
+    </div>
+    
+    <div class="app-header">
+      <h2>Lieferungen</h2>
+      <span class="project-badge">🏗️ Projekt Isar-Tower</span>
+    </div>
+    
+    <div class="date-nav">
+      <div class="arrow">‹</div>
+      <div>
+        <div class="date-label">Mittwoch, 12. März 2026</div>
+      </div>
+      <div class="today-btn">Heute</div>
+      <div class="arrow">›</div>
+    </div>
+    
+    <div class="summary-strip">
+      <div class="stat-pill">
+        <div class="num">7</div>
+        <div class="label">Gesamt</div>
+      </div>
+      <div class="stat-pill alert">
+        <div class="num">3</div>
+        <div class="label">Offen</div>
+      </div>
+      <div class="stat-pill">
+        <div class="num">4</div>
+        <div class="label">Bestätigt</div>
+      </div>
+    </div>
+    
+    <div class="scrollable">
+      <div class="delivery-list">
+        <div class="delivery-card arriving">
+          <div class="dc-top">
+            <div class="dc-supplier">Beton Müller GmbH</div>
+            <div class="dc-time">🕐 10:30</div>
+          </div>
+          <div class="dc-items">Beton C25/30 — 45 m³ · Pumpe bestellt</div>
+          <div class="dc-footer">
+            <span class="dc-status arriving">Unterwegs</span>
+            <span class="dc-positions">3 Pos.</span>
+          </div>
+        </div>
+        
+        <div class="delivery-card urgent">
+          <div class="dc-top">
+            <div class="dc-supplier">Stahl König AG</div>
+            <div class="dc-time">🕐 11:00</div>
+          </div>
+          <div class="dc-items">Bewehrungsstahl BSt 500 — 8.200 kg</div>
+          <div class="dc-footer">
+            <span class="dc-status pending">Ausstehend</span>
+            <span class="dc-positions">5 Pos.</span>
+          </div>
+        </div>
+        
+        <div class="delivery-card">
+          <div class="dc-top">
+            <div class="dc-supplier">Holzbau Huber</div>
+            <div class="dc-time">🕐 13:00</div>
+          </div>
+          <div class="dc-items">Schalung 3-SO, Schalungsträger H20 — 120 Stk</div>
+          <div class="dc-footer">
+            <span class="dc-status pending">Ausstehend</span>
+            <span class="dc-positions">2 Pos.</span>
+          </div>
+        </div>
+        
+        <div class="delivery-card confirmed">
+          <div class="dc-top">
+            <div class="dc-supplier">Baustoffhandel Süd</div>
+            <div class="dc-time">🕐 07:15</div>
+          </div>
+          <div class="dc-items">Kalksandstein KS 20 — 4.800 kg</div>
+          <div class="dc-footer">
+            <span class="dc-status confirmed">Bestätigt ✓</span>
+            <span class="dc-positions">1 Pos.</span>
+          </div>
+        </div>
+        
+        <div class="delivery-card confirmed">
+          <div class="dc-top">
+            <div class="dc-supplier">Dämmstoff Express</div>
+            <div class="dc-time">🕐 08:00</div>
+          </div>
+          <div class="dc-items">Mineralwolle 160mm — 280 m²</div>
+          <div class="dc-footer">
+            <span class="dc-status confirmed">Bestätigt ✓</span>
+            <span class="dc-positions">2 Pos.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="fab">+</div>
+    
+    <div class="tab-bar">
+      <div class="tab-item active">
+        <div class="tab-icon">📅</div>
+        <div class="tab-label">Lieferungen</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon"><span class="tab-badge">🛒</span></div>
+        <div class="tab-label">Bestellen</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">📷</div>
+        <div class="tab-label">Scannen</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">🔔</div>
+        <div class="tab-label">Alerts</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">👤</div>
+        <div class="tab-label">Profil</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="screen-label">SCREEN 1 — Lieferkalender (Home)</div>
+<div class="screen-notes">Tagesansicht mit Status-Farben · Swipe links/rechts für Tage · Pull-to-Refresh</div>
+</div>
+
+<!-- ========== SCREEN 2: Lieferschein bestätigen ========== -->
+<div class="screen-wrapper">
+<div class="phone-frame">
+  <div class="phone-inner">
+    <div class="status-bar">
+      <span class="time">10:32</span>
+      <span class="icons">📶 🔋</span>
+    </div>
+    
+    <div class="confirm-header">
+      <div class="back">‹</div>
+      <h2>Lieferschein bestätigen</h2>
+    </div>
+    
+    <div class="confirm-info">
+      <div class="info-chip"><strong>Beton Müller</strong></div>
+      <div class="info-chip">LS-2026-0412</div>
+      <div class="info-chip">10:30 Uhr</div>
+    </div>
+    
+    <div class="scrollable">
+      <div class="line-items">
+        <div class="line-item">
+          <div class="li-top">
+            <div class="li-name">Beton C25/30</div>
+            <div class="li-qty">Bestellt: 45 m³</div>
+          </div>
+          <div style="font-size:12px;color:#888;margin-bottom:6px;">Vertragspreis: €82,50/m³</div>
+          <div class="li-actions">
+            <div class="li-btn ok active">✓ 45 m³ OK</div>
+            <div class="li-btn issue">⚠️ Abweichung</div>
+          </div>
+        </div>
+        
+        <div class="line-item">
+          <div class="li-top">
+            <div class="li-name">Betonpumpe (Stunden)</div>
+            <div class="li-qty">Bestellt: 4 Std</div>
+          </div>
+          <div style="font-size:12px;color:#888;margin-bottom:6px;">Vertragspreis: €180,00/Std</div>
+          <div class="li-actions">
+            <div class="li-btn ok active">✓ 4 Std OK</div>
+            <div class="li-btn issue">⚠️ Abweichung</div>
+          </div>
+        </div>
+        
+        <div class="line-item" style="border-color:#f59e0b;">
+          <div class="li-top">
+            <div class="li-name">Fließmittel FM-30</div>
+            <div class="li-qty">Bestellt: 50 Liter</div>
+          </div>
+          <div style="font-size:12px;color:#888;margin-bottom:6px;">Vertragspreis: €4,20/L</div>
+          <div class="li-actions">
+            <div class="li-btn ok">✓ OK</div>
+            <div class="li-btn issue active">⚠️ Nur 42L</div>
+          </div>
+          <div style="margin-top:8px;">
+            <div style="font-size:12px;font-weight:600;color:#92400e;margin-bottom:4px;">Tatsächliche Menge:</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input type="text" value="42" style="width:60px;padding:8px;border:2px solid #f59e0b;border-radius:8px;font-size:16px;font-weight:700;text-align:center;">
+              <span style="font-size:14px;color:#666;">Liter</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="photo-upload">
+        <div class="camera-icon">📸</div>
+        <div class="label">Foto aufnehmen oder hochladen</div>
+        <div style="font-size:11px;color:#aaa;margin-top:4px;">Schäden, Abweichungen, Lieferschein</div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;">
+          <div style="width:56px;height:56px;border-radius:8px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:24px;">📷</div>
+          <div style="width:56px;height:56px;border-radius:8px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:24px;">🖼️</div>
+        </div>
+      </div>
+      
+      <div style="padding:12px 16px;">
+        <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:6px;">Anmerkung (optional)</div>
+        <textarea style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:10px;font-size:14px;resize:none;height:60px;" placeholder="z.B. Betonqualität geprüft, Lieferzeit OK..."></textarea>
+      </div>
+    </div>
+    
+    <div class="confirm-bar">
+      <button class="btn-reject">✗ Ablehnen</button>
+      <button class="btn-confirm">✓ Bestätigen</button>
+    </div>
+  </div>
+</div>
+<div class="screen-label">SCREEN 2 — Lieferschein bestätigen</div>
+<div class="screen-notes">Pro Position OK/Abweichung · Foto-Dokumentation · Haptic Feedback bei Confirm</div>
+</div>
+
+<!-- ========== SCREEN 3: Schnell-Nachbestellung ========== -->
+<div class="screen-wrapper">
+<div class="phone-frame">
+  <div class="phone-inner">
+    <div class="status-bar">
+      <span class="time">14:15</span>
+      <span class="icons">📶 🔋</span>
+    </div>
+    
+    <div class="confirm-header">
+      <div class="back">‹</div>
+      <h2>Nachbestellen</h2>
+    </div>
+    
+    <div class="scrollable">
+      <div class="quick-order-content">
+        <div class="form-group">
+          <label>Lieferant</label>
+          <input class="form-input form-select" value="Beton Müller GmbH" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label>Lieferdatum</label>
+          <input class="form-input" type="text" value="Mo, 14. März 2026">
+        </div>
+        
+        <div class="form-group">
+          <label>Material suchen</label>
+          <input class="form-input" type="text" placeholder="🔍  z.B. Beton, Stahl, Schalung...">
+          <div class="product-search-results">
+            <div class="product-result" style="background:#f0f7ff;">
+              <div>
+                <div class="pr-name">Beton C25/30</div>
+                <div class="pr-unit">Vertragsware · Beton Müller</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="pr-price">€82,50</div>
+                <div class="pr-unit">/m³</div>
+              </div>
+            </div>
+            <div class="product-result">
+              <div>
+                <div class="pr-name">Beton C30/37</div>
+                <div class="pr-unit">Vertragsware · Beton Müller</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="pr-price">€95,00</div>
+                <div class="pr-unit">/m³</div>
+              </div>
+            </div>
+            <div class="product-result">
+              <div>
+                <div class="pr-name">Beton C35/45</div>
+                <div class="pr-unit">Vertragsware · Beton Müller</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="pr-price">€108,00</div>
+                <div class="pr-unit">/m³</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Menge</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input class="form-input" style="flex:2;" type="number" value="30">
+            <input class="form-input form-select" style="flex:1;" value="m³" readonly>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Anmerkung für Einkauf</label>
+          <textarea class="form-input" style="height:50px;resize:none;" placeholder="z.B. Decke 3. OG, dringend"></textarea>
+        </div>
+        
+        <div class="order-summary">
+          <div class="os-row"><span>Beton C25/30</span><span>30 m³</span></div>
+          <div class="os-row"><span>Preis/Einheit</span><span>€82,50</span></div>
+          <div class="os-total"><span>Bestellwert</span><span>€2.475,00</span></div>
+        </div>
+        
+        <button class="btn-submit-order">Zur Freigabe einreichen →</button>
+        <div style="text-align:center;font-size:11px;color:#888;margin-top:8px;">Einkauf wird per Push benachrichtigt</div>
+      </div>
+    </div>
+    
+    <div class="tab-bar">
+      <div class="tab-item">
+        <div class="tab-icon">📅</div>
+        <div class="tab-label">Lieferungen</div>
+      </div>
+      <div class="tab-item active">
+        <div class="tab-icon">🛒</div>
+        <div class="tab-label">Bestellen</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">📷</div>
+        <div class="tab-label">Scannen</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">🔔</div>
+        <div class="tab-label">Alerts</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">👤</div>
+        <div class="tab-label">Profil</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="screen-label">SCREEN 3 — Schnell-Nachbestellung</div>
+<div class="screen-notes">Vom Lieferkalender direkt nachbestellen · Vertragspreise auto-fill · Push an Einkauf</div>
+</div>
+
+<!-- ========== SCREEN 4: Offline-Modus ========== -->
+<div class="screen-wrapper">
+<div class="phone-frame">
+  <div class="phone-inner">
+    <div class="status-bar">
+      <span class="time">11:05</span>
+      <span class="icons">❌📶 🔋</span>
+    </div>
+    
+    <div class="offline-banner">
+      <div class="offline-dot"></div>
+      Offline-Modus
+      <span class="sync-info">· 2 Aktionen ausstehend</span>
+    </div>
+    
+    <div class="app-header">
+      <h2>Lieferungen</h2>
+      <span class="project-badge">🏗️ Isar-Tower</span>
+    </div>
+    
+    <div class="date-nav">
+      <div class="arrow">‹</div>
+      <div class="date-label">Mittwoch, 12. März 2026</div>
+      <div class="today-btn">Heute</div>
+      <div class="arrow">›</div>
+    </div>
+    
+    <div class="scrollable">
+      <div class="delivery-list">
+        <div class="delivery-card arriving">
+          <div class="dc-top">
+            <div class="dc-supplier">Beton Müller GmbH</div>
+            <div class="dc-time">🕐 10:30</div>
+          </div>
+          <div class="dc-items">Beton C25/30 — 45 m³</div>
+          <div class="dc-footer">
+            <span class="dc-status confirmed">Bestätigt ✓ <span class="queued-badge">⏳ Sync</span></span>
+          </div>
+        </div>
+        
+        <div class="delivery-card urgent">
+          <div class="dc-top">
+            <div class="dc-supplier">Stahl König AG</div>
+            <div class="dc-time">🕐 11:00</div>
+          </div>
+          <div class="dc-items">Bewehrungsstahl — 8.200 kg</div>
+          <div class="dc-footer">
+            <span class="dc-status pending">Ausstehend</span>
+          </div>
+        </div>
+        
+        <div style="margin:20px 16px;padding:16px;background:#fffbeb;border:1px solid #fde68a;border-radius:12px;text-align:center;">
+          <div style="font-size:28px;margin-bottom:8px;">📡</div>
+          <div style="font-size:14px;font-weight:600;color:#92400e;">Offline verfügbar</div>
+          <div style="font-size:12px;color:#b45309;margin-top:4px;line-height:1.4;">
+            Lieferscheine bestätigen funktioniert auch ohne Internet.<br>
+            Daten werden automatisch synchronisiert sobald du wieder online bist.
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
+            <div style="background:#fef3c7;padding:6px 10px;border-radius:8px;font-size:11px;color:#92400e;">
+              <strong>2</strong> in Warteschlange
+            </div>
+            <div style="background:#fef3c7;padding:6px 10px;border-radius:8px;font-size:11px;color:#92400e;">
+              Letzte Sync: 10:58
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-bar">
+      <div class="tab-item active">
+        <div class="tab-icon">📅</div>
+        <div class="tab-label">Lieferungen</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">🛒</div>
+        <div class="tab-label">Bestellen</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">📷</div>
+        <div class="tab-label">Scannen</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">🔔</div>
+        <div class="tab-label">Alerts</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">👤</div>
+        <div class="tab-label">Profil</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="screen-label">SCREEN 4 — Offline-Modus</div>
+<div class="screen-notes">P1-Feature: Offline-Queue · Bestätigungen lokal speichern · Auto-Sync bei Reconnect</div>
+</div>
+
+<!-- ========== SCREEN 5: Push Notifications ========== -->
+<div class="screen-wrapper">
+<div class="phone-frame">
+  <div class="phone-inner">
+    <div class="status-bar">
+      <span class="time">15:42</span>
+      <span class="icons">📶 🔋</span>
+    </div>
+    
+    <div class="app-header">
+      <h2>Benachrichtigungen</h2>
+      <span style="font-size:13px;color:#2563eb;font-weight:600;">Alle gelesen</span>
+    </div>
+    
+    <div style="padding:0 16px 8px;">
+      <div style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.5px;">Heute</div>
+    </div>
+    
+    <div class="scrollable">
+      <div class="notif-list">
+        <div class="notif-card unread">
+          <div class="notif-icon alert">🚨</div>
+          <div class="notif-body">
+            <div class="notif-title">Lieferverzögerung</div>
+            <div class="notif-desc">Stahl König AG — Bewehrungsstahl verschiebt sich auf 14:00 Uhr (+3h)</div>
+            <div class="notif-time">vor 12 Min</div>
+          </div>
+        </div>
+        
+        <div class="notif-card unread">
+          <div class="notif-icon delivery">📦</div>
+          <div class="notif-body">
+            <div class="notif-title">Neue Lieferung angekündigt</div>
+            <div class="notif-desc">Holzbau Huber — Schalung 3-SO morgen 08:00 Uhr (120 Stk)</div>
+            <div class="notif-time">vor 45 Min</div>
+          </div>
+        </div>
+        
+        <div class="notif-card">
+          <div class="notif-icon order">✅</div>
+          <div class="notif-body">
+            <div class="notif-title">Bestellung freigegeben</div>
+            <div class="notif-desc">Deine Nachbestellung Beton C25/30 (30 m³) wurde vom Einkauf freigegeben.</div>
+            <div class="notif-time">vor 2 Std</div>
+          </div>
+        </div>
+        
+        <div class="notif-card">
+          <div class="notif-icon delivery">📋</div>
+          <div class="notif-body">
+            <div class="notif-title">Rechnung gebucht</div>
+            <div class="notif-desc">Rechnung RE-2026-0388 (Baustoffhandel Süd, €3.840) — 3-Way-Match OK, in ERP gebucht.</div>
+            <div class="notif-time">vor 4 Std</div>
+          </div>
+        </div>
+        
+        <div style="padding:8px 0;">
+          <div style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.5px;">Gestern</div>
+        </div>
+        
+        <div class="notif-card">
+          <div class="notif-icon alert">⚠️</div>
+          <div class="notif-body">
+            <div class="notif-title">Preisabweichung erkannt</div>
+            <div class="notif-desc">Rechnung Beton Müller: +6,25% über Vertragspreis für Beton C25/30. Einkauf prüft.</div>
+            <div class="notif-time">Gestern, 16:30</div>
+          </div>
+        </div>
+        
+        <div class="notif-card">
+          <div class="notif-icon order">📝</div>
+          <div class="notif-body">
+            <div class="notif-title">Lieferschein bestätigt</div>
+            <div class="notif-desc">LS-2026-0409 (Dämmstoff Express) — alle Positionen OK, keine Abweichungen.</div>
+            <div class="notif-time">Gestern, 08:15</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-bar">
+      <div class="tab-item">
+        <div class="tab-icon">📅</div>
+        <div class="tab-label">Lieferungen</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">🛒</div>
+        <div class="tab-label">Bestellen</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">📷</div>
+        <div class="tab-label">Scannen</div>
+      </div>
+      <div class="tab-item active">
+        <div class="tab-icon">🔔</div>
+        <div class="tab-label">Alerts</div>
+      </div>
+      <div class="tab-item">
+        <div class="tab-icon">👤</div>
+        <div class="tab-label">Profil</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="screen-label">SCREEN 5 — Push Notifications</div>
+<div class="screen-notes">Lieferverzögerung · Bestellfreigabe · Preisabweichung · Rechnungsstatus</div>
+</div>
+
+</body>
+</html>
