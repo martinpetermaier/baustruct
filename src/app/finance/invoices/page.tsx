@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { getDemoDbUser } from "@/lib/demo-user";
 
 export default async function InvoiceListPage({
   searchParams,
@@ -15,13 +16,15 @@ export default async function InvoiceListPage({
 
   if (!user) redirect("/login");
 
-  const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+  const dbUser = user.id === "demo-user-id"
+    ? getDemoDbUser(user.email)
+    : await prisma.user.findUnique({ where: { id: user.id } });
   if (!dbUser) redirect("/login");
 
   const params = await searchParams;
   const statusFilter = params.status;
 
-  const invoices = await prisma.invoice.findMany({
+  const invoices = dbUser.companyId ? await prisma.invoice.findMany({
     where: {
       companyId: dbUser.companyId,
       ...(statusFilter ? { status: statusFilter } : {}),
@@ -29,13 +32,13 @@ export default async function InvoiceListPage({
     include: { supplier: true },
     orderBy: { createdAt: "desc" },
     take: 50,
-  });
+  }) : [];
 
-  const counts = await prisma.invoice.groupBy({
+  const counts = dbUser.companyId ? await prisma.invoice.groupBy({
     by: ["status"],
     where: { companyId: dbUser.companyId },
     _count: true,
-  });
+  }) : [];
 
   const countMap = Object.fromEntries(
     counts.map((c) => [c.status, c._count])

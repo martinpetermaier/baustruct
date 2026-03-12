@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
+import { getDemoDbUser } from "@/lib/demo-user";
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
@@ -15,7 +17,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+  const dbUser = user.id === "demo-user-id" ? getDemoDbUser(user.email) : await prisma.user.findUnique({ where: { id: user.id } });
   if (!dbUser) {
     return NextResponse.json(
       { error: { code: "NOT_FOUND", message: "Benutzer nicht gefunden" } },
@@ -29,7 +31,7 @@ export async function GET(request: NextRequest) {
   // Single delivery note by ID
   if (id) {
     const deliveryNote = await prisma.deliveryNote.findFirst({
-      where: { id, companyId: dbUser.companyId },
+      where: { id, companyId: dbUser.companyId! },
       include: {
         items: true,
         supplier: true,
@@ -55,7 +57,7 @@ export async function GET(request: NextRequest) {
 
   const deliveryNotes = await prisma.deliveryNote.findMany({
     where: {
-      companyId: dbUser.companyId,
+      companyId: dbUser.companyId!,
       ...(projectId ? { projectId } : {}),
       ...(status ? { status } : {}),
       ...(date ? { deliveryDate: new Date(date) } : {}),
@@ -85,7 +87,7 @@ export async function PATCH(request: NextRequest) {
     );
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+  const dbUser = user.id === "demo-user-id" ? getDemoDbUser(user.email) : await prisma.user.findUnique({ where: { id: user.id } });
   if (!dbUser) {
     return NextResponse.json(
       { error: { code: "NOT_FOUND", message: "Benutzer nicht gefunden" } },
@@ -100,7 +102,7 @@ export async function PATCH(request: NextRequest) {
   const itemsJson = formData.get("items") as string;
 
   const deliveryNote = await prisma.deliveryNote.findFirst({
-    where: { id: deliveryId, companyId: dbUser.companyId },
+    where: { id: deliveryId, companyId: dbUser.companyId! },
   });
 
   if (!deliveryNote) {
@@ -172,7 +174,7 @@ export async function PATCH(request: NextRequest) {
   // Audit log
   await prisma.auditLog.create({
     data: {
-      companyId: dbUser.companyId,
+      companyId: dbUser.companyId!,
       userId: user.id,
       entityType: "delivery_note",
       entityId: deliveryId,

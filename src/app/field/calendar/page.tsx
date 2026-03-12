@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/utils";
+import { getDemoDbUser } from "@/lib/demo-user";
 
 export default async function FieldCalendarPage({
   searchParams,
@@ -15,7 +16,9 @@ export default async function FieldCalendarPage({
 
   if (!user) redirect("/login");
 
-  const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+  const dbUser = user.id === "demo-user-id"
+    ? getDemoDbUser(user.email)
+    : await prisma.user.findUnique({ where: { id: user.id } });
   if (!dbUser) redirect("/login");
 
   const params = await searchParams;
@@ -23,7 +26,7 @@ export default async function FieldCalendarPage({
     ? new Date(params.date)
     : new Date();
 
-  const deliveries = await prisma.deliveryNote.findMany({
+  const deliveries = dbUser.companyId ? await prisma.deliveryNote.findMany({
     where: {
       companyId: dbUser.companyId,
       deliveryDate: selectedDate,
@@ -35,12 +38,12 @@ export default async function FieldCalendarPage({
       items: true,
     },
     orderBy: { createdAt: "asc" },
-  });
+  }) : [];
 
-  const projects = await prisma.project.findMany({
+  const projects = dbUser.companyId ? await prisma.project.findMany({
     where: { companyId: dbUser.companyId, status: "active" },
     orderBy: { name: "asc" },
-  });
+  }) : [];
 
   const statusColors: Record<string, string> = {
     pending: "bg-yellow-100 text-yellow-800",

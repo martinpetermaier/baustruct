@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { inngest } from "@/inngest/client";
+import { getDemoDbUser } from "@/lib/demo-user";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
@@ -16,7 +18,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+  const dbUser = user.id === "demo-user-id" ? getDemoDbUser(user.email) : await prisma.user.findUnique({ where: { id: user.id } });
   if (!dbUser) {
     return NextResponse.json(
       { error: { code: "NOT_FOUND", message: "Benutzer nicht gefunden" } },
@@ -59,7 +61,7 @@ export async function POST(request: NextRequest) {
   // Create invoice record
   const invoice = await prisma.invoice.create({
     data: {
-      companyId: dbUser.companyId,
+      companyId: dbUser.companyId!,
       status: "received",
       invoiceDate: new Date(),
       totalNet: 0,

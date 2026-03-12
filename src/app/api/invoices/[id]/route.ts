@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
+import { getDemoDbUser } from "@/lib/demo-user";
+export const dynamic = "force-dynamic";
 
 export async function GET(
   _request: NextRequest,
@@ -18,7 +20,7 @@ export async function GET(
     );
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+  const dbUser = user.id === "demo-user-id" ? getDemoDbUser(user.email) : await prisma.user.findUnique({ where: { id: user.id } });
   if (!dbUser) {
     return NextResponse.json(
       { error: { code: "NOT_FOUND", message: "Benutzer nicht gefunden" } },
@@ -29,7 +31,7 @@ export async function GET(
   const { id } = await params;
 
   const invoice = await prisma.invoice.findFirst({
-    where: { id, companyId: dbUser.companyId },
+    where: { id, companyId: dbUser.companyId! },
     include: {
       supplier: true,
       items: {

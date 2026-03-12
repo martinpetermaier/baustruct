@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { getDemoDbUser } from "@/lib/demo-user";
 
 export default async function OrderListPage({
   searchParams,
@@ -15,12 +16,14 @@ export default async function OrderListPage({
 
   if (!user) redirect("/login");
 
-  const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+  const dbUser = user.id === "demo-user-id"
+    ? getDemoDbUser(user.email)
+    : await prisma.user.findUnique({ where: { id: user.id } });
   if (!dbUser) redirect("/login");
 
   const params = await searchParams;
 
-  const orders = await prisma.purchaseOrder.findMany({
+  const orders = dbUser.companyId ? await prisma.purchaseOrder.findMany({
     where: {
       companyId: dbUser.companyId,
       ...(params.status ? { status: params.status } : {}),
@@ -33,7 +36,7 @@ export default async function OrderListPage({
     },
     orderBy: { createdAt: "desc" },
     take: 50,
-  });
+  }) : [];
 
   const statusTabs = [
     { label: "Entwurf", value: "draft" },

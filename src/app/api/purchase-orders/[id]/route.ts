@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { getDemoDbUser } from "@/lib/demo-user";
+export const dynamic = "force-dynamic";
 
 const PatchOrderSchema = z.object({
   status: z
@@ -18,7 +20,7 @@ async function getAuthUser() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return null;
-  const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+  const dbUser = user.id === "demo-user-id" ? getDemoDbUser(user.email) : await prisma.user.findUnique({ where: { id: user.id } });
   return dbUser;
 }
 
@@ -37,7 +39,7 @@ export async function GET(
   const { id } = await params;
 
   const order = await prisma.purchaseOrder.findFirst({
-    where: { id, companyId: dbUser.companyId },
+    where: { id, companyId: dbUser.companyId! },
     include: {
       supplier: true,
       project: true,
@@ -127,7 +129,7 @@ export async function PATCH(
   }
 
   const existing = await prisma.purchaseOrder.findFirst({
-    where: { id, companyId: dbUser.companyId },
+    where: { id, companyId: dbUser.companyId! },
   });
 
   if (!existing) {
@@ -157,7 +159,7 @@ export async function PATCH(
 
   await prisma.auditLog.create({
     data: {
-      companyId: dbUser.companyId,
+      companyId: dbUser.companyId!,
       userId: dbUser.id,
       entityType: "purchase_order",
       entityId: id,
@@ -184,7 +186,7 @@ export async function DELETE(
   const { id } = await params;
 
   const existing = await prisma.purchaseOrder.findFirst({
-    where: { id, companyId: dbUser.companyId },
+    where: { id, companyId: dbUser.companyId! },
   });
 
   if (!existing) {
@@ -210,7 +212,7 @@ export async function DELETE(
 
   await prisma.auditLog.create({
     data: {
-      companyId: dbUser.companyId,
+      companyId: dbUser.companyId!,
       userId: dbUser.id,
       entityType: "purchase_order",
       entityId: id,

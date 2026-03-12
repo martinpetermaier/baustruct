@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
+import { getDemoDbUser } from "@/lib/demo-user";
+export const dynamic = "force-dynamic";
 
 // DATEV CSV header row
 const DATEV_HEADER = [
@@ -67,7 +69,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+  const dbUser = user.id === "demo-user-id" ? getDemoDbUser(user.email) : await prisma.user.findUnique({ where: { id: user.id } });
   if (!dbUser) {
     return NextResponse.json(
       { error: { code: "NOT_FOUND", message: "Benutzer nicht gefunden" } },
@@ -82,7 +84,7 @@ export async function GET(request: NextRequest) {
   // Fetch approved invoices that haven't been exported yet
   const invoices = await prisma.invoice.findMany({
     where: {
-      companyId: dbUser.companyId,
+      companyId: dbUser.companyId!,
       status: "approved",
       erpExportedAt: null,
       ...(from || to
@@ -160,10 +162,10 @@ export async function GET(request: NextRequest) {
   // Audit log for export
   await prisma.auditLog.create({
     data: {
-      companyId: dbUser.companyId,
+      companyId: dbUser.companyId!,
       userId: dbUser.id,
       entityType: "datev_export",
-      entityId: dbUser.companyId,
+      entityId: dbUser.companyId ?? "demo",
       action: "exported",
       changes: {
         invoiceCount: invoices.length,

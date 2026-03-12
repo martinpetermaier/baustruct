@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { inngest } from "@/inngest/client";
+import { getDemoDbUser } from "@/lib/demo-user";
+export const dynamic = "force-dynamic";
 
 export async function POST(
   _request: NextRequest,
@@ -19,7 +21,7 @@ export async function POST(
     );
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+  const dbUser = user.id === "demo-user-id" ? getDemoDbUser(user.email) : await prisma.user.findUnique({ where: { id: user.id } });
   if (!dbUser) {
     return NextResponse.json(
       { error: { code: "NOT_FOUND", message: "Benutzer nicht gefunden" } },
@@ -43,7 +45,7 @@ export async function POST(
   const { id } = await params;
 
   const invoice = await prisma.invoice.findFirst({
-    where: { id, companyId: dbUser.companyId },
+    where: { id, companyId: dbUser.companyId! },
   });
 
   if (!invoice) {
@@ -74,7 +76,7 @@ export async function POST(
   // Create audit log entry
   await prisma.auditLog.create({
     data: {
-      companyId: dbUser.companyId,
+      companyId: dbUser.companyId!,
       userId: dbUser.id,
       entityType: "invoice",
       entityId: id,
@@ -92,7 +94,7 @@ export async function POST(
     name: "invoice/approved",
     data: {
       invoiceId: id,
-      companyId: dbUser.companyId,
+      companyId: dbUser.companyId!,
       approvedBy: dbUser.id,
     },
   });

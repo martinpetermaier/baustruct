@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { getDemoDbUser } from "@/lib/demo-user";
+export const dynamic = "force-dynamic";
 
 const CreateOrderSchema = z.object({
   projectId: z.string().uuid(),
@@ -32,7 +34,9 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+  const dbUser = user.id === "demo-user-id"
+    ? getDemoDbUser(user.email)
+    : await prisma.user.findUnique({ where: { id: user.id } });
   if (!dbUser) {
     return NextResponse.json(
       { error: { code: "NOT_FOUND", message: "Benutzer nicht gefunden" } },
@@ -46,15 +50,15 @@ export async function GET(request: NextRequest) {
   if (searchParams.get("meta") === "form") {
     const [projects, suppliers, products] = await Promise.all([
       prisma.project.findMany({
-        where: { companyId: dbUser.companyId, status: "active" },
+        where: { companyId: dbUser.companyId!, status: "active" },
         select: { id: true, name: true },
       }),
       prisma.supplier.findMany({
-        where: { companyId: dbUser.companyId, isActive: true },
+        where: { companyId: dbUser.companyId!, isActive: true },
         select: { id: true, name: true },
       }),
       prisma.product.findMany({
-        where: { companyId: dbUser.companyId, isActive: true },
+        where: { companyId: dbUser.companyId!, isActive: true },
         select: { id: true, name: true, unit: true, unitPrice: true },
       }),
     ]);
@@ -68,7 +72,7 @@ export async function GET(request: NextRequest) {
 
   const orders = await prisma.purchaseOrder.findMany({
     where: {
-      companyId: dbUser.companyId,
+      companyId: dbUser.companyId!,
       ...(status ? { status } : {}),
       ...(projectId ? { projectId } : {}),
     },
@@ -127,7 +131,7 @@ export async function POST(request: NextRequest) {
   // Generate order number: PO-YYYYMMDD-XXXX
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
   const count = await prisma.purchaseOrder.count({
-    where: { companyId: dbUser.companyId },
+    where: { companyId: dbUser.companyId! },
   });
   const orderNumber = `PO-${today}-${String(count + 1).padStart(4, "0")}`;
 
@@ -141,7 +145,7 @@ export async function POST(request: NextRequest) {
 
   const order = await prisma.purchaseOrder.create({
     data: {
-      companyId: dbUser.companyId,
+      companyId: dbUser.companyId!,
       projectId,
       supplierId,
       orderNumber,
@@ -170,7 +174,7 @@ export async function POST(request: NextRequest) {
   // Audit log
   await prisma.auditLog.create({
     data: {
-      companyId: dbUser.companyId,
+      companyId: dbUser.companyId!,
       userId: user.id,
       entityType: "purchase_order",
       entityId: order.id,
