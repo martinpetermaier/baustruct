@@ -19,14 +19,15 @@ model Company {
   createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz()
 
-  users          User[]
-  projects       Project[]
-  suppliers      Supplier[]
-  products       Product[]
-  purchaseOrders PurchaseOrder[]
-  deliveryNotes  DeliveryNote[]
-  invoices       Invoice[]
-  auditLogs      AuditLog[]
+  users                User[]
+  projects             Project[]
+  suppliers            Supplier[]
+  products             Product[]
+  purchaseOrders       PurchaseOrder[]
+  deliveryNotes        DeliveryNote[]
+  invoices             Invoice[]
+  auditLogs            AuditLog[]
+  materialCalculations MaterialCalculation[]
 
   @@map("companies")
 }
@@ -70,10 +71,11 @@ model Project {
   projectManagerId String?   @map("project_manager_id") @db.Uuid
   createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz()
 
-  company        Company        @relation(fields: [companyId], references: [id])
-  projectManager User?          @relation("ProjectManager", fields: [projectManagerId], references: [id])
-  purchaseOrders PurchaseOrder[]
-  deliveryNotes  DeliveryNote[]
+  company              Company               @relation(fields: [companyId], references: [id])
+  projectManager       User?                 @relation("ProjectManager", fields: [projectManagerId], references: [id])
+  purchaseOrders       PurchaseOrder[]
+  deliveryNotes        DeliveryNote[]
+  materialCalculations MaterialCalculation[]
 
   @@index([companyId])
   @@map("projects")
@@ -96,11 +98,12 @@ model Supplier {
   isActive         Boolean  @default(true) @map("is_active")
   createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
-  company        Company        @relation(fields: [companyId], references: [id])
-  products       Product[]
-  purchaseOrders PurchaseOrder[]
-  deliveryNotes  DeliveryNote[]
-  invoices       Invoice[]
+  company              Company               @relation(fields: [companyId], references: [id])
+  products             Product[]
+  purchaseOrders       PurchaseOrder[]
+  deliveryNotes        DeliveryNote[]
+  invoices             Invoice[]
+  materialCalculations MaterialCalculation[]
 
   @@index([companyId])
   @@map("suppliers")
@@ -228,9 +231,10 @@ model DeliveryNoteItem {
   deviationFlag     Boolean  @default(false) @map("deviation_flag")
   deviationNote     String?  @map("deviation_note")
 
-  deliveryNote DeliveryNote  @relation(fields: [deliveryNoteId], references: [id], onDelete: Cascade)
-  product      Product?      @relation(fields: [productId], references: [id])
-  invoiceItems InvoiceItem[]
+  deliveryNote    DeliveryNote        @relation(fields: [deliveryNoteId], references: [id], onDelete: Cascade)
+  product         Product?            @relation(fields: [productId], references: [id])
+  invoiceItems    InvoiceItem[]
+  co2Calculation  MaterialCalculation?
 
   @@map("delivery_note_items")
 }
@@ -321,6 +325,81 @@ model InvoicePurchaseOrderLink {
 
   @@id([invoiceId, purchaseOrderId])
   @@map("invoice_purchase_order_links")
+}
+
+// ─── CO₂ / ESG Tracking ─────────────────────────────────────
+
+/**
+ * Material catalogue — ÖKOBAUDAT 2024-I emission factors.
+ * Seeded from prisma/seeds/co2-factors.ts.
+ * One row per material code (e.g. CONC_C2530, STEEL_REINF).
+ */
+model Material {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code             String   @unique @db.VarChar(50)   // e.g. 'CONC_C2530'
+  name             String   @db.VarChar(255)
+  category         String   @db.VarChar(50)           // CONC | STEEL | WOOD | …
+  defaultUnit      String   @db.VarChar(20)           // kg | t | m3 | m2 | pcs
+  /// CO₂e kg per kg of material — A1-A3 phase (production)
+  /// Negative = CO₂ storage (biogenic carbon, e.g. timber)
+  emissionFactorA1a3 Decimal @map("emission_factor_a1a3") @db.Decimal(10, 5)
+  /// CO₂e kg per kg — A4 phase (transport to site)
+  emissionFactorA4   Decimal @map("emission_factor_a4")   @db.Decimal(10, 5)
+  co2Scope           String  @map("co2_scope")  @db.VarChar(10)  // scope1 | scope2 | scope3
+  dataSource         String  @map("data_source") @db.VarChar(30) // OEKOBAUDAT | DEFRA | UBA | ESTIMATED
+  /// Unit conversion helpers (optional — used by normalizeToKg)
+  densityKgM3      Decimal? @map("density_kg_m3")      @db.Decimal(10, 3)
+  areaWeightKgM2   Decimal? @map("area_weight_kg_m2")  @db.Decimal(10, 3)
+  pieceWeightKg    Decimal? @map("piece_weight_kg")    @db.Decimal(10, 3)
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt        DateTime @updatedAt      @map("updated_at") @db.Timestamptz()
+
+  calculations     MaterialCalculation[]
+
+  @@index([category])
+  @@map("materials")
+}
+
+/**
+ * CO₂ calculation result per delivery note line item.
+ * Written by the Inngest co2-job after every `delivery/confirmed` event.
+ * One row per DeliveryNoteItem.
+ */
+model MaterialCalculation {
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deliveryNoteItemId   String   @map("delivery_note_item_id") @db.Uuid
+  materialId           String?  @map("material_id") @db.Uuid  // null if code unknown
+  materialCode         String   @map("material_code") @db.VarChar(50)
+  projectId            String   @map("project_id")   @db.Uuid
+  companyId            String   @map("company_id")   @db.Uuid
+  supplierId           String   @map("supplier_id")  @db.Uuid
+  /// Quantity normalized to kg before calculation
+  quantityKg           Decimal  @map("quantity_kg")  @db.Decimal(14, 3)
+  co2KgA1A3            Decimal  @map("co2_kg_a1a3")  @db.Decimal(14, 3)
+  co2KgA4              Decimal  @map("co2_kg_a4")    @db.Decimal(14, 3)
+  co2KgTotal           Decimal  @map("co2_kg_total") @db.Decimal(14, 3)
+  co2Scope             String   @map("co2_scope")    @db.VarChar(10)  // scope1 | scope2 | scope3
+  /// Source label — OEKOBAUDAT | DEFRA | UBA | ESTIMATED
+  emissionFactorSource String   @map("emission_factor_source") @db.VarChar(30)
+  /// factor_db | category_default | estimated
+  calculationMethod    String   @map("calculation_method") @db.VarChar(30)
+  /// high | medium | low — drives CSRD data-quality flag
+  dataQuality          String   @map("data_quality") @db.VarChar(10)
+  deliveryDate         DateTime @map("delivery_date") @db.Date
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  material       Material?      @relation(fields: [materialId],         references: [id])
+  deliveryNoteItem DeliveryNoteItem @relation(fields: [deliveryNoteItemId], references: [id], onDelete: Cascade)
+  project        Project        @relation(fields: [projectId],          references: [id])
+  company        Company        @relation(fields: [companyId],          references: [id])
+  supplier       Supplier       @relation(fields: [supplierId],         references: [id])
+
+  @@unique([deliveryNoteItemId])   // one calculation per line item
+  @@index([projectId, deliveryDate])
+  @@index([companyId, co2Scope])
+  @@index([dataQuality])
+  @@map("material_calculations")
 }
 
 // ─── Audit ───────────────────────────────────────────────────
